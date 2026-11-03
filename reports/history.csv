@@ -1,0 +1,22 @@
+datum,typ,lista,strategi,per_ar_pct,avkastning_pct,sp500_pct,storsta_nedgang_pct,affarer,godkand
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter + relativ styrka,24.5,146.86,106.78,-22.59,107,ja
+2026-11-03,swing,Bevakningslistan,Swing – låt vinnare löpa,19.5,108.58,106.78,-33.87,110,ja
+2026-11-03,swing,Bevakningslistan,Swing – grund,11.7,57.91,106.78,-29.79,152,ja
+2026-11-03,swing,Bevakningslistan,"Swing + marknadsfilter, mål 3R",10.9,52.93,106.78,-29.79,136,ja
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter,9.1,42.96,106.78,-29.79,142,ja
+2026-11-03,swing,Bevakningslistan,Ditt upplägg: +2 % / −2 %,5.3,23.93,106.78,-21.26,275,ja
+2026-11-03,swing,Bevakningslistan,Utbrott + marknadsfilter – låt vinnare löpa,20.2,113.54,106.78,-24.05,66,nej
+2026-11-03,swing,Bevakningslistan,Utbrott – låt vinnare löpa,19.5,108.35,106.78,-24.05,66,nej
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter – låt vinnare löpa,12.7,63.85,106.78,-37.77,109,nej
+2026-11-03,swing,100 mest omsatta,Swing – låt vinnare löpa,73.3,863.85,106.78,-32.42,144,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter – låt vinnare löpa,72.8,853.28,106.78,-34.57,147,ja
+2026-11-03,swing,100 mest omsatta,Utbrott – låt vinnare löpa,52.4,468.12,106.78,-35.02,128,ja
+2026-11-03,swing,100 mest omsatta,Utbrott + marknadsfilter – låt vinnare löpa,46.5,382.1,106.78,-33.15,127,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter + relativ styrka,34.9,243.68,106.78,-31.01,213,ja
+2026-11-03,swing,100 mest omsatta,"Swing + marknadsfilter, mål 3R",21.7,124.39,106.78,-35.68,226,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter,22.7,132.47,106.78,-38.84,252,ja
+2026-11-03,swing,100 mest omsatta,Swing – grund,19.9,110.99,106.78,-39.87,271,ja
+2026-11-03,swing,100 mest omsatta,Ditt upplägg: +2 % / −2 %,-24.3,-68.17,106.78,-68.51,569,nej
+2026-11-03,day,50 mest omsatta,Day – momentum (nuvarande),,-38.44,-2.51,-40.4,2842,
+2026-11-03,day,50 mest omsatta,Day – ORB 15 min,,-2.61,-2.51,-3.64,278,
+2026-11-03,day,50 mest omsatta,Day – ORB 30 min,,-0.56,-2.51,-2.24,157,
