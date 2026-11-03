@@ -6,6 +6,7 @@ from .config import Settings
 from .data import YahooResearchProvider
 from .risk import position_size, sek_to_usd, usd_to_sek
 from .strategies import day, swing
+from .strategies.variants import add_market
 
 SIGNAL_ORDER = {"CANDIDATE": 0, "WATCH": 1, "LOW_LIQUIDITY": 2, "INSUFFICIENT_DATA": 3, "DATA_ERROR": 4}
 
@@ -40,7 +41,7 @@ def add_sizing(row, settings, usd_sek):
     return row
 
 
-def _scan_symbol(symbol, include_day, include_swing, provider, settings):
+def _scan_symbol(symbol, include_day, include_swing, provider, settings, swing_strategy=swing, market_bars=None):
     rows = []
     daily = None
     try:
@@ -64,7 +65,7 @@ def _scan_symbol(symbol, include_day, include_swing, provider, settings):
 
     if include_swing and not rows:
         try:
-            rows.append(swing.evaluate(symbol, daily))
+            rows.append(swing_strategy.evaluate(symbol, add_market(daily, market_bars)))
         except Exception as e:
             rows.append({"symbol": symbol, "strategy": "swing", "signal": "DATA_ERROR", "reason": str(e)[:160]})
     if include_day:
@@ -76,12 +77,15 @@ def _scan_symbol(symbol, include_day, include_swing, provider, settings):
 
 
 def scan(symbols, include_day=True, include_swing=True, provider=None, settings=None,
-         usd_sek=None, max_workers=8, progress=None):
+         usd_sek=None, max_workers=8, progress=None, swing_strategy=None, market_bars=None):
     """Skannar aktier. Returnerar en lista med rader (en per aktie och strategi),
     sorterad med köpkandidater först.
 
     progress: valfri funktion progress(klara, totalt) för t.ex. en förloppsindikator.
+    swing_strategy: vilken swing-variant som används (standard: grundstrategin).
+    market_bars: kurser för SPY, behövs för varianter med marknadsfilter.
     """
+    swing_strategy = swing_strategy or swing
     provider = provider or YahooResearchProvider()
     settings = settings or Settings()
     if usd_sek is None:
@@ -90,7 +94,8 @@ def scan(symbols, include_day=True, include_swing=True, provider=None, settings=
 
     results = []
     with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = [pool.submit(_scan_symbol, s, include_day, include_swing, provider, settings) for s in symbols]
+        futures = [pool.submit(_scan_symbol, s, include_day, include_swing, provider, settings,
+                               swing_strategy, market_bars) for s in symbols]
         for i, f in enumerate(futures, 1):
             results.extend(f.result())
             if progress:

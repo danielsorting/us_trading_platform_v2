@@ -34,8 +34,20 @@ def _prepare(bars_by_symbol, module):
     return prepared
 
 
-def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None):
+def stop_and_target(module, signal_close, atr, entry):
+    """Stop loss och kursmål enligt strategin (ATR-baserat eller fast procent)."""
+    stop_pct = getattr(module, "STOP_PCT", None)
+    target_pct = getattr(module, "TARGET_PCT", None)
+    stop = signal_close * (1 - stop_pct / 100) if stop_pct else signal_close - module.STOP_ATR * atr
+    target = entry * (1 + target_pct / 100) if target_pct else entry + module.TARGET_R * (entry - stop)
+    return float(stop), float(target)
+
+
+def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None, start=None, end=None):
     """Kör ett backtest. bars_by_symbol: {"AAPL": kurstabell, ...}.
+
+    start/end: handla bara inom detta tidsfönster (indikatorerna räknas ändå
+    på all tidigare data). Öppna positioner stängs vid fönstrets slut.
 
     Returnerar {"trades": tabell, "equity": serie, "stats": dict}.
     """
@@ -51,6 +63,12 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         return commission(qty, settings.commission_per_share_usd, settings.min_commission_usd, price)
 
     timeline = sorted(set().union(*[x.index for x in data.values()]))
+    if start is not None:
+        timeline = [t for t in timeline if t >= pd.Timestamp(start)]
+    if end is not None:
+        timeline = [t for t in timeline if t < pd.Timestamp(end)]
+    if not timeline:
+        return {"trades": pd.DataFrame(), "equity": pd.Series(dtype=float), "stats": _empty_stats(capital_usd)}
     pos_in = {s: {t: i for i, t in enumerate(x.index)} for s, x in data.items()}
     cash = float(capital_usd)
     open_pos, trades, equity_points, last_close = {}, [], [], {}
@@ -107,8 +125,8 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
                 continue
             if is_day and (prev.LAST_OF_DAY or bar.LAST_OF_DAY):
                 continue  # ingen signal över natten, inget köp på dagens sista stapel
-            stop = float(prev.Close - module.STOP_ATR * prev.ATR14)
             entry = float(bar.Open) * (1 + slip)
+            stop, target = stop_and_target(module, float(prev.Close), float(prev.ATR14), entry)
             if entry <= stop:
                 continue
             equity = cash + sum(q["qty"] * last_close.get(s, q["entry"]) for s, q in open_pos.items())
@@ -120,7 +138,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
                 continue
             cash -= qty * entry + c
             p = {"entry": entry, "qty": qty, "stop": stop,
-                 "target": entry + module.TARGET_R * (entry - stop),
+                 "target": target,
                  "time": t, "fees": c, "bars": 0}
             open_pos[sym] = p
             check_exit(sym, p, bar, t, allow_time_exit=False)  # stop/mål kan nås redan första stapeln
@@ -136,10 +154,11 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
     end_t = timeline[-1]
     for sym in list(open_pos):
         close(sym, open_pos[sym], end_t, last_close[sym], "testets slut")
+    window = (timeline[0], end_t)
     equity = pd.Series(dict(equity_points), name="equity")
     equity.iloc[-1] = cash
     trades_df = pd.DataFrame(trades)
-    return {"trades": trades_df, "equity": equity, "stats": _stats(trades_df, equity, capital_usd, data)}
+    return {"trades": trades_df, "equity": equity, "stats": _stats(trades_df, equity, capital_usd, data, window)}
 
 
 def _empty_stats(capital):
@@ -148,7 +167,7 @@ def _empty_stats(capital):
             "max_drawdown_pct": 0.0, "fees_usd": 0.0, "buy_and_hold_pct": None}
 
 
-def _stats(trades, equity, capital, data):
+def _stats(trades, equity, capital, data, window=None):
     s = _empty_stats(capital)
     if len(equity):
         s["end_capital_usd"] = round(float(equity.iloc[-1]), 2)
@@ -164,7 +183,43 @@ def _stats(trades, equity, capital, data):
         s["profit_factor"] = round(wins / losses, 2) if losses > 0 else None
         s["fees_usd"] = round(float(trades.fees_usd.sum()), 2)
     # Jämförelse: köp och behåll alla aktier med lika vikt hela perioden.
-    rets = [x.Close.iloc[-1] / x.Close.iloc[0] - 1 for x in data.values() if len(x)]
+    closes = [x.Close if window is None else x.Close[(x.index >= window[0]) & (x.index <= window[1])]
+              for x in data.values()]
+    rets = [c.iloc[-1] / c.iloc[0] - 1 for c in closes if len(c) > 1]
     if rets:
         s["buy_and_hold_pct"] = round(sum(rets) / len(rets) * 100, 2)
     return {k: (float(v) if hasattr(v, "item") else v) for k, v in s.items()}
+
+
+def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, split=0.7):
+    """Jämför flera strategier på samma aktier.
+
+    Perioden delas i två delar: "test" (första split-andelen) och "kontroll"
+    (resten). En strategi som bara fungerar i testdelen är troligen tur
+    eller överanpassad.
+
+    strategies: {"namn": strategi, ...}. Returnerar en tabell, en rad per strategi.
+    """
+    settings = settings or Settings()
+    times = sorted(set().union(*[b.index for b in bars_by_symbol.values() if b is not None and len(b)]))
+    if not times:
+        return pd.DataFrame()
+    # Börja handla först när det finns data nog för SMA200.
+    first = times[min(220, len(times) - 1)]
+    usable = [t for t in times if t >= first]
+    cut = usable[int(len(usable) * split)] if len(usable) > 10 else None
+    rows = []
+    for name, strat in strategies.items():
+        full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first)["stats"]
+        row = {"Strategi": name, "Avkastning %": full["total_return_pct"],
+               "Köp & behåll %": full["buy_and_hold_pct"], "Affärer": full["trades"],
+               "Vinstandel %": full["win_rate_pct"], "Snitt R": full["avg_r"],
+               "Profit factor": full["profit_factor"], "Största nedgång %": full["max_drawdown_pct"]}
+        if cut is not None:
+            a = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, end=cut)["stats"]
+            b = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=cut)["stats"]
+            row["Testdel %"] = a["total_return_pct"]
+            row["Kontrolldel %"] = b["total_return_pct"]
+            row["Håller i kontroll?"] = "ja" if (a["total_return_pct"] > 0 and b["total_return_pct"] > 0) else "nej"
+        rows.append(row)
+    return pd.DataFrame(rows).sort_values("Avkastning %", ascending=False).reset_index(drop=True)

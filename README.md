@@ -12,9 +12,10 @@ Skriven i Python med ett dashboard i Streamlit.
 | Del | Vad den gör |
 |---|---|
 | **Scanner** | Bedömer aktier med strategierna och visar köpkandidater med stop loss, kursmål, antal aktier och risk i USD och SEK. Filtrerar bort aktier med för låg omsättning. |
-| **Swingtrading** | Dagsdata. Köper rekyler i en upptrend (SMA50/SMA200, RSI, MACD, volym). Stop = pris − 2×ATR, mål = 2R, max 20 dagar. |
-| **Daytrading** | 5-minutersdata. Momentum (EMA9/EMA20, MACD, RSI 50–75, volym). Stop = pris − 1,5×ATR, mål = 2R, stängs senast vid dagens slut. |
+| **Swingtrading** | Dagsdata. Köper rekyler i en upptrend (SMA50/SMA200) först när vändningen är **bekräftad**: RSI stiger två dagar i rad, MACD-linjen och histogrammet stiger, inga nya bottnar och stängning över gårdagens högsta kurs. Köper aldrig när RSI eller MACD är på väg ner. Stop = pris − 2×ATR, mål = 2R, max 20 dagar. |
+| **Daytrading** | 5-minutersdata. Momentum (EMA9/EMA20, stigande MACD, stigande RSI 50–75, volym). Stop = pris − 1,5×ATR, mål = 2R, stängs senast vid dagens slut. |
 | **Riskhantering** | Positionsstorlek så att du förlorar högst vald risk om stop loss slår till. Stöd för delaktier. Växlar mellan SEK och USD. |
+| **Jämför strategier** | Fem swing-varianter (grund, marknadsfilter, relativ styrka, mål 3R, fast +2 %/−2 %) testas på samma aktier. Perioden delas i testdel (70 %) och kontrolldel (30 %) för att avslöja tur. |
 | **Backtest** | Historiskt test utan framtidsinformation: köp på stapeln efter signalen, gap-hantering, courtage och slippage, gemensam kassa och max antal positioner. Jämför med "köp och behåll". |
 | **Simulerad handel** | Papper-konto med låtsaspengar. En *handelsrunda* säljer positioner som nått stop/mål/tidsgräns och köper nya kandidater. Kontot sparas i `paper_account.json`. |
 | **Dashboard** | Fyra flikar: Scanner, Backtest, Simulerad handel och Om. |

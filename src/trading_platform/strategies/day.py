@@ -21,8 +21,8 @@ def conditions(x):
     return pd.DataFrame(
         {
             "intradagstrend": (x.Close > x.EMA20) & (x.EMA9 > x.EMA20),
-            "momentum": x.MACD_HIST > x.MACD_HIST.shift(1),
-            "RSI-styrka": (x.RSI14 > 50) & (x.RSI14 < 75),
+            "MACD stiger": (x.MACD > x.MACD.shift(1)) & (x.MACD_HIST > x.MACD_HIST.shift(1)),
+            "RSI stiger": (x.RSI14 > x.RSI14.shift(1)) & (x.RSI14 > 50) & (x.RSI14 < 75),
             "relativ volym": x.Volume > x.VOL20,
         },
         index=x.index,

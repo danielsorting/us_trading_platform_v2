@@ -39,3 +39,16 @@ def test_scanner_reports_data_errors(provider):
 
     rows = scan(["AAPL"], provider=Broken(), settings=Settings())
     assert {r["signal"] for r in rows} == {"DATA_ERROR"}
+
+
+def test_swing_never_buys_when_rsi_or_macd_falling(bars):
+    """Användarens regel: köp aldrig när RSI eller MACD är på väg ner,
+    och bara efter bekräftad botten (kursen har vänt upp)."""
+    for seed in range(5):
+        x, sig = entry_signals(swing, bars(1500, seed=seed))
+        b = x[sig]
+        prev = x.shift(1)[sig]
+        prev2 = x.shift(2)[sig]
+        assert (b.RSI14 > prev.RSI14).all() and (prev.RSI14 > prev2.RSI14).all()
+        assert (b.MACD > prev.MACD).all() and (b.MACD_HIST > prev.MACD_HIST).all()
+        assert (b.Close > prev.High).all()

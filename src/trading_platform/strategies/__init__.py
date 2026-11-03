@@ -14,7 +14,7 @@ from ..indicators import enrich
 
 def entry_signals(module, bars):
     """Returnerar (indikatortabell, sant/falskt-serie för köpsignal)."""
-    x = enrich(bars.dropna())
+    x = enrich(bars.dropna(subset=["Open", "High", "Low", "Close", "Volume"]))
     cond = module.conditions(x)
     return x, cond.all(axis=1) & cond.notna().all(axis=1)
 
@@ -28,8 +28,10 @@ def evaluate_last(module, symbol, bars):
     cond = module.conditions(x).iloc[-1]
     a = x.iloc[-1]
     ok = int(cond.sum())
-    stop = float(a.Close - module.STOP_ATR * a.ATR14)
-    target = float(a.Close + module.TARGET_R * (a.Close - stop))
+    stop_pct = getattr(module, "STOP_PCT", None)
+    target_pct = getattr(module, "TARGET_PCT", None)
+    stop = float(a.Close * (1 - stop_pct / 100)) if stop_pct else float(a.Close - module.STOP_ATR * a.ATR14)
+    target = float(a.Close * (1 + target_pct / 100)) if target_pct else float(a.Close + module.TARGET_R * (a.Close - stop))
     return {
         "symbol": symbol,
         "strategy": name,

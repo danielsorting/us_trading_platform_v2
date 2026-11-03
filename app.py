@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 import pandas as pd
 import streamlit as st
 
-from trading_platform.backtest import run_backtest
+from trading_platform.backtest import compare_strategies, run_backtest
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import YahooResearchProvider
@@ -17,10 +17,12 @@ from trading_platform.paper_trader import latest_prices, run_paper_cycle
 from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
 from trading_platform.strategies import day, swing
+from trading_platform.strategies.variants import MARKET_SYMBOL, add_market, needs_market, swing_variants
 from trading_platform.universe import get_symbols
 
 PAPER_FILE = PROJECT_ROOT / "paper_account.json"
 STRATEGIES = {"Swingtrading": swing, "Daytrading": day}
+VARIANTS = swing_variants()
 
 COLUMN_NAMES = {
     "symbol": "Aktie", "strategy": "Strategi", "signal": "Signal", "price": "Pris (USD)",
@@ -47,6 +49,17 @@ def get_history(symbol, period, interval):
     return provider.history(symbol, period, interval)
 
 
+def market_bars_for(strategy, period="2y"):
+    """SPY-kurser om strategin behöver marknadsdata, annars None."""
+    if not needs_market([strategy]):
+        return None
+    try:
+        return get_history(MARKET_SYMBOL, period, "1d")
+    except Exception:
+        st.warning("Kunde inte hämta S&P 500 (SPY). Marknadsfiltret blockerar då alla köp.")
+        return None
+
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -69,6 +82,9 @@ with st.sidebar:
                        swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
                        max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
                        allow_fractional_shares=fractional)
+    variant_name = st.selectbox("Swing-variant i scanner och simulerad handel", list(VARIANTS),
+                                help="Välj den variant som klarat sig bäst under fliken Backtest → Jämför.")
+    swing_strategy = VARIANTS[variant_name]
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
@@ -108,7 +124,8 @@ with tab_scan:
     if st.button("Kör skanning", type="primary", disabled=not symbols or not chosen):
         bar = st.progress(0.0, text="Startar…")
         res = scan(symbols, "Daytrading" in chosen, "Swingtrading" in chosen, provider=provider,
-                   settings=settings, usd_sek=usd_sek,
+                   settings=settings, usd_sek=usd_sek, swing_strategy=swing_strategy,
+                   market_bars=market_bars_for(swing_strategy),
                    progress=lambda i, n: bar.progress(i / n, text=f"Skannat {i} av {n} aktier"))
         bar.empty()
         st.session_state["scan_results"] = pd.DataFrame(res)
@@ -131,9 +148,18 @@ with tab_scan:
 with tab_bt:
     st.write("Testa hur en strategi hade gått historiskt. Köp sker alltid på stapeln **efter** signalen, "
              "och courtage och slippage räknas med.")
-    strat_name = st.radio("Strategi", list(STRATEGIES), horizontal=True, key="bt_strat")
-    module = STRATEGIES[strat_name]
-    if module is swing:
+    bt_mode = st.radio("Vad vill du göra?", ["Jämför swing-varianter", "Testa en strategi i detalj"],
+                       horizontal=True, key="bt_mode")
+    if bt_mode == "Jämför swing-varianter":
+        strat_name = None
+        module = swing
+        st.caption("Alla varianter testas på samma aktier och period. Perioden delas: de första 70 % är "
+                   "*testdel* och de sista 30 % är *kontrolldel*. En bra strategi ska gå plus i båda.")
+    else:
+        choices = {**{k: v for k, v in VARIANTS.items()}, "Daytrading": day}
+        strat_name = st.selectbox("Strategi", list(choices), key="bt_strat")
+        module = choices[strat_name]
+    if module is not day:
         period = st.select_slider("Period", ["1y", "2y", "5y", "10y"], value="5y",
                                   format_func=lambda p: p.replace("y", " år"))
         interval = "1d"
@@ -143,7 +169,7 @@ with tab_bt:
         interval = "5m"
         st.caption("Yahoo har bara 5-minutersdata cirka 60 dagar bakåt, så daytrading kan bara testas på kort period.")
     bt_symbols = parse_symbols(st.text_area("Aktier", ",".join(settings.watchlist), height=70, key="bt_syms"))
-    default_cap = int(settings.swing_capital if module is swing else settings.day_capital)
+    default_cap = int(settings.day_capital if module is day else settings.swing_capital)
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
@@ -157,8 +183,35 @@ with tab_bt:
         missing = [s for s, b in bars.items() if b is None or len(b) < module.MIN_BARS]
         if missing:
             st.warning("För lite data för: " + ", ".join(missing))
-        with st.spinner("Kör backtest…"):
-            st.session_state["bt"] = (strat_name, run_backtest(bars, module, sek_to_usd(bt_cap_sek, usd_sek), settings))
+        cap_usd = sek_to_usd(bt_cap_sek, usd_sek)
+        if module is not day:
+            mkt = market_bars_for(VARIANTS["Swing + marknadsfilter"], period)
+            bars = {s: add_market(b, mkt) for s, b in bars.items()}
+        if strat_name is None:
+            with st.spinner("Jämför varianter… (kan ta en stund)"):
+                st.session_state["bt_compare"] = compare_strategies(bars, VARIANTS, cap_usd, settings)
+            st.session_state.pop("bt", None)
+        else:
+            with st.spinner("Kör backtest…"):
+                st.session_state["bt"] = (strat_name, run_backtest(bars, module, cap_usd, settings))
+            st.session_state.pop("bt_compare", None)
+
+    if "bt_compare" in st.session_state:
+        cmp = st.session_state["bt_compare"]
+        st.subheader("Jämförelse av swing-varianter")
+        if len(cmp):
+            st.dataframe(cmp, width="stretch", hide_index=True)
+            good = cmp[(cmp.get("Håller i kontroll?") == "ja")] if "Håller i kontroll?" in cmp else cmp.iloc[0:0]
+            if len(good):
+                st.success(f"Bäst av de som går plus i både test- och kontrolldel: **{good.iloc[0].Strategi}**. "
+                           "Välj den i sidopanelen för scanner och simulerad handel.")
+            else:
+                st.warning("Ingen variant gick plus i både test- och kontrolldel med dessa aktier och denna period. "
+                           "Prova fler aktier eller en längre period innan du drar slutsatser.")
+            st.caption("Tips: testa på många aktier (gärna 20+) och den längsta perioden. Ju fler affärer, "
+                       "desto säkrare resultat. Jämför alltid med kolumnen 'Köp & behåll'.")
+        else:
+            st.warning("Ingen data att jämföra.")
 
     if "bt" in st.session_state:
         name, r = st.session_state["bt"]
@@ -204,7 +257,8 @@ with tab_paper:
     b1, b2 = st.columns(2)
     if b1.button("▶️ Kör handelsrunda", type="primary", disabled=not paper_syms):
         with st.spinner("Skannar och handlar…"):
-            rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek)
+            rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek,
+                        swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
             prices = latest_prices(provider, set(paper_syms) | set(broker.positions))
             st.session_state["paper_prices"] = prices
             st.session_state["paper_actions"] = run_paper_cycle(broker, rows, settings, prices)
@@ -260,9 +314,9 @@ with tab_info:
     st.markdown("""
 **Så här fungerar det**
 - **Scanner** bedömer varje aktie med strategiernas villkor. *Köpkandidat* betyder att alla villkor är uppfyllda.
-- **Swingtrading** (dagsdata): upptrend (över SMA200, SMA50 > SMA200), nylig rekyl (RSI ≤ 45), RSI och MACD vänder upp, normal volym.
+- **Swingtrading** (dagsdata): upptrend (över SMA200, SMA50 > SMA200), nylig rekyl (RSI ≤ 45) och **bekräftad vändning**: RSI stiger två dagar i rad, MACD-linjen och histogrammet stiger, inga nya bottnar och stängning över gårdagens högsta kurs. Köper aldrig när RSI eller MACD är på väg ner.
   Stop = pris − 2 × ATR, mål = 2 × risken, max 20 handelsdagar.
-- **Daytrading** (5-minutersdata): kurs över EMA20, EMA9 > EMA20, MACD stiger, RSI 50–75, hög volym.
+- **Daytrading** (5-minutersdata): kurs över EMA20, EMA9 > EMA20, MACD-linjen och histogrammet stiger, RSI stiger och ligger 50–75, hög volym.
   Stop = pris − 1,5 × ATR, mål = 2 × risken, stängs senast vid dagens slut.
 - **Positionsstorlek**: så många aktier att du förlorar högst *risk per affär* om stop loss slår till.
 
