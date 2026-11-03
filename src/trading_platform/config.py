@@ -35,6 +35,8 @@ class Settings:
     # Parkera ledigt kapital i en indexfond (SPY) när roboten inte har affärer.
     park_idle_in_index: bool = False
     park_symbol: str = "SPY"
+    # Vilken swing-variant scanner och simulerad handel använder som standard.
+    swing_variant: str = "Swing – grund"
     # Max antal aktier per skanning när hela marknaden väljs.
     max_symbols_per_scan: int = 300
 

@@ -86,7 +86,8 @@ def parse_symbols(text):
 defaults = load_settings()
 RISK_OPTIONS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
 st.session_state.setdefault("sb_risk", float(defaults.risk_per_trade_pct))
-st.session_state.setdefault("sb_variant", list(VARIANTS)[0])
+st.session_state.setdefault("sb_variant", defaults.swing_variant if defaults.swing_variant in VARIANTS
+                            else list(VARIANTS)[0])
 
 
 def use_best(variant, risk=None):
