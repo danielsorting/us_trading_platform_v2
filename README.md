@@ -22,6 +22,16 @@ Skriven i Python med ett dashboard i Streamlit.
 | **Simulerad handel** | Papper-konto med låtsaspengar. En *handelsrunda* säljer positioner som nått stop/mål/tidsgräns och köper nya kandidater. Kontot sparas i `paper_account.json`. |
 | **Dashboard** | Fyra flikar: Scanner, Backtest, Simulerad handel och Om. |
 
+## Automatik (körs av sig själv)
+
+| Vad | När | Var |
+|---|---|---|
+| **Automatisk handel** (låtsaspengar): daytrading på dagens bästa + swing på bevakningslistan | Var 15:e minut under USA-börsens öppettider, swing-köp 21:30 svensk tid, dagpositioner stängs före 22:00 | `.github/workflows/auto_trade.yml` → `scripts/auto_trade.py`. Konto och logg i `paper/`, visas i fliken 🤖 Automatisk handel |
+| **Nattrapport** med riktiga kurser (swing 5 år, daytrading 60 dagar) | Vardagar 23:37 svensk tid | `.github/workflows/nightly.yml` → `scripts/nightly_report.py`. Rapport i `reports/latest.md` |
+| **Morgonförbättring**: Claude läser rapporten, gör en förbättring, testar och föreslår den som pull request | Vardagsmorgnar | Schemalagd uppgift i Claude. Du godkänner med ett klick på GitHub |
+
+Stäng av automatisk handel: sätt `"auto_trading_enabled": false` i `config.json`.
+
 ## Starta dashboarden på nätet (rekommenderas för gamla Mac-datorer)
 
 Streamlit Community Cloud kör appen gratis direkt från GitHub. Inget behöver installeras på din dator.

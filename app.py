@@ -209,7 +209,8 @@ c1.metric("Daytrading-budget", f"{settings.day_capital:,.0f} SEK", help=f"≈ {s
 c2.metric("Swingtrading-budget", f"{settings.swing_capital:,.0f} SEK", help=f"≈ {sek_to_usd(settings.swing_capital, usd_sek):,.0f} USD")
 c3.metric("Max risk per affär (swing)", f"{settings.swing_capital * risk / 100:,.0f} SEK")
 
-tab_scan, tab_bt, tab_paper, tab_info = st.tabs(["🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
+tab_auto, tab_scan, tab_bt, tab_paper, tab_info = st.tabs(
+    ["🤖 Automatisk handel", "🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
 
 # ---------------------------------------------------------------- scanner
 with tab_scan:
@@ -739,6 +740,71 @@ with tab_paper:
             st.rerun()
 
 # ---------------------------------------------------------------- om
+# ---------------------------------------------------------------- automatisk handel (GitHub)
+with tab_auto:
+    AUTO_DIR = PROJECT_ROOT / "paper"
+    st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 15:e minut** under börsens öppettider "
+             "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
+    st.caption(f"Daytrading: {settings.day_allocation_pct:.0f} % av kontot, de {settings.auto_day_top_n} bästa "
+               f"bland de 300 mest omsatta, ny sökning var 30:e minut, stängs före 22:00. "
+               f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, köp en gång per "
+               f"dag kl 21:30 på din bevakningslista, stop loss kontrolleras var 15:e minut. "
+               f"Inställningarna hämtas från config.json.")
+    auto_acc_file = AUTO_DIR / "auto_account.json"
+    if not auto_acc_file.exists():
+        st.info("Bakgrundsroboten har inte handlat än. Den startar automatiskt nästa gång börsen är öppen. "
+                "Sidan uppdateras när roboten har sparat (var 15:e minut).")
+    else:
+        auto_broker = PaperBroker(state_file=auto_acc_file)
+        auto_state = {}
+        try:
+            auto_state = json.loads((AUTO_DIR / "auto_state.json").read_text())
+        except Exception:
+            pass
+        auto_prices = st.session_state.get("auto_prices", {})
+        acc = auto_broker.get_account(auto_prices)
+        park_v = sum(p["quantity"] * auto_prices.get(sy, p["avg_price"]) for sy, p in auto_broker.positions.items()
+                     if p.get("strategy") == "park")
+        trades_a = {sy: p for sy, p in auto_broker.positions.items() if p.get("strategy") != "park"}
+        stock_v = sum(p["quantity"] * auto_prices.get(sy, p["avg_price"]) for sy, p in trades_a.items())
+        m = st.columns(5)
+        m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK",
+                    help=f"{acc['equity']:,.2f} USD. Klicka 'Uppdatera kurser' för aktuellt värde.")
+        m[1].metric(f"I aktier ({len(trades_a)} st)", f"{usd_to_sek(stock_v, usd_sek):,.0f} SEK")
+        m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_v, usd_sek):,.0f} SEK")
+        m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK")
+        m[4].metric("Resultat sedan start", f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %")
+        if auto_state.get("last_run"):
+            st.caption(f"Senaste körning: {sv_time(auto_state['last_run'])} (svensk tid).")
+        if st.button("🔄 Uppdatera kurser", key="auto_refresh", disabled=not auto_broker.positions):
+            st.session_state["auto_prices"] = latest_prices(provider, list(auto_broker.positions))
+            st.rerun()
+        st.subheader("Öppna positioner")
+        if auto_broker.positions:
+            st.dataframe(pd.DataFrame([{
+                "Aktie": sy, "Strategi": p.get("strategy"), "Antal": p["quantity"], "Köpkurs": round(p["avg_price"], 2),
+                "Senaste kurs": auto_prices.get(sy), "Stop loss": p.get("stop"),
+                "Kursmål": None if p.get("target") is None else round(p["target"], 2),
+                "Orealiserat (USD)": None if sy not in auto_prices else round(p["quantity"] * (auto_prices[sy] - p["avg_price"]), 2),
+                "Öppnad (svensk tid)": sv_time(p["opened"])} for sy, p in auto_broker.positions.items()]),
+                width="stretch", hide_index=True)
+        else:
+            st.caption("Inga öppna positioner.")
+        closed = [o for o in auto_broker.orders if o.get("pnl") is not None and o.get("strategy") != "park"]
+        if closed:
+            pnl = [o["pnl"] for o in closed]
+            st.caption(f"Avslutade affärer: {len(pnl)} · vinstandel {sum(x > 0 for x in pnl) / len(pnl) * 100:.0f} % "
+                       f"· summa {sum(pnl):+.2f} USD (≈ {usd_to_sek(sum(pnl), usd_sek):+,.0f} SEK)")
+        st.subheader("Logg (senaste 100 händelserna)")
+        try:
+            log_df = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(100).iloc[::-1]
+            st.dataframe(log_df.rename(columns={"tid": "Tid (svensk)", "typ": "Typ", "symbol": "Aktie",
+                                                "action": "Händelse", "detail": "Detaljer"}),
+                         width="stretch", hide_index=True)
+        except Exception:
+            st.caption("Ingen logg än.")
+    st.caption("Vill du starta en körning direkt, ändra något eller börja om? Säg till i chatten så fixar jag det.")
+
 with tab_info:
     st.markdown("""
 **Så här fungerar det**

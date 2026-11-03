@@ -22,7 +22,10 @@ def make_intraday(days=10, seed=1, vol=0.003):
     return make_bars(len(idx), "5min", seed, 0, vol).set_index(idx)
 
 
-class FakeProvider:
+from trading_platform.data import MarketDataProvider
+
+
+class FakeProvider(MarketDataProvider):
     def __init__(self, bars_by_symbol=None, rate=10.0):
         self.bars = bars_by_symbol or {}
         self.rate = rate

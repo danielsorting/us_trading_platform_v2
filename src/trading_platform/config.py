@@ -35,6 +35,10 @@ class Settings:
     # Parkera ledigt kapital i en indexfond (SPY) när roboten inte har affärer.
     park_idle_in_index: bool = False
     park_symbol: str = "SPY"
+    # Automatisk handel i bakgrunden (GitHub Actions, scripts/auto_trade.py).
+    auto_trading_enabled: bool = True
+    auto_day_top_n: int = 10
+    auto_max_move_pct: float = 2.0
     # Vilken swing-variant scanner och simulerad handel använder som standard.
     swing_variant: str = "Swing – grund"
     # Max antal aktier per skanning när hela marknaden väljs.
