@@ -16,6 +16,15 @@ class MarketDataProvider(ABC):
         """Aktuell växelkurs USD→SEK, eller None om den inte kan hämtas."""
         return None
 
+    def latest_extended(self, symbols):
+        """Senaste pris INKLUSIVE förhandel/efterhandel: {aktie: (pris, tid)}.
+        Standard: senaste stängningskurs från vanlig data."""
+        out = {}
+        for sym, df in self.history_many(list(symbols), "5d", "5m").items():
+            if df is not None and len(df):
+                out[sym] = (float(df.Close.iloc[-1]), df.index[-1])
+        return out
+
     def history_many(self, symbols, period, interval, progress=None):
         """Kurser för många aktier. Standard: en i taget (parallellt)."""
         from concurrent.futures import ThreadPoolExecutor
@@ -54,7 +63,15 @@ class YahooResearchProvider(MarketDataProvider):
             df.index = df.index.tz_convert("America/New_York").tz_localize(None)
         return df[["Open", "High", "Low", "Close", "Volume"]]
 
-    def history_many(self, symbols, period, interval, progress=None, chunk=100):
+    def latest_extended(self, symbols):
+        """Senaste pris inklusive förhandel och efterhandel (prepost)."""
+        out = {}
+        for sym, df in self.history_many(list(symbols), "2d", "5m", prepost=True).items():
+            if df is not None and len(df):
+                out[sym] = (float(df.Close.iloc[-1]), df.index[-1])
+        return out
+
+    def history_many(self, symbols, period, interval, progress=None, chunk=100, prepost=False):
         """Hämtar många aktier i omgångar med yfinance.download (mycket snabbare
         än en i taget). Aktier som saknar data får värdet None."""
         import yfinance as yf
@@ -65,7 +82,7 @@ class YahooResearchProvider(MarketDataProvider):
             part = symbols[start:start + chunk]
             try:
                 df = yf.download(part, period=period, interval=interval, group_by="ticker",
-                                 auto_adjust=True, threads=True, progress=False)
+                                 auto_adjust=True, threads=True, progress=False, prepost=prepost)
             except Exception:
                 df = None
             for sym in part:
@@ -137,6 +154,9 @@ class PrefetchedProvider(MarketDataProvider):
 
     def history_many(self, symbols, period, interval, progress=None):
         return self.base.history_many(symbols, period, interval, progress=progress)
+
+    def latest_extended(self, symbols):
+        return self.base.latest_extended(symbols)
 
     def usd_sek(self):
         return self.base.usd_sek()

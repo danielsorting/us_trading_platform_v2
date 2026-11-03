@@ -77,3 +77,19 @@ def rank_day_candidates(intraday_by_symbol):
     if "score" not in df:
         df["score"] = None
     return df.sort_values(["is_candidate", "score"], ascending=[False, False], na_position="last").reset_index(drop=True)
+
+
+def add_extended_check(ranked, extended, max_move_pct=2.0):
+    """Lägger till senaste pris inklusive förhandel och markerar aktier som
+    rört sig för mycket sedan signalen (t.ex. stort fall i förhandeln).
+
+    extended: {aktie: (pris, tid)} från provider.latest_extended().
+    """
+    if ranked is None or not len(ranked):
+        return ranked
+    df = ranked.copy()
+    ext = df.symbol.map(lambda s: extended.get(s, (None, None))[0])
+    df["ext_price"] = ext
+    df["ext_move_pct"] = ((ext / df.price - 1) * 100).round(2)
+    df["move_ok"] = df.ext_move_pct.abs().le(max_move_pct) | df.ext_move_pct.isna()
+    return df

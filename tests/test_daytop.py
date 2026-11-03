@@ -51,3 +51,13 @@ def test_close_all_day_positions(tmp_path):
     b.submit_order("S", "buy", 1, price=100, strategy="swing")
     close_all_day_positions(b, {"D": 101})
     assert list(b.positions) == ["S"]
+
+
+def test_extended_check_blocks_big_premarket_moves():
+    import pandas as pd
+    from trading_platform.daytop import add_extended_check
+    ranked = pd.DataFrame({"symbol": ["AAPL", "MSFT", "X"], "price": [338.32, 100.0, 50.0]})
+    ext = {"AAPL": (324.51, None), "MSFT": (101.0, None)}
+    out = add_extended_check(ranked, ext, 2.0)
+    assert out.set_index("symbol").loc["AAPL", "ext_move_pct"] == -4.08
+    assert out.move_ok.tolist() == [False, True, True]  # X saknar pris → inte blockerad
