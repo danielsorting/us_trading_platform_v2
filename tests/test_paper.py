@@ -54,7 +54,7 @@ def test_cycle_sells_on_stop_target_and_old_day_positions(tmp_path):
 def test_parking_buys_spy_and_sells_it_to_fund_trades(tmp_path):
     from dataclasses import replace
     b = broker(tmp_path, cash=1000)
-    s = replace(Settings(), park_idle_in_index=True)
+    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=0, swing_allocation_pct=100)
     run_paper_cycle(b, [], s, {"SPY": 500})
     assert b.positions["SPY"]["strategy"] == "park"
     assert b.cash < 50  # nästan allt parkerat
@@ -66,3 +66,17 @@ def test_parking_buys_spy_and_sells_it_to_fund_trades(tmp_path):
     assert b.positions["SPY"]["strategy"] == "park"  # resten parkerad igen
     run_paper_cycle(b, [], s, {"SPY": 400, "A": 100})
     assert "SPY" in b.positions  # parkering har ingen stop loss
+
+
+def test_parking_keeps_day_trading_share_as_cash(tmp_path):
+    """Daytrading-andelen ska ligga kvar som kontanter (ingen SPY-handel vid varje daytrade)."""
+    from dataclasses import replace
+    b = broker(tmp_path, cash=10_000)
+    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=20, swing_allocation_pct=80)
+    run_paper_cycle(b, [], s, {"SPY": 500})
+    assert 2_000 <= b.cash <= 2_300  # ca 20 % + 1 % buffert kvar
+    rows = [{"symbol": "A", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.0, "target_reference": 102.0}]
+    acts = run_paper_cycle(b, rows, replace(s, max_position_pct_of_strategy_capital=10), {"SPY": 500, "A": 100})
+    assert "A" in b.positions
+    assert not any("parkering" in a["action"] for a in acts)  # ingen SPY-försäljning behövdes

@@ -33,7 +33,11 @@ def _free_cash_from_park(broker, settings, prices, needed, actions):
 
 
 def _park_idle_cash(broker, settings, prices, actions):
-    """Köper SPY för ledig kassa (utom en liten buffert)."""
+    """Köper SPY för ledig kassa.
+
+    Daytrading-andelen (t.ex. 20 %) plus en liten buffert ligger alltid kvar som
+    kontanter, så att daytrading inte behöver sälja och köpa SPY vid varje affär
+    (det kostade courtage i onödan). Små belopp parkeras inte heller."""
     sym = settings.park_symbol
     price = prices.get(sym)
     if not price:
@@ -43,8 +47,9 @@ def _park_idle_cash(broker, settings, prices, actions):
     if held and held.get("strategy") != PARK:
         return  # roboten äger redan SPY som vanlig affär
     equity = broker.get_account(prices)["equity"]
-    spend = broker.cash - equity * PARK_BUFFER_PCT / 100
-    if spend < 50:
+    keep_pct = PARK_BUFFER_PCT + max(0.0, float(settings.day_allocation_pct))
+    spend = broker.cash - equity * keep_pct / 100
+    if spend < max(50.0, equity * 0.02):
         return
     qty = round(spend * 0.98 / price - 0.00005, 4)
     if qty <= 0:
