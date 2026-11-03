@@ -255,8 +255,11 @@ def settings_panel(base, prefix, disabled):
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key="sb_risk")
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
-    max_pos_pct = b.slider("Max storlek per position (% av strategins kapital)", 5, 100,
+    max_pos_pct = b.slider("Max storlek per swingaffär (% av swingkapitalet)", 5, 100,
                            int(base.max_position_pct_of_strategy_capital), 5, disabled=disabled, key=k("maxpct"))
+    day_pct_max = b.slider("Max storlek per daytrade (% av daytrading-kapitalet)", 5, 100,
+                           int(base.day_max_position_pct or base.max_position_pct_of_strategy_capital), 5,
+                           disabled=disabled, key=k("daymaxpct"))
     fractional = c.checkbox("Tillåt delaktier", value=base.allow_fractional_shares, disabled=disabled,
                             key=k("frac"), help="T.ex. 0,35 aktie. Avanza säljer bara hela aktier, därför är "
                                                 "det avstängt för att likna verkligheten.")
@@ -274,7 +277,8 @@ def settings_panel(base, prefix, disabled):
     out = replace(base, total_capital=float(capital), day_allocation_pct=float(day_pct),
                   swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
                   max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
-                  allow_fractional_shares=fractional, park_idle_in_index=park)
+                  allow_fractional_shares=fractional, park_idle_in_index=park,
+                  day_max_position_pct=float(day_pct_max))
     m = st.columns(3)
     m[0].metric("Daytrading-budget", f"{out.day_capital:,.0f} SEK")
     m[1].metric("Swingtrading-budget", f"{out.swing_capital:,.0f} SEK")

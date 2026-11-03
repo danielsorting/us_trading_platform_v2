@@ -19,6 +19,7 @@ class Settings:
     risk_per_trade_pct: float = 0.5
     max_positions_per_strategy: int = 3
     max_position_pct_of_strategy_capital: float = 25
+    day_max_position_pct: float | None = None   # egen gräns för daytrades (None = samma som ovan)
     # Delaktier (t.ex. 0,35 aktie). Behövs ofta med litet kapital.
     allow_fractional_shares: bool = True
     scan_mode: str = "watchlist"

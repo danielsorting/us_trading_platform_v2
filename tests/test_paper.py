@@ -133,3 +133,16 @@ def test_strategy_budget_is_never_exceeded(tmp_path):
     used = sum(p["quantity"] * 100 for p in b.positions.values())
     assert used <= 2_000 and b.positions["A"]["quantity"] == 14  # 70 % av 2 000 USD
     assert any("budgeten är fullt använd" in a["detail"] for a in acts)
+
+
+def test_day_trades_have_their_own_max_size(tmp_path):
+    from dataclasses import replace
+    b = broker(tmp_path, cash=10_000)
+    s = replace(Settings(), day_allocation_pct=20, swing_allocation_pct=80, risk_per_trade_pct=2,
+                max_position_pct_of_strategy_capital=70, day_max_position_pct=25, allow_fractional_shares=False,
+                max_fee_share_of_profit_pct=1000, max_positions_per_strategy=8)
+    rows = [{"symbol": x, "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.0, "target_reference": 102.0} for x in "ABCD"]
+    run_paper_cycle(b, rows, s, {x: 100.0 for x in "ABCD"})
+    assert sorted(b.positions) == list("ABCD")  # fyra affärer ryms nu
+    assert all(p["quantity"] == 5 for p in b.positions.values())  # 25 % av 2 000 USD = 500 USD

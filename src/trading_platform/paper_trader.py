@@ -178,8 +178,10 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
                             "detail": f"Kursen ({price:.2f}) ligger redan under stop loss ({stop:.2f}) – signalen gäller inte längre."})
             continue
         cap = equity * alloc.get(strat, 0) / 100
-        qty = position_size(cap, price, stop, settings.risk_per_trade_pct,
-                            settings.max_position_pct_of_strategy_capital,
+        max_pct = settings.max_position_pct_of_strategy_capital
+        if strat == "day" and getattr(settings, "day_max_position_pct", None):
+            max_pct = settings.day_max_position_pct  # egen gräns för daytrades
+        qty = position_size(cap, price, stop, settings.risk_per_trade_pct, max_pct,
                             settings.allow_fractional_shares)
         # Strategins budget: alla öppna positioner i strategin får tillsammans högst vara strategins kapital.
         used = sum(p["quantity"] * prices.get(s2, p["avg_price"]) for s2, p in held.items()
@@ -196,7 +198,7 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
         if qty <= 0:
             actions.append({"symbol": sym, "action": "hoppar över",
                             "detail": f"För lite kapital: en aktie kostar {price:,.2f} USD, men högst "
-                                      f"{cap * settings.max_position_pct_of_strategy_capital / 100:,.0f} USD får "
+                                      f"{cap * max_pct / 100:,.0f} USD får "
                                       "läggas per affär (hela aktier)."})
             continue
         target = price + (row["target_reference"] - row["price"]) if row.get("target_reference") else None

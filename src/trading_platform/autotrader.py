@@ -59,6 +59,8 @@ def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, ma
     # top_n = hur många av dagens bästa som prövas; antal samtidiga = max positioner per strategi.
     # Räcker inte pengarna hoppar roboten över resten.
     s_day = replace(settings, day_allocation_pct=float(day_share), swing_allocation_pct=float(100 - day_share))
+    if getattr(settings, "day_max_position_pct", None):
+        s_day = replace(s_day, max_position_pct_of_strategy_capital=float(settings.day_max_position_pct))
     acts += run_paper_cycle(broker, cands, s_day, prices,
                             limits={"day": min(top_n, settings.max_positions_per_strategy)}, ny_now=ny_now)
     if not cands:
