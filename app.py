@@ -187,6 +187,9 @@ if "pending_best" in st.session_state:
 
 with st.sidebar:
     st.header("Kapital och risk")
+    st.info("**Gäller bara den här webbsidan:** 🔎 Scanner, 📈 Backtest och 🧪 Simulerad handel.\n\n"
+            "🤖 **Automatisk handel (bakgrundsroboten) påverkas INTE.** Den har egna inställningar "
+            "som syns under fliken 🤖 Automatisk handel. Vill du ändra dem – säg till Claude.")
     capital = st.number_input("Totalt kapital (SEK)", min_value=1000, value=int(defaults.total_capital), step=1000)
     day_pct = st.slider("Andel till daytrading (%)", 0, 100, int(defaults.day_allocation_pct), 5)
     st.caption(f"Andel till swingtrading: {100 - day_pct} %")
@@ -214,7 +217,7 @@ with st.sidebar:
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
     rt_ok, rt_text = realtime_status()
     (st.success if rt_ok else st.info)(rt_text)
-    st.caption("Inställningarna här gäller bara tills sidan laddas om. Startvärdena finns i config.json.")
+    st.caption("Ändringar här gäller bara tills sidan laddas om, och bara på webbsidan – aldrig bakgrundsroboten.")
 
 st.title("US Trading Platform")
 st.caption("Scanner · Backtest · Simulerad handel — inga riktiga order skickas")
@@ -708,13 +711,19 @@ with tab_auto:
     AUTO_DIR = PROJECT_ROOT / "paper"
     st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut** under börsens öppettider "
              "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
-    st.caption(f"Daytrading: {settings.day_allocation_pct:.0f} % av kontot, strategi **{settings.day_variant}**, "
-               f"de {settings.auto_day_top_n} bästa "
-               f"bland de 300 mest omsatta, ny sökning var 30:e minut, stängs före 22:00. "
-               f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, ny sökning var "
-               f"30:e minut bland {'de 300 mest omsatta + din bevakningslista' if settings.swing_universe == 'liquid' else 'din bevakningslista'}, "
-               "stop loss kontrolleras var 5:e minut. "
-               f"Inställningarna hämtas från config.json.")
+    rb = defaults  # robotens egna inställningar (config.json) – INTE reglagen till vänster
+    with st.expander("⚙️ Robotens inställningar (påverkas inte av reglagen till vänster)", expanded=False):
+        st.markdown(
+            f"- **Kapital:** {rb.total_capital:,.0f} SEK\n"
+            f"- **Daytrading:** {rb.day_allocation_pct:.0f} % · strategi **{rb.day_variant}** · de "
+            f"{rb.auto_day_top_n} bästa bland de 300 mest omsatta · stängs före 22:00\n"
+            f"- **Swing:** {rb.swing_allocation_pct:.0f} % · strategi **{rb.swing_variant}** · söker bland "
+            f"{'de 300 mest omsatta + din bevakningslista' if rb.swing_universe == 'liquid' else 'din bevakningslista'}\n"
+            f"- **Risk per affär:** {rb.risk_per_trade_pct:g} % · **max positioner per strategi:** "
+            f"{rb.max_positions_per_strategy} · **max storlek per position:** {rb.max_position_pct_of_strategy_capital:.0f} %\n"
+            f"- **Delaktier:** {'på' if rb.allow_fractional_shares else 'av'} · **parkering i S&P 500:** "
+            f"{'på' if rb.park_idle_in_index else 'av'} · **courtage:** {rb.commission_pct:g} %\n\n"
+            "Vill du ändra något här – säg till Claude, så ändras det i robotens inställningsfil.")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():
         st.info("Bakgrundsroboten har inte handlat än. Den startar automatiskt nästa gång börsen är öppen. "
