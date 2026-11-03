@@ -568,9 +568,7 @@ with tab_paper:
 
     def run_tick(force):
         universe = (liquid_symbols(300) if dt_universe == LIQUID else list(settings.watchlist)) \
-            if (force or not tick_state.get("day_list")) and settings.day_allocation_pct > 0 else []
-        if not universe and settings.day_allocation_pct > 0:
-            universe = tick_state.get("day_list") or list(settings.watchlist)
+            if settings.day_allocation_pct > 0 else []
         bar = st.progress(0.0, text="Hämtar kurser…")
         swing_list = (list(dict.fromkeys(liquid_symbols(300) + swing_syms))
                       if settings.swing_universe == "liquid" else swing_syms)
@@ -638,7 +636,7 @@ with tab_paper:
                              "avstängd (fliken 🤖 Automatisk handel).")
     auto_every = a2.selectbox("Handelsrunda var", [5, 10, 15], key="auto_every", format_func=lambda m: f"{m}:e minut")
     st.caption("Varje runda: kontrollerar alla positioner (stop loss, kursmål, dagens slut) och köper nya. "
-               "Ny sökning efter dagens bästa – både swing och daytrading – var 30:e minut.")
+               "Daytrading granskar alla 300 varje runda. Swing söker nytt var 30:e minut (dagsdata ändras långsamt).")
 
     @st.fragment(run_every=60 if auto_on else None)
     def auto_runner():

@@ -3,10 +3,9 @@ bakgrundsroboten på GitHub (scripts/auto_trade.py).
 
 En "tick" (körs t.ex. var 5:e minut):
 1. Börsen stängd → stäng eventuella dagpositioner, annars inget.
-2. Daytrading: ny sökning efter dagens bästa var 30:e minut, annars färska kurser
-   för den sparade listan. Rangordna, förhandelskoll, köp de bästa, sälj vid
-   stop/mål/dagens slut.
-3. Swing: var 30:e minut – skanna bevakningslistan och köp kandidater.
+2. Daytrading: granskar alla de mest omsatta (300) varje runda. Rangordna,
+   förhandelskoll, köp de bästa, sälj vid stop/mål/dagens slut.
+3. Swing: var 30:e minut – skanna de 300 mest omsatta + bevakningslistan och köp kandidater.
    Stop/mål för alla positioner kontrolleras varje tick.
 4. Ledigt kapital parkeras i SPY (om påslaget).
 """
@@ -161,7 +160,7 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
          search_every_min=SEARCH_EVERY_MIN, progress=None):
     """En automatisk runda för BÅDE daytrading och swing. `state` sparas mellan körningarna.
 
-    - Daytrading: ny sökning bland `liquid_symbols` var `search_every_min` minut (eller om
+    - Daytrading: granskar alla `liquid_symbols` varje runda (tidigare bara var 30:e minut, om
       force=True), annars färska kurser för den sparade listan. Köp/sälj varje runda.
     - Swing: skanna `swing_symbols` (standard: bevakningslistan) var `search_every_min` minut
       (eller om force=True) och köp kandidater. Stop/mål för ALLA positioner kontrolleras varje runda.
@@ -215,13 +214,11 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
         state["last_swing_date"] = now_ny.strftime("%Y-%m-%d")
 
     if settings.day_allocation_pct > 0:
+        # Daytrading granskar ALLA de mest omsatta (300) varje runda – lägen uppstår snabbt.
         saved = state.get("day_list") or []
-        searched = due or not saved
-        if searched:
-            universe = list(liquid_symbols)
-        else:
-            universe = list(dict.fromkeys(saved + [s for s, p in broker.positions.items()
-                                                   if p.get("strategy") == "day"]))
+        searched = True
+        universe = list(dict.fromkeys(list(liquid_symbols or saved) + [s for s, p in broker.positions.items()
+                                                                      if p.get("strategy") == "day"]))
         ranked, acts, _ = day_round(provider, broker, settings, universe, top_n=top_n,
                                     day_share=settings.day_allocation_pct, max_move_pct=max_move_pct,
                                     is_open=True, progress=progress, ny_now=now_ny)
