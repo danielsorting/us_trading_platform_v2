@@ -190,8 +190,11 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
                    if p.get("strategy") == strat)
         room = cap - used
         if qty > 0 and qty * price > room:
+            wanted = qty
             qty = (int(room // price) if not settings.allow_fractional_shares
                    else max(0.0, int(room / price * 10_000) / 10_000))
+            if qty < wanted / 2:  # bara smulor kvar i budgeten – en så liten affär lönar sig inte
+                qty = 0
             if qty <= 0:
                 actions.append({"symbol": sym, "action": "hoppar över",
                                 "detail": f"{STRATEGY_NAMES.get(strat, strat)}-budgeten är fullt använd "
