@@ -158,3 +158,6 @@ tid,typ,symbol,action,detail
 2026-11-03 20:50,day,RSI,KÖP,"20 st à 12.41 USD (day), stop 12.31"
 2026-11-03 20:50,day,TOST,hoppar över,"Daytrading-budgeten är fullt använd (966 av 1,021 USD)."
 2026-11-03 20:50,day,O,hoppar över,"Daytrading-budgeten är fullt använd (966 av 1,021 USD)."
+2026-11-03 20:55,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:40: Granskade 291 aktier: 0 köpkandidater. Närmast: BETA (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6). Nästa sökning ca 21:10 (dagskurser ändras långsamt)."
+2026-11-03 20:55,day,ADEA,hoppar över,"Daytrading-budgeten är fullt använd (958 av 1,018 USD)."
+2026-11-03 20:55,day,CVS,hoppar över,"Daytrading-budgeten är fullt använd (958 av 1,018 USD)."
