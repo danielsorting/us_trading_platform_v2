@@ -66,3 +66,11 @@ def provider():
 @pytest.fixture
 def hourly():
     return make_hourly
+
+
+@pytest.fixture(autouse=True)
+def no_real_news(monkeypatch):
+    """Testerna ska aldrig hämta riktiga nyheter från nätet."""
+    from trading_platform import news
+    monkeypatch.setattr(news, "fetch_symbol_news", lambda symbol, count=10: [])
+    monkeypatch.setattr(news, "fetch_market_news", lambda *a, **k: [])

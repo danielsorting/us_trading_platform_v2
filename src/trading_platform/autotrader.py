@@ -17,6 +17,7 @@ from .daytop import add_extended_check, extended_phase, market_status, rank_day_
 from .paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
 from .data import PrefetchedProvider
 from .scanner import scan
+from . import news
 
 NY = ZoneInfo("America/New_York")
 SWING_TIME_NY = time(15, 30)   # 21:30 svensk tid
@@ -29,8 +30,40 @@ def day_strategy_for(settings):
     return day_variants().get(getattr(settings, "day_variant", ""), None)
 
 
+def news_screen(rows, settings, state):
+    """Tar bort köpkandidater med dåliga nyheter (om nyhetsfiltret är på). Aldrig ett fel."""
+    if state is None or not getattr(settings, "news_filter_enabled", False):
+        return rows, []
+    try:
+        return news.filter_candidates(rows, state)
+    except Exception as e:
+        return rows, [{"symbol": "", "action": "nyheter",
+                       "detail": f"Kunde inte läsa nyheter ({type(e).__name__}) – köper utan nyhetskoll."}]
+
+
+def news_mood(settings, state, add):
+    """Världsläget. Returnerar inställningar (med halverad risk om nyheterna är tydligt negativa)."""
+    if state is None or not getattr(settings, "news_market_risk_cut", False):
+        return settings
+    try:
+        before = (state.get("market_news") or {}).get("ts")
+        m = news.market_mood(state)
+    except Exception:
+        return settings
+    if m.get("ts") != before:  # nyss uppdaterat → skriv i loggen
+        worst = next((h["title"] for h in m.get("headlines", []) if h["score"] < 0), None)
+        add("nyheter", [{"symbol": "", "action": "världsläget",
+                         "detail": f"Marknadshumör {m['mood']} (nyhetspoäng {m['score']}, {m['count']} nyheter om "
+                                   "börsen, olja, Trump/tullar och räntor)."
+                                   + (f" Mest negativ: \"{worst}\"." if worst else "")
+                                   + (" Risken per ny affär halveras tills läget lugnar sig." if m["risk_off"] else "")}])
+    if m.get("risk_off"):
+        return replace(settings, risk_per_trade_pct=settings.risk_per_trade_pct / 2)
+    return settings
+
+
 def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, max_move_pct=2.0,
-              is_open=True, progress=None, ny_now=None):
+              is_open=True, progress=None, ny_now=None, state=None):
     """Daytrading-runda. Returnerar (rangordning, händelser, priser)."""
     intraday = provider.history_many(list(universe), "5d", "5m", progress=progress)
     ranked = rank_day_candidates(intraday, day_strategy_for(settings))
@@ -55,6 +88,8 @@ def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, ma
                          "detail": f"Har rört sig {r.ext_move_pct:+.1f} % sedan signalen (gräns {max_move_pct} %)."})
         top = top[top.move_ok]
     cands = top.to_dict("records") if len(top) else []
+    cands, news_acts = news_screen(cands, settings, state)
+    acts += news_acts
     # Storlek per affär följer DINA inställningar (risk per affär och max % per position).
     # top_n = hur många av dagens bästa som prövas; antal samtidiga = max positioner per strategi.
     # Räcker inte pengarna hoppar roboten över resten.
@@ -205,6 +240,8 @@ def _extended_swing_round(provider, broker, settings, state, symbols, swing_stra
             state["last_search_ts"] = now_ny.timestamp()
             acts.append(summary)
         cands = state.get("pre_candidates") or []
+        cands, news_acts = news_screen(cands, settings, state)
+        acts += news_acts
     held = [sym for sym, p in broker.positions.items() if p.get("strategy") not in ("park", "day")]
     syms = set(held) | {c["symbol"] for c in cands}
     if not syms:
@@ -257,6 +294,10 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
                     else kind
                 events.append({"tid": stamp, "typ": typ, **a})
 
+    phase_now = None if is_open else extended_phase(now_ny)
+    if is_open or (phase_now and getattr(settings, "extended_hours_swing", False)):
+        settings = news_mood(settings, state, add)
+
     if not is_open:
         day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
         if day_pos:
@@ -277,7 +318,9 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
         add("swing", [summary])
         prices = latest_prices(provider, set(swing_symbols) | set(broker.positions)
                                | ({settings.park_symbol} if settings.park_idle_in_index else set()))
-        add("swing", run_paper_cycle(broker, rows, settings, prices, ny_now=now_ny))
+        buy_rows, news_acts = news_screen(rows, settings, state)
+        add("swing", news_acts)
+        add("swing", run_paper_cycle(broker, buy_rows, settings, prices, ny_now=now_ny))
         import pandas as pd
         state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
         state["last_swing_date"] = now_ny.strftime("%Y-%m-%d")
@@ -302,7 +345,7 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
                                                                       if p.get("strategy") == "day"]))
         ranked, acts, _ = day_round(provider, broker, settings, universe, top_n=top_n,
                                     day_share=settings.day_allocation_pct, max_move_pct=max_move_pct,
-                                    is_open=True, progress=progress, ny_now=now_ny)
+                                    is_open=True, progress=progress, ny_now=now_ny, state=state)
         if searched and len(ranked):
             state["day_list"] = ranked.symbol.head(30).tolist()
         state["day_top"] = _records(ranked, DAY_COLS)

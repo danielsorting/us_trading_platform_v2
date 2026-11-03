@@ -890,10 +890,29 @@ with tab_auto:
             pnl = [o["pnl"] for o in closed]
             st.caption(f"Avslutade affärer: {len(pnl)} · vinstandel {sum(x > 0 for x in pnl) / len(pnl) * 100:.0f} % "
                        f"· summa **{usd_to_sek(sum(pnl), usd_sek):+,.0f} kr** ({sum(pnl):+.2f} USD)")
+        mn = auto_state.get("market_news") or {}
+        with st.expander(f"📰 Nyheter som roboten läser – världsläget: {mn.get('mood', 'ej läst än')}",
+                         expanded=bool(mn.get("risk_off"))):
+            st.caption("Roboten läser Yahoo Finance-nyheter om börsen, olja, Trump/tullar och räntor var 30:e minut, "
+                       "och nyheterna om varje aktie innan den köper. Tydligt dåliga bolagsnyheter (t.ex. nyemission, "
+                       "stämning, utredning, sänkt prognos) stoppar köpet. Är världsläget tydligt negativt halveras "
+                       "risken per ny affär. Det går inte att backtesta nyheter bakåt, så se det som ett extra skydd.")
+            if mn:
+                (st.error if mn.get("risk_off") else st.success if mn.get("mood") == "positivt" else st.info)(
+                    f"Marknadshumör **{mn.get('mood')}** (nyhetspoäng {mn.get('score')}, {mn.get('count')} nyheter, "
+                    f"läst {sv_time(mn['ts'])})" + (" – **risken per ny affär är halverad**." if mn.get("risk_off") else "."))
+                for h in mn.get("headlines", []):
+                    icon = "🔴" if h["score"] < 0 else "🟢" if h["score"] > 0 else "⚪"
+                    st.markdown(f"{icon} [{h['title']}]({h['link']})" if h.get("link") else f"{icon} {h['title']}")
+            blocked = {k: v for k, v in (auto_state.get("news") or {}).items() if v.get("block")}
+            if blocked:
+                st.markdown("**Aktier som inte köptes på grund av nyheter:**")
+                for sym, v in blocked.items():
+                    st.markdown(f"- **{sym}**: \"{v.get('worst')}\" (poäng {v.get('score')})")
         try:
             last_log = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(300)
             st.subheader("Senaste runda")
-            for typ, name in (("day", "📅 Daytrading"), ("swing", "🔁 Swing")):
+            for typ, name in (("day", "📅 Daytrading"), ("swing", "🔁 Swing"), ("nyheter", "📰 Nyheter")):
                 rows = last_log[last_log.typ == typ]
                 if len(rows):
                     r = rows.iloc[-1]
