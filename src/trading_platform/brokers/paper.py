@@ -31,7 +31,8 @@ class PaperBroker(BrokerAdapter):
             self.reset(starting_cash, usd_sek_at_start)
 
     # ---- kontot ---------------------------------------------------------
-    def reset(self, starting_cash, usd_sek_at_start=None):
+    def reset(self, starting_cash, usd_sek_at_start=None, reset_id=None):
+        self.reset_id = reset_id
         self.cash = float(starting_cash)
         self.starting_cash = float(starting_cash)
         self.usd_sek_at_start = usd_sek_at_start
@@ -43,7 +44,7 @@ class PaperBroker(BrokerAdapter):
     def to_dict(self):
         return {"cash": self.cash, "starting_cash": self.starting_cash,
                 "usd_sek_at_start": self.usd_sek_at_start, "created": self.created,
-                "positions": self.positions, "orders": self.orders}
+                "positions": self.positions, "orders": self.orders, "reset_id": getattr(self, "reset_id", None)}
 
     def from_dict(self, d):
         self.cash = float(d["cash"])
@@ -52,6 +53,7 @@ class PaperBroker(BrokerAdapter):
         self.created = d.get("created", "")
         self.positions = d.get("positions", {})
         self.orders = d.get("orders", [])
+        self.reset_id = d.get("reset_id")
 
     def save(self):
         if self.state_file:

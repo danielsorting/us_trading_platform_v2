@@ -110,3 +110,11 @@ def test_pnl_breakdown_separates_swing_day_and_park(tmp_path):
     assert round(r["swing"]["total"], 2) == 100 and r["swing"]["wins"] == 1
     assert round(r["day"]["total"], 2) == -20
     assert round(r["park"]["unrealized"], 2) == 10 and r["park"]["open"] == 1
+
+
+def test_reset_id_survives_save_and_load(tmp_path):
+    b = broker(tmp_path)
+    b.submit_order("A", "buy", 1, price=100, strategy="swing")
+    b.reset(5000, 10.0, reset_id="x1")
+    again = PaperBroker(state_file=tmp_path / "acct.json")
+    assert again.reset_id == "x1" and again.positions == {} and again.cash == 5000

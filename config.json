@@ -60,5 +60,6 @@
   "commission_pct": 0.04,
   "fx_fee_pct": 0.0,
   "day_variant": "Day – ORB 30 min",
-  "swing_universe": "liquid"
+  "swing_universe": "liquid",
+  "paper_reset_id": "2026-11-03-1"
 }

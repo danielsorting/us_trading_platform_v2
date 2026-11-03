@@ -44,6 +44,8 @@ class Settings:
     auto_trading_enabled: bool = True
     auto_day_top_n: int = 10
     auto_max_move_pct: float = 2.0
+    # Ändra detta värde för att nollställa det simulerade kontot på webbsidan (en gång).
+    paper_reset_id: str = ""
     # Vilka aktier swing söker bland: "liquid" = de mest omsatta + bevakningslistan, "watchlist" = bara listan.
     swing_universe: str = "watchlist"
     # Vilken swing-variant scanner och simulerad handel använder som standard.

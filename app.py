@@ -472,6 +472,12 @@ with tab_paper:
     broker = PaperBroker(sek_to_usd(settings.total_capital, usd_sek), PAPER_FILE,
                          settings.commission_per_share_usd, settings.min_commission_usd,
                          settings.slippage_pct, usd_sek, settings.commission_pct, settings.fx_fee_pct)
+    if settings.paper_reset_id and getattr(broker, "reset_id", None) != settings.paper_reset_id:
+        # Återställningssignal från config.json: börja om med ett nytt konto (sker bara en gång).
+        broker.reset(sek_to_usd(settings.total_capital, usd_sek), usd_sek, reset_id=settings.paper_reset_id)
+        for k in ("paper_actions", "paper_prices", "tick_state", "auto_log", "auto_last"):
+            st.session_state.pop(k, None)
+        st.success("Det simulerade kontot har börjat om med ett nytt konto.")
     prices = st.session_state.get("paper_prices", {})
     acc = broker.get_account(prices)
     park_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in broker.positions.items()
