@@ -65,9 +65,18 @@ def _park_idle_cash(broker, settings, prices, actions):
 
 
 def latest_prices(provider, symbols):
-    """Senaste kurs per aktie (5-minutersdata, annars dagsdata)."""
+    """Senaste kurs per aktie. Realtid (t.ex. Alpaca) om den finns, annars
+    5-minutersdata och sist dagsdata."""
     prices = {}
+    symbols = list(symbols)
+    if getattr(provider, "has_realtime", False) and symbols:
+        try:
+            prices = {s: p for s, (p, _) in provider.latest_extended(symbols).items() if p}
+        except Exception:
+            prices = {}
     for sym in symbols:
+        if sym in prices:
+            continue
         for period, interval in (("5d", "5m"), ("5d", "1d")):
             try:
                 df = provider.history(sym, period, interval)

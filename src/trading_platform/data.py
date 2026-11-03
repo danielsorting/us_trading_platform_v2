@@ -158,5 +158,87 @@ class PrefetchedProvider(MarketDataProvider):
     def latest_extended(self, symbols):
         return self.base.latest_extended(symbols)
 
+    @property
+    def has_realtime(self):
+        return getattr(self.base, "has_realtime", False)
+
     def usd_sek(self):
         return self.base.usd_sek()
+
+
+class AlpacaRealtime:
+    """Realtidspriser från Alpaca (gratis konto, börsen IEX).
+
+    Nycklarna läses från Streamlit Secrets eller miljövariabler – aldrig från koden.
+    Dokumentation: https://docs.alpaca.markets/docs/about-market-data-api
+    """
+
+    URL = "https://data.alpaca.markets/v2/stocks/trades/latest"
+
+    def __init__(self, key_id, secret_key, feed="iex", timeout=10):
+        self.headers = {"APCA-API-KEY-ID": key_id, "APCA-API-SECRET-KEY": secret_key}
+        self.feed = feed
+        self.timeout = timeout
+
+    @staticmethod
+    def to_alpaca(sym):
+        return sym.replace("-", ".")  # Yahoo BRK-B → Alpaca BRK.B
+
+    def latest_trades(self, symbols, chunk=100):
+        """{aktie: (pris, tid)} för senaste avslut. Saknade aktier utelämnas."""
+        import requests
+
+        symbols = list(dict.fromkeys(symbols))
+        back = {self.to_alpaca(s): s for s in symbols}
+        out = {}
+        for i in range(0, len(symbols), chunk):
+            part = [self.to_alpaca(s) for s in symbols[i:i + chunk]]
+            r = requests.get(self.URL, headers=self.headers, timeout=self.timeout,
+                             params={"symbols": ",".join(part), "feed": self.feed})
+            r.raise_for_status()
+            for sym, tr in (r.json().get("trades") or {}).items():
+                price = tr.get("p")
+                if price:
+                    out[back.get(sym, sym)] = (float(price), pd.Timestamp(tr.get("t")))
+        return out
+
+    def check(self):
+        """Testar nycklarna. Returnerar (ok, text)."""
+        try:
+            got = self.latest_trades(["SPY"])
+            return (True, "Alpaca fungerar") if "SPY" in got else (False, "Alpaca svarade utan pris")
+        except Exception as e:
+            return False, f"Alpaca fungerar inte: {e}"
+
+
+class HybridProvider(MarketDataProvider):
+    """Historik och staplar från en källa (Yahoo) + senaste pris i realtid (Alpaca)."""
+
+    has_realtime = True
+
+    def __init__(self, base, realtime):
+        self.base = base
+        self.realtime = realtime
+
+    def history(self, symbol, period, interval):
+        return self.base.history(symbol, period, interval)
+
+    def history_many(self, symbols, period, interval, progress=None):
+        return self.base.history_many(symbols, period, interval, progress=progress)
+
+    def usd_sek(self):
+        return self.base.usd_sek()
+
+    def latest_extended(self, symbols):
+        out = {}
+        try:
+            out = self.realtime.latest_trades(symbols)
+        except Exception:
+            out = {}
+        missing = [s for s in symbols if s not in out]
+        if missing:
+            try:
+                out.update(self.base.latest_extended(missing))
+            except Exception:
+                pass
+        return out

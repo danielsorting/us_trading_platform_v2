@@ -19,7 +19,7 @@ from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategie
                                       period_return, run_backtest)
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
-from trading_platform.data import PrefetchedProvider, YahooResearchProvider
+from trading_platform.data import AlpacaRealtime, HybridProvider, PrefetchedProvider, YahooResearchProvider
 from trading_platform.daytop import (add_extended_check, market_status, most_liquid, rank_day_candidates,
                                     yahoo_symbol)
 from trading_platform.paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
@@ -46,7 +46,28 @@ SIGNAL_NAMES = {"CANDIDATE": "✅ Köpkandidat", "WATCH": "👀 Bevaka", "LOW_LI
                 "INSUFFICIENT_DATA": "… För lite data", "DATA_ERROR": "⚠️ Datafel"}
 
 st.set_page_config(page_title="US Trading Platform", layout="wide")
-provider = YahooResearchProvider()
+def _secret(name):
+    """Läser en hemlig nyckel från Streamlit Secrets eller miljövariabel (aldrig från koden)."""
+    import os
+    try:
+        if name in st.secrets:
+            return st.secrets[name]
+    except Exception:
+        pass
+    return os.environ.get(name)
+
+
+_alpaca_key, _alpaca_secret = _secret("ALPACA_KEY_ID"), _secret("ALPACA_SECRET_KEY")
+REALTIME = AlpacaRealtime(_alpaca_key, _alpaca_secret) if _alpaca_key and _alpaca_secret else None
+provider = HybridProvider(YahooResearchProvider(), REALTIME) if REALTIME else YahooResearchProvider()
+
+
+@st.cache_data(ttl=600, show_spinner=False)
+def realtime_status(_dummy=0):
+    if REALTIME is None:
+        return False, "Ingen realtidskälla – Yahoo används (kan vara fördröjt)."
+    ok, text = REALTIME.check()
+    return ok, ("Realtidskurser från Alpaca (IEX) ✅" if ok else text + " – Yahoo används i stället.")
 
 
 @st.cache_data(ttl=3600, show_spinner=False)
@@ -175,6 +196,8 @@ with st.sidebar:
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
+    rt_ok, rt_text = realtime_status()
+    (st.success if rt_ok else st.info)(rt_text)
     st.caption("Inställningarna här gäller bara tills sidan laddas om. Startvärdena finns i config.json.")
 
 st.title("US Trading Platform")
