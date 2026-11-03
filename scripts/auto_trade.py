@@ -82,6 +82,10 @@ def main():
                   top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct)
     log(f"Runda klar: {len(events)} händelser.")
     from trading_platform import notify
+    if notify.topic() and not state.get("notify_hello"):
+        if notify.send("✅ Tradingroboten är kopplad", "Du får en notis här när roboten köper eller säljer en swingaffär."):
+            state["notify_hello"] = True
+            log("Testnotis skickad.")
     for title, msg in notify.messages_for(events, fx):
         log(f"Notis: {title} – {'skickad' if notify.send(title, msg) else 'inte skickad (NTFY_TOPIC saknas?)'}")
     broker.save()
