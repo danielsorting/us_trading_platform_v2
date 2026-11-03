@@ -64,3 +64,45 @@ def test_swing_searches_liquid_list_and_parking_is_labelled(tmp_path, provider):
     swung = {r["symbol"] for r in state["swing_top"]}
     assert set(liquid) <= swung and {"AAPL", "MSFT", "NVDA"} <= swung
     assert all(e["typ"] == "park" for e in ev if "parkering" in e["action"])
+
+
+def test_project_today_volume_scales_partial_day(bars):
+    from trading_platform.autotrader import project_today_volume
+    df = bars(30, start="2026-10-06")
+    df.index = df.index[:-1].append(__import__("pandas").DatetimeIndex(["2026-11-03"]))
+    before = df.Volume.iloc[-1]
+    out = project_today_volume(df, datetime(2026, 11, 3, 11, 0, tzinfo=NY))  # 1,5 av 6,5 timmar
+    assert abs(out.Volume.iloc[-1] - before / (1.5 / 6.5)) < 1
+    assert out.Volume.iloc[-2] == df.Volume.iloc[-2]
+
+
+def test_swing_summary_lists_candidates_and_near_misses():
+    from trading_platform.autotrader import swing_summary
+    rows = [{"symbol": "A", "signal": "CANDIDATE", "conditions_met": "6/6"},
+            {"symbol": "B", "signal": "WATCH", "conditions_met": "5/6"},
+            {"symbol": "C", "signal": "WATCH", "conditions_met": "2/6"},
+            {"symbol": "D", "signal": "INSUFFICIENT_DATA"}]
+    d = swing_summary(rows)["detail"]
+    assert "Granskade 3 aktier: 1 köpkandidater (A)" in d and d.index("B (5/6)") < d.index("C (2/6)")
+
+
+def test_day_summary_explains_closed_orb_window(intraday):
+    from trading_platform.autotrader import day_summary
+    from trading_platform.config import load_settings
+    from trading_platform.daytop import rank_day_candidates
+    from trading_platform.autotrader import day_strategy_for
+    s = load_settings()
+    ranked = rank_day_candidates({f"S{i}": intraday(3, seed=i) for i in range(5)}, day_strategy_for(s))
+    d = day_summary(ranked, s, datetime(2026, 11, 3, 12, 30, tzinfo=NY))["detail"]
+    assert d.startswith("Granskade 5 aktier") and "fönstret stängt" in d and "15:30–17:30" in d
+    d2 = day_summary(ranked, s, datetime(2026, 11, 3, 10, 30, tzinfo=NY))["detail"]
+    assert "fönstret stängt" not in d2
+
+
+def test_skip_reason_when_price_below_stop(tmp_path):
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    from trading_platform.paper_trader import run_paper_cycle
+    rows = [{"symbol": "A", "strategy": "swing", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 95.0, "target_reference": 110.0}]
+    acts = run_paper_cycle(b, rows, settings(), {"A": 94.0})
+    assert "A" not in b.positions and any("under stop loss" in a["detail"] for a in acts)

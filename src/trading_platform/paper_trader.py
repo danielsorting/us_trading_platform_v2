@@ -170,7 +170,12 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
             continue
         price = prices.get(sym, row.get("price"))
         stop = row.get("stop_reference")
-        if not price or stop is None or stop >= price:
+        if not price or stop is None:
+            actions.append({"symbol": sym, "action": "hoppar över", "detail": "Saknar aktuell kurs eller stop loss."})
+            continue
+        if stop >= price:
+            actions.append({"symbol": sym, "action": "hoppar över",
+                            "detail": f"Kursen ({price:.2f}) ligger redan under stop loss ({stop:.2f}) – signalen gäller inte längre."})
             continue
         cap = equity * alloc.get(strat, 0) / 100
         qty = position_size(cap, price, stop, settings.risk_per_trade_pct,

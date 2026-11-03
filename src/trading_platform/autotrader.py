@@ -61,9 +61,32 @@ def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, ma
                                                              100.0 / max(top_n, 1)))
     acts += run_paper_cycle(broker, cands, s_day, prices, limits={"day": top_n}, ny_now=ny_now)
     if not cands:
-        acts.insert(0, {"symbol": "", "action": "inga kandidater",
-                        "detail": "Ingen aktie uppfyller alla daytrading-villkor just nu."})
+        acts.insert(0, day_summary(ranked, settings, ny_now))
     return ranked, acts, prices
+
+
+def day_summary(ranked, settings=None, ny_now=None):
+    """En rad som berättar vad daytrading-sökningen hittade när inget köps."""
+    n = int(ranked.signal.isin(["CANDIDATE", "WATCH"]).sum()) if len(ranked) and "signal" in ranked else 0
+    near = ""
+    if n:
+        w = ranked[ranked.signal == "WATCH"].copy()
+        if len(w) and "conditions_met" in w:
+            w["_m"] = w.conditions_met.map(lambda t: int(t.split("/")[0]) / int(t.split("/")[1]))
+            w = w.sort_values("_m", ascending=False).head(5)
+            near = ". Närmast: " + ", ".join(f"{r.symbol} ({r.conditions_met})" for r in w.itertuples())
+    note = ""
+    strat = day_strategy_for(settings) if settings is not None else None
+    if strat is not None and hasattr(strat, "last_entry_bar"):
+        now = (ny_now or datetime.now(NY)).astimezone(NY)
+        minutes = (now.hour * 60 + now.minute) - (9 * 60 + 30)
+        window_end = strat.last_entry_bar * 5
+        if minutes > window_end:
+            h, m = divmod(15 * 60 + 30 + window_end, 60)
+            note = (f" {strat.label} köper bara de första {window_end // 60} timmarna efter öppning "
+                    f"(15:30–{h:02d}:{m:02d} svensk tid) – i dag är fönstret stängt, nya köp i morgon.")
+    return {"symbol": "", "action": "inga daytrades",
+            "detail": f"Granskade {n} aktier: ingen uppfyller alla villkor just nu{near}.{note}"}
 
 
 def swing_round(provider, broker, settings, symbols, swing_strategy=None, market_bars=None, usd_sek=10.0,
@@ -74,6 +97,47 @@ def swing_round(provider, broker, settings, symbols, swing_strategy=None, market
     prices = latest_prices(provider, set(symbols) | set(broker.positions)
                            | ({settings.park_symbol} if settings.park_idle_in_index else set()))
     return run_paper_cycle(broker, rows, settings, prices, ny_now=ny_now), prices
+
+
+def session_fraction(now_ny):
+    """Hur stor del av dagens börstid (09:30–16:00 New York) som har gått, 0–1."""
+    start = now_ny.replace(hour=9, minute=30, second=0, microsecond=0)
+    frac = (now_ny - start).total_seconds() / (6.5 * 3600)
+    return max(0.0, min(1.0, frac))
+
+
+def project_today_volume(df, now_ny):
+    """Mitt under dagen är dagens dagsstapel ofärdig. Räkna upp dagens volym till en
+    hel dag (volym hittills / andel av dagen som gått), så att volymvillkoret blir rättvist."""
+    if df is None or not len(df):
+        return df
+    last_day = df.index[-1]
+    if last_day.date() != now_ny.date():
+        return df
+    frac = session_fraction(now_ny)
+    if frac <= 0 or frac >= 1:
+        return df
+    out = df.copy()
+    out["Volume"] = out["Volume"].astype(float)
+    out.iloc[-1, out.columns.get_loc("Volume")] = out["Volume"].iloc[-1] / max(frac, 0.1)
+    return out
+
+
+def swing_summary(rows):
+    """En rad som berättar vad swing-sökningen hittade (även när inget köps)."""
+    ok = [r for r in rows if r.get("signal") in ("CANDIDATE", "WATCH")]
+    cands = [r["symbol"] for r in ok if r.get("signal") == "CANDIDATE"]
+
+    def met(r):
+        a, b = (r.get("conditions_met") or "0/1").split("/")
+        return int(a) / int(b)
+
+    near = sorted((r for r in ok if r.get("signal") == "WATCH"), key=met, reverse=True)[:5]
+    near_txt = ", ".join(f"{r['symbol']} ({r.get('conditions_met')})" for r in near)
+    return {"symbol": "", "action": "swing-sökning",
+            "detail": f"Granskade {len(ok)} aktier: {len(cands)} köpkandidater"
+                      + (f" ({', '.join(cands[:8])})" if cands else "")
+                      + (f". Närmast: {near_txt}" if near_txt else "") + "."}
 
 
 def _records(df, cols, n=30):
@@ -136,11 +200,13 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
         # Hämta dagsdata för alla swing-aktier i ett svep (få anrop till Yahoo).
         fast = PrefetchedProvider(provider)
         try:
-            fast.add(provider.history_many(swing_symbols, "2y", "1d"), "2y", "1d")
+            daily = provider.history_many(swing_symbols, "2y", "1d")
+            fast.add({k: project_today_volume(v, now_ny) for k, v in daily.items()}, "2y", "1d")
         except Exception:
             pass
         rows = scan(swing_symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                     swing_strategy=swing_strategy, market_bars=market_bars)
+        add("swing", [swing_summary(rows)])
         prices = latest_prices(provider, set(swing_symbols) | set(broker.positions)
                                | ({settings.park_symbol} if settings.park_idle_in_index else set()))
         add("swing", run_paper_cycle(broker, rows, settings, prices, ny_now=now_ny))
