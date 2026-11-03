@@ -161,6 +161,46 @@ def show_pnl_by_strategy(acct_broker, acct_prices):
                     f"öppet {usd_to_sek(v['unrealized'], usd_sek):+,.0f} kr ({v['open']} st)")
 
 
+
+@st.cache_data(ttl=120, show_spinner=False)
+def cached_prices(symbols):
+    """Senaste kurser (hämtas automatiskt, högst varannan minut)."""
+    try:
+        return latest_prices(provider, list(symbols))
+    except Exception:
+        return {}
+
+
+TYPE_NAMES = {"day": "Daytrade", "swing": "Swing", "park": "Parkerat (S&P 500)"}
+
+
+def positions_table(positions, prices, fx):
+    """Öppna positioner, enkelt och i kronor."""
+    def kr(v, sign=False):
+        return f"{v:+,.0f} kr".replace(",", " ") if sign else f"{v:,.0f} kr".replace(",", " ")
+
+    rows = []
+    for sy, p in positions.items():
+        q, buy = p["quantity"], p["avg_price"]
+        now = prices.get(sy)
+        cost = q * buy
+        row = {"Aktie": sy, "Typ": TYPE_NAMES.get(p.get("strategy"), p.get("strategy")),
+               "Köpt": f"{q:g} st à {buy:,.2f} $", "Köpt för": kr(cost * fx),
+               "Resultat nu": "–" if now is None else
+               f"{kr(q * (now - buy) * fx, True)} ({(now / buy - 1) * 100:+.1f} %)",
+               "Om kursmålet nås": "–", "Om stop loss nås": "–",
+               "Köpt (svensk tid)": sv_time(p["opened"])[-5:]}
+        if p.get("target") is not None:
+            row["Om kursmålet nås"] = f"{kr(q * (p['target'] - buy) * fx, True)} vid {p['target']:,.2f} $"
+        elif p.get("trail_atr"):
+            row["Om kursmålet nås"] = "inget fast mål – stop följer med uppåt"
+        if p.get("stop") is not None:
+            row["Om stop loss nås"] = f"{kr(q * (p['stop'] - buy) * fx, True)} vid {p['stop']:,.2f} $"
+        rows.append(row)
+    order = {"Daytrade": 0, "Swing": 1}
+    rows.sort(key=lambda r: order.get(r["Typ"], 2))
+    return pd.DataFrame(rows)
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -721,12 +761,7 @@ with tab_paper:
 
     st.subheader("Öppna positioner")
     if broker.positions:
-        pos = pd.DataFrame([{"Aktie": s, "Strategi": p.get("strategy"), "Antal": p["quantity"],
-                             "Köpkurs": round(p["avg_price"], 2), "Senaste kurs": prices.get(s),
-                             "Stop loss": p.get("stop"), "Kursmål": None if p.get("target") is None else round(p["target"], 2),
-                             "Orealiserat (SEK)": None if s not in prices else round(usd_to_sek(p["quantity"] * (prices[s] - p["avg_price"]), usd_sek)),
-                             "Orealiserat (USD)": None if s not in prices else round(p["quantity"] * (prices[s] - p["avg_price"]), 2),
-                             "Öppnad (svensk tid)": sv_time(p["opened"])} for s, p in broker.positions.items()])
+        pos = positions_table(broker.positions, {**cached_prices(tuple(sorted(broker.positions))), **prices}, usd_sek)
         st.dataframe(pos, width="stretch", hide_index=True)
     else:
         st.caption("Inga öppna positioner.")
@@ -787,7 +822,7 @@ with tab_auto:
             auto_state = json.loads((AUTO_DIR / "auto_state.json").read_text())
         except Exception:
             pass
-        auto_prices = st.session_state.get("auto_prices", {})
+        auto_prices = {**cached_prices(tuple(sorted(auto_broker.positions))), **st.session_state.get("auto_prices", {})}
         acc = auto_broker.get_account(auto_prices)
         park_v = sum(p["quantity"] * auto_prices.get(sy, p["avg_price"]) for sy, p in auto_broker.positions.items()
                      if p.get("strategy") == "park")
@@ -809,14 +844,8 @@ with tab_auto:
             st.rerun()
         st.subheader("Öppna positioner")
         if auto_broker.positions:
-            st.dataframe(pd.DataFrame([{
-                "Aktie": sy, "Strategi": p.get("strategy"), "Antal": p["quantity"], "Köpkurs": round(p["avg_price"], 2),
-                "Senaste kurs": auto_prices.get(sy), "Stop loss": p.get("stop"),
-                "Kursmål": None if p.get("target") is None else round(p["target"], 2),
-                "Orealiserat (SEK)": None if sy not in auto_prices else round(usd_to_sek(p["quantity"] * (auto_prices[sy] - p["avg_price"]), usd_sek)),
-                "Orealiserat (USD)": None if sy not in auto_prices else round(p["quantity"] * (auto_prices[sy] - p["avg_price"]), 2),
-                "Öppnad (svensk tid)": sv_time(p["opened"])} for sy, p in auto_broker.positions.items()]),
-                width="stretch", hide_index=True)
+            st.dataframe(positions_table(auto_broker.positions, auto_prices, usd_sek), width="stretch", hide_index=True)
+            st.caption("Kurserna uppdateras automatiskt varannan minut. 'Resultat nu' är före försäljningens courtage.")
         else:
             st.caption("Inga öppna positioner.")
         closed = [o for o in auto_broker.orders if o.get("pnl") is not None and o.get("strategy") != "park"]
