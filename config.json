@@ -7,6 +7,7 @@
   "max_positions_per_strategy": 8,
   "max_position_pct_of_strategy_capital": 70,
   "day_max_position_pct": 25,
+  "extended_hours_swing": false,
   "scan_mode": "watchlist",
   "watchlist": [
     "AAPL",

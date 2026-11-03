@@ -4,13 +4,13 @@ name: Automatisk handel (låtsaspengar)
 # slut, i några få långa körningar (GitHub hoppar annars ofta över schemalagda körningar).
 on:
   schedule:
-    # Roboten startar före Avanzas förhandel (11:00 svensk tid) och kör en runda var
-    # 5:e minut till efterhandelns slut (22:30). En körning får vara max ca 6 timmar,
-    # så nästa (köad) körning tar vid. Tider i UTC (svensk vintertid = UTC+1).
-    - cron: "50 9 * * 1-5"    # 10:50 – förhandel och början av börsdagen
-    - cron: "50 11 * * 1-5"   # reserv om GitHub hoppar över den första
-    - cron: "20 15 * * 1-5"   # tar vid efter första körningen (börsdagen)
-    - cron: "50 20 * * 1-5"   # tar vid till efterhandelns slut (22:30)
+    # Roboten kör en runda var 5:e minut under börsdagen 15:30–22:00 svensk tid.
+    # En körning får vara max ca 6 timmar, så nästa (köad) körning tar vid. Tider i UTC.
+    # (Handel i Avanzas för-/efterhandel finns förberedd men är avstängd: extended_hours_swing.)
+    - cron: "20 13 * * 1-5"   # 14:20 svensk tid – startar före öppning
+    - cron: "20 14 * * 1-5"   # reserv
+    - cron: "20 17 * * 1-5"   # tar vid efter första körningen
+    - cron: "20 19 * * 1-5"   # reserv fram till stängning
   workflow_dispatch: {}
 
 permissions:
@@ -49,6 +49,12 @@ jobs:
           while [ $SECONDS -lt $LIMIT ]; do
             sync || echo "Kunde inte hämta senaste versionen – kör med den vi har."
             PHASE=$(python scripts/market_phase.py)
+            # För- och efterhandel bara om det är påslaget i config.json (extended_hours_swing).
+            if [ "$PHASE" = "pre" ] || [ "$PHASE" = "post" ]; then
+              if ! grep -q '"extended_hours_swing": true' config.json; then
+                [ "$PHASE" = "post" ] && PHASE="after" || PHASE="before"
+              fi
+            fi
             if [ "$PHASE" = "weekend" ]; then echo "Helg – inget att göra."; break; fi
             if [ "$PHASE" = "after" ]; then
               python scripts/auto_trade.py || true   # stänger ev. kvarvarande dagpositioner

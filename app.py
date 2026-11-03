@@ -837,13 +837,13 @@ with tab_paper:
 # ---------------------------------------------------------------- automatisk handel (GitHub)
 with tab_auto:
     AUTO_DIR = fresh_robot_files()
-    st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut**, även när din dator är "
-             "avstängd, och handlar med **låtsaspengar**:\n"
-             "- **Förhandel 11:00–15:30** (svensk tid): bara swing – köper på gårdagens signaler, kontrollerar stop loss\n"
-             "- **Börsdag 15:30–22:00**: swing och daytrading\n"
-             "- **Efterhandel 22:00–22:30**: bara stop loss och kursmål för swing\n\n"
-             "Samma tider som Avanza har för USA-aktier. Utanför ordinarie tid räknar roboten med större "
-             "skillnad mellan köp- och säljkurs.")
+    if defaults.extended_hours_swing:
+        st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut**, även när din dator är "
+                 "avstängd, och handlar med **låtsaspengar**: förhandel 11:00–15:30 (bara swing), börsdag "
+                 "15:30–22:00 (swing och daytrading), efterhandel 22:00–22:30 (bara stop loss för swing).")
+    else:
+        st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut** under börsens öppettider "
+                 "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
     rb = defaults
     st.caption(f"Övrigt: daytrading väljer de {rb.auto_day_top_n} bästa bland de 300 mest omsatta och stänger före 22:00. "
                f"Swing söker bland {'de 300 mest omsatta + din bevakningslista' if rb.swing_universe == 'liquid' else 'din bevakningslista'}. "

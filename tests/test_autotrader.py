@@ -133,7 +133,9 @@ def test_premarket_and_afterhours_swing(tmp_path, provider):
          "target_reference": 110.0, "atr": 2.0, "trail_atr": None}]}
     s = settings()
     from dataclasses import replace
-    s = replace(s, max_fee_share_of_profit_pct=1000)
+    off = replace(s, max_fee_share_of_profit_pct=1000)  # standard: avstängt
+    assert tick(P(), b, off, dict(state), [], now_ny=pre) == [] and b.positions == {}
+    s = replace(off, extended_hours_swing=True)
     ev = tick(P(), b, s, state, [], now_ny=pre)
     assert "AAA" in b.positions and b.positions["AAA"]["strategy"] == "swing"
     assert b.positions["AAA"]["avg_price"] > 100.0          # högre slippage i förhandel

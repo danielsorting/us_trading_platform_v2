@@ -21,7 +21,7 @@ class Settings:
     max_position_pct_of_strategy_capital: float = 25
     news_filter_enabled: bool = True        # köp inte aktier med tydligt dåliga nyheter senaste 48 h
     news_market_risk_cut: bool = True       # halvera risken per affär när världsnyheterna är tydligt negativa
-    extended_hours_swing: bool = True       # swing handlar även i för- och efterhandel (Avanza)
+    extended_hours_swing: bool = False      # swing även i Avanzas för- och efterhandel (avstängt)
     extended_slippage_pct: float = 0.15     # större skillnad köp/sälj utanför ordinarie tid
     day_max_position_pct: float | None = None   # egen gräns för daytrades (None = samma som ovan)
     # Delaktier (t.ex. 0,35 aktie). Behövs ofta med litet kapital.
