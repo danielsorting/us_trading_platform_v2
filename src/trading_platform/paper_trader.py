@@ -9,7 +9,8 @@ En runda gör två saker:
 Köp och sälj sker till senaste kända kurs från datakällan (kan vara
 fördröjd). Inga riktiga order skickas.
 """
-from datetime import datetime
+from datetime import datetime, time
+from zoneinfo import ZoneInfo
 
 from .risk import position_size
 
@@ -78,9 +79,32 @@ def latest_prices(provider, symbols):
     return prices
 
 
-def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
-    """Kör en handelsrunda. Returnerar en lista med vad som hände."""
+DAY_CLOSE_NY = time(15, 50)  # stäng dagpositioner 10 min före börsens stängning (21:50 svensk tid)
+
+
+def close_all_day_positions(broker, prices, reason="stängd manuellt"):
+    """Säljer alla daytrading-positioner till senaste kurs."""
+    actions = []
+    for sym, pos in broker.get_positions().items():
+        if pos.get("strategy") != "day":
+            continue
+        price = prices.get(sym)
+        if price is None:
+            actions.append({"symbol": sym, "action": "ingen kurs", "detail": "Kunde inte stänga – kurs saknas."})
+            continue
+        order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason, strategy="day")
+        actions.append({"symbol": sym, "action": "SÄLJ", "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
+    return actions
+
+
+def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, ny_now=None):
+    """Kör en handelsrunda. Returnerar en lista med vad som hände.
+
+    limits: valfritt max antal positioner per strategi, t.ex. {"day": 10}.
+    """
     now = now or datetime.now()
+    ny_now = ny_now or datetime.now(ZoneInfo("America/New_York"))
+    limits = limits or {}
     actions = []
 
     # 1) Sälj.
@@ -107,6 +131,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
             reason = "kursmål"
         elif pos.get("strategy") == "day" and opened.date() < now.date():
             reason = "dagposition från tidigare dag"
+        elif pos.get("strategy") == "day" and ny_now.weekday() < 5 and ny_now.time() >= DAY_CLOSE_NY:
+            reason = "dagens slut (börsen stänger snart)"
         elif (pos.get("strategy") == "swing" and not pos.get("trail_atr")
               and (now - opened).days >= SWING_MAX_CALENDAR_DAYS):
             reason = "tidsgräns"
@@ -123,7 +149,9 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
         sym, strat = row.get("symbol"), row.get("strategy")
         if row.get("signal") != "CANDIDATE" or sym in held or sym == settings.park_symbol:
             continue
-        if sum(1 for p in held.values() if p.get("strategy") == strat) >= settings.max_positions_per_strategy:
+        if ((strat == "day" and ny_now.weekday() < 5 and ny_now.time() >= DAY_CLOSE_NY)):
+            continue  # inga nya dagpositioner strax före stängning
+        if sum(1 for p in held.values() if p.get("strategy") == strat) >= limits.get(strat, settings.max_positions_per_strategy):
             actions.append({"symbol": sym, "action": "hoppar över", "detail": f"Max antal {strat}-positioner nått."})
             continue
         price = prices.get(sym, row.get("price"))

@@ -17,6 +17,8 @@ Skriven i Python med ett dashboard i Streamlit.
 | **Riskhantering** | Positionsstorlek så att du förlorar högst vald risk om stop loss slår till. Stöd för delaktier. Växlar mellan SEK och USD. |
 | **Jämför strategier** | Fem swing-varianter (grund, marknadsfilter, relativ styrka, mål 3R, fast +2 %/−2 %) testas på samma aktier. Perioden delas i testdel (70 %) och kontrolldel (30 %) för att avslöja tur. |
 | **Backtest** | Historiskt test utan framtidsinformation: köp på stapeln efter signalen, gap-hantering, courtage och slippage, gemensam kassa och max antal positioner. Jämför med "köp och behåll". |
+| **Dagens bästa daytrades** | Knapp i Simulerad handel: söker bland de 300 mest omsatta USA-aktierna (eller din lista), rangordnar daytrading-kandidater och köper de bästa med låtsaspengar. Dagpositioner stängs efter 21:50 svensk tid. |
+| **300 mest omsatta** | Val i Scanner, Backtest och Simulerad handel. Listan räknas fram från hela USA-marknaden och sparas i 6 timmar. |
 | **Simulerad handel** | Papper-konto med låtsaspengar. En *handelsrunda* säljer positioner som nått stop/mål/tidsgräns och köper nya kandidater. Kontot sparas i `paper_account.json`. |
 | **Dashboard** | Fyra flikar: Scanner, Backtest, Simulerad handel och Om. |
 

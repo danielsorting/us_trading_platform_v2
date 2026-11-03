@@ -1,0 +1,53 @@
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from trading_platform.brokers.paper import PaperBroker
+from trading_platform.config import Settings
+from trading_platform.daytop import market_status, most_liquid, rank_day_candidates, yahoo_symbol
+from trading_platform.paper_trader import close_all_day_positions, run_paper_cycle
+
+NY = ZoneInfo("America/New_York")
+
+
+def test_market_status():
+    assert market_status(datetime(2026, 11, 3, 10, 0, tzinfo=NY))[0] is True
+    assert market_status(datetime(2026, 11, 3, 8, 0, tzinfo=NY))[0] is False
+    assert market_status(datetime(2026, 11, 7, 12, 0, tzinfo=NY))[0] is False  # lördag
+
+
+def test_most_liquid_picks_highest_dollar_volume(bars):
+    a, b, c = bars(30, seed=1), bars(30, seed=2), bars(30, seed=3)
+    b["Volume"] = b["Volume"] * 10
+    c["Close"] = c["Close"] / 50  # billig aktie (< 5 USD) ska bort
+    assert most_liquid({"A": a, "B": b, "C": c}, n=2) == ["B", "A"]
+
+
+def test_yahoo_symbol():
+    assert yahoo_symbol("BRK.B") == "BRK-B"
+
+
+def test_rank_puts_candidates_first(intraday):
+    ranked = rank_day_candidates({f"S{i}": intraday(5, seed=i) for i in range(15)})
+    flags = ranked.is_candidate.tolist()
+    assert flags == sorted(flags, reverse=True)
+    assert "score" in ranked
+
+
+def test_day_top_buys_limit_and_closes_before_market_close(tmp_path):
+    b = PaperBroker(10_000, tmp_path / "a.json", slippage_pct=0)
+    rows = [{"symbol": f"S{i}", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.0, "target_reference": 102.0} for i in range(12)]
+    midday = datetime(2026, 11, 3, 11, 0, tzinfo=NY)
+    run_paper_cycle(b, rows, Settings(max_position_pct_of_strategy_capital=10), {}, limits={"day": 10}, ny_now=midday)
+    assert sum(1 for p in b.positions.values() if p["strategy"] == "day") == 10
+    late = datetime(2026, 11, 3, 15, 55, tzinfo=NY)
+    acts = run_paper_cycle(b, rows, Settings(), {f"S{i}": 100.5 for i in range(12)}, ny_now=late)
+    assert b.positions == {} and all("dagens slut" in a["detail"] for a in acts if a["action"] == "SÄLJ")
+
+
+def test_close_all_day_positions(tmp_path):
+    b = PaperBroker(1000, tmp_path / "a.json", slippage_pct=0)
+    b.submit_order("D", "buy", 1, price=100, strategy="day")
+    b.submit_order("S", "buy", 1, price=100, strategy="swing")
+    close_all_day_positions(b, {"D": 101})
+    assert list(b.positions) == ["S"]

@@ -13,8 +13,9 @@ from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategie
                                       period_return, run_backtest)
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
-from trading_platform.data import YahooResearchProvider
-from trading_platform.paper_trader import latest_prices, run_paper_cycle
+from trading_platform.data import PrefetchedProvider, YahooResearchProvider
+from trading_platform.daytop import market_status, most_liquid, rank_day_candidates, yahoo_symbol
+from trading_platform.paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
 from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
 from trading_platform.strategies import day, swing
@@ -54,17 +55,8 @@ def get_history(symbol, period, interval):
 
 @st.cache_data(ttl=900, show_spinner=False)
 def get_history_many(symbols, period, interval):
-    """Hämtar kurser för många aktier samtidigt (parallellt) – mycket snabbare."""
-    from concurrent.futures import ThreadPoolExecutor
-
-    def one(sym):
-        try:
-            return sym, provider.history(sym, period, interval)
-        except Exception:
-            return sym, None
-
-    with ThreadPoolExecutor(max_workers=8) as pool:
-        return dict(pool.map(one, symbols))
+    """Hämtar kurser för många aktier i ett svep – mycket snabbare än en i taget."""
+    return provider.history_many(list(symbols), period, interval)
 
 
 def market_bars_for(strategy, period="2y"):
@@ -76,6 +68,25 @@ def market_bars_for(strategy, period="2y"):
     except Exception:
         st.warning("Kunde inte hämta S&P 500 (SPY). Marknadsfiltret blockerar då alla köp.")
         return None
+
+
+@st.cache_data(ttl=6 * 3600, show_spinner=False)
+def get_liquid_ranking(include_etfs=False):
+    """Alla USA-aktier (pris ≥ 5 USD) sorterade efter omsättning. Tungt (~6 000 aktier)
+    – görs en gång och sparas i 6 timmar. Delas av Scanner, Backtest och Simulerad handel."""
+    uni = get_symbols("us_market", [], include_etfs)
+    syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
+    daily = provider.history_many(syms, "1mo", "1d")
+    return most_liquid(daily, None)
+
+
+def liquid_symbols(n=300):
+    with st.spinner(f"Hittar de {n} mest omsatta USA-aktierna (kan ta några minuter första gången, "
+                    "sedan sparat i 6 timmar)…"):
+        return get_liquid_ranking()[:n]
+
+
+LIQUID = "Hela USA-marknaden (300 mest omsatta)"
 
 
 def parse_symbols(text):
@@ -144,28 +155,28 @@ tab_scan, tab_bt, tab_paper, tab_info = st.tabs(["🔎 Scanner", "📈 Backtest"
 
 # ---------------------------------------------------------------- scanner
 with tab_scan:
-    mode = st.radio("Vilka aktier?", ["Min bevakningslista", "Hela USA-marknaden"], horizontal=True)
-    include_etfs = st.checkbox("Ta med ETF:er", value=settings.include_etfs)
+    mode = st.radio("Vilka aktier?", ["Min bevakningslista", LIQUID], horizontal=True)
     if mode == "Min bevakningslista":
         symbols = parse_symbols(st.text_area("Aktier (kommaseparerade)", ",".join(settings.watchlist), height=80))
+        n_liquid = None
     else:
-        st.warning("Hela marknaden är tusentals aktier. Skanningen begränsas till det antal du väljer nedan "
-                   "och kan ta flera minuter. Yahoo kan också begränsa många anrop.")
-        if st.button("Hämta lista över USA-aktier"):
-            try:
-                uni = get_symbols("us_market", [], include_etfs)
-                st.session_state["us_symbols"] = uni["symbol"].tolist()
-            except Exception as e:
-                st.error(f"Kunde inte hämta listan: {e}")
-        all_syms = st.session_state.get("us_symbols", [])
-        limit = st.slider("Max antal aktier att skanna", 10, 2000, settings.max_symbols_per_scan, 10)
-        symbols = all_syms[:limit]
-        st.write(f"Hämtade aktier: {len(all_syms):,} · skannas: {len(symbols):,}")
+        n_liquid = st.slider("Antal aktier (de mest omsatta)", 50, 1000, 300, 50, key="scan_n")
+        st.caption("Hela marknaden är cirka 6 000 aktier. Roboten tar de mest omsatta (pris minst 5 USD), "
+                   "eftersom de går att handla utan stora prisskillnader. Första gången per 6 timmar tar det "
+                   "några minuter.")
+        symbols = ["(hämtas vid skanning)"]
 
     chosen = st.multiselect("Strategier", list(STRATEGIES), default=list(STRATEGIES))
     if st.button("Kör skanning", type="primary", disabled=not symbols or not chosen):
-        bar = st.progress(0.0, text="Startar…")
-        res = scan(symbols, "Daytrading" in chosen, "Swingtrading" in chosen, provider=provider,
+        if n_liquid:
+            symbols = liquid_symbols(n_liquid)
+        bar = st.progress(0.0, text="Hämtar kurser…")
+        fast = PrefetchedProvider(provider)
+        if "Swingtrading" in chosen:
+            fast.add(get_history_many(tuple(symbols), "2y", "1d"), "2y", "1d")
+        if "Daytrading" in chosen:
+            fast.add(get_history_many(tuple(symbols), "5d", "5m"), "5d", "5m")
+        res = scan(symbols, "Daytrading" in chosen, "Swingtrading" in chosen, provider=fast,
                    settings=settings, usd_sek=usd_sek, swing_strategy=swing_strategy,
                    market_bars=market_bars_for(swing_strategy),
                    progress=lambda i, n: bar.progress(i / n, text=f"Skannat {i} av {n} aktier"))
@@ -225,7 +236,7 @@ with tab_bt:
                                   format_func=lambda p: {"5d": "5 dagar", "1mo": "1 månad", "60d": "60 dagar"}[p])
         interval = "5m"
         st.caption("Yahoo har bara 5-minutersdata cirka 60 dagar bakåt, så daytrading kan bara testas på kort period.")
-    bt_list = st.radio("Aktielista", ["Min bevakningslista", "30 stora USA-aktier + IREN, NBIS", "Egen lista"],
+    bt_list = st.radio("Aktielista", ["Min bevakningslista", "30 stora USA-aktier + IREN, NBIS", LIQUID, "Egen lista"],
                        horizontal=True, key="bt_list",
                        help="Fler aktier ger fler affärer och därmed säkrare slutsatser.")
     if bt_list == "Min bevakningslista":
@@ -234,11 +245,19 @@ with tab_bt:
         bt_default = LARGE_US
     else:
         bt_default = ""
-    bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
+    if bt_list == LIQUID:
+        bt_symbols = ["(hämtas vid test)"]
+        st.caption("Dagens 300 mest omsatta aktier. Obs: de är valda utifrån hur de ser ut **i dag**, så "
+                   "historiska test blir något för positiva (bolag som gått dåligt och försvunnit saknas). "
+                   "Med 300 aktier tar 🏆-knappen några minuter.")
+    else:
+        bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
     default_cap = int(settings.day_capital if module is day else settings.swing_capital)
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
+        if bt_list == LIQUID:
+            bt_symbols = liquid_symbols(300)
         with st.spinner("Hämtar historiska kurser…"):
             bars = get_history_many(tuple(bt_symbols), period, interval)
         missing = [s for s, b in bars.items() if b is None or len(b) < module.MIN_BARS]
@@ -402,6 +421,71 @@ with tab_paper:
     if b2.button("🔄 Uppdatera kurser", disabled=not broker.positions):
         st.session_state["paper_prices"] = latest_prices(provider, list(broker.positions))
         st.rerun()
+
+    # ------------------------------------------------ dagens bästa daytrades
+    st.divider()
+    st.subheader("⚡ Dagens bästa daytrades")
+    is_open, status_text = market_status()
+    (st.success if is_open else st.warning)(status_text + ("" if is_open else
+        " Kör du nu används senaste kända kurser – bäst är att köra under börsens öppettider."))
+    d1, d2, d3 = st.columns(3)
+    dt_universe = d1.radio("Vilka aktier?", [LIQUID, "Min bevakningslista"],
+                           key="dt_universe")
+    dt_top = d2.slider("Antal aktier att köpa", 1, 20, 10, key="dt_top")
+    dt_share = d3.slider("Andel av kontot till daytrading (%)", 10, 100,
+                         int(settings.day_allocation_pct) if settings.day_allocation_pct else 50, 5, key="dt_share",
+                         help="Pengarna delas lika på aktierna. Resten ligger kvar i swing/parkering.")
+    st.caption("Roboten letar bland aktierna efter de som just nu uppfyller **alla** daytrading-villkor "
+               "(trend, stigande MACD och RSI, hög volym), rangordnar dem och köper de bästa med låtsaspengar. "
+               "Dagpositioner stängs när du kör en runda efter **21:50 svensk tid**, eller med knappen nedan. "
+               "Första sökningen i hela marknaden per dag tar några minuter.")
+    k1, k2 = st.columns(2)
+    if k1.button(f"⚡ Hitta och köp dagens {dt_top} bästa", type="primary"):
+        try:
+            if dt_universe.startswith("Hela"):
+                universe = liquid_symbols(300)
+            else:
+                universe = list(settings.watchlist)
+            bar = st.progress(0.0, text="Steg 2 av 2: hämtar 5-minutersdata…")
+            intraday = provider.history_many(universe, "5d", "5m",
+                                             progress=lambda i, n: bar.progress(i / n, text=f"Steg 2 av 2: {i} av {n} aktier"))
+            bar.empty()
+            ranked = rank_day_candidates(intraday)
+            st.session_state["dt_ranked"] = ranked
+            prices = {sym: float(df.Close.iloc[-1]) for sym, df in intraday.items() if df is not None and len(df)}
+            extra = (set(broker.positions) | ({settings.park_symbol} if settings.park_idle_in_index else set())) - set(prices)
+            prices.update(latest_prices(provider, extra))
+            st.session_state["paper_prices"] = prices
+            cands = ranked[ranked.is_candidate].head(dt_top).to_dict("records") if len(ranked) else []
+            s_day = replace(settings, day_allocation_pct=float(dt_share), swing_allocation_pct=float(100 - dt_share),
+                            max_position_pct_of_strategy_capital=min(settings.max_position_pct_of_strategy_capital,
+                                                                     100.0 / dt_top))
+            acts = run_paper_cycle(broker, cands, s_day, prices, limits={"day": dt_top})
+            if not cands:
+                acts.insert(0, {"symbol": "", "action": "inga kandidater",
+                                "detail": "Ingen aktie uppfyller alla daytrading-villkor just nu."})
+            st.session_state["paper_actions"] = acts
+        except Exception as e:
+            st.error(f"Något gick fel vid hämtning av data: {e}")
+        st.rerun()
+    day_open = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
+    if k2.button("⏹ Stäng alla dagpositioner", disabled=not day_open):
+        prices = latest_prices(provider, set(day_open) | ({settings.park_symbol} if settings.park_idle_in_index else set()))
+        acts = close_all_day_positions(broker, prices)
+        acts += [a for a in run_paper_cycle(broker, [], settings, prices) if a["action"] != "inget att göra"]
+        st.session_state["paper_actions"] = acts
+        st.session_state["paper_prices"] = {**st.session_state.get("paper_prices", {}), **prices}
+        st.rerun()
+    if "dt_ranked" in st.session_state and len(st.session_state["dt_ranked"]):
+        with st.expander("Rangordning från senaste sökningen (topp 30)", expanded=False):
+            r = st.session_state["dt_ranked"].head(30).copy()
+            cols = [c for c in ["symbol", "signal", "score", "price", "change_today_pct", "rel_volume", "rsi",
+                                "stop_reference", "target_reference", "conditions_met", "conditions"] if c in r]
+            r = r[cols].rename(columns={**COLUMN_NAMES, "score": "Poäng", "change_today_pct": "Idag %",
+                                        "rel_volume": "Relativ volym"})
+            if "Signal" in r:
+                r["Signal"] = r["Signal"].map(SIGNAL_NAMES).fillna(r["Signal"])
+            st.dataframe(r, width="stretch", hide_index=True)
 
     if st.session_state.get("paper_actions"):
         st.subheader("Senaste handelsrundan")
