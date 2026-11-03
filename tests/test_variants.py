@@ -73,3 +73,25 @@ def test_paper_cycle_moves_trailing_stop_up(tmp_path):
     assert b.positions["A"]["stop"] == 104  # flyttas aldrig ned
     run_paper_cycle(b, [], Settings(), {"A": 103})
     assert "A" not in b.positions  # såld på följande stop
+
+
+def test_breakout_buys_new_highs_with_rising_rsi_and_macd(bars):
+    from trading_platform.strategies.variants import BreakoutVariant
+    v = BreakoutVariant("utbrott")
+    total = 0
+    for seed in range(5):
+        x, sig = entry_signals(v, bars(1500, seed=seed, drift=0.001))
+        b, prev = x[sig], x.shift(1)[sig]
+        assert (b.Close > x.High.shift(1).rolling(50).max()[sig]).all()
+        assert (b.RSI14 > prev.RSI14).all() and (b.MACD > prev.MACD).all()
+        total += int(sig.sum())
+    assert total > 10
+
+
+def test_compare_includes_sp500_benchmark(bars):
+    mkt = bars(900, seed=50, drift=0.0004, vol=0.01)
+    data = {f"S{i}": add_market(bars(900, seed=i), mkt) for i in range(3)}
+    df = compare_strategies(data, swing_variants(), 1000, Settings(), benchmark=mkt.Close)
+    assert df["S&P 500 %"].notna().all()
+    assert set(df["Slår S&P 500?"]) <= {"ja", "nej"}
+    assert "Per år %" in df

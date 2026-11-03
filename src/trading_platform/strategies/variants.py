@@ -61,6 +61,36 @@ class SwingVariant:
         return f"SwingVariant({self.label!r})"
 
 
+class BreakoutVariant(SwingVariant):
+    """Trendföljning: köp när aktien bryter upp till ny högsta nivå.
+
+    Passar aktier i starka trender som sällan gör stora rekyler. Följer
+    samma grundregel som swing: köp aldrig när RSI eller MACD är på väg ner.
+    """
+
+    def __init__(self, label, lookback=50, volume_factor=1.5, **kw):
+        kw.setdefault("trail_atr", 3.0)
+        kw.setdefault("max_hold", 120)
+        super().__init__(label, **kw)
+        self.lookback = lookback
+        self.volume_factor = volume_factor
+
+    def conditions(self, x):
+        c = pd.DataFrame(
+            {
+                "upptrend": (x.Close > x.SMA50) & (x.SMA50 > x.SMA200),
+                f"ny {self.lookback}-dagars högsta": x.Close > x.High.shift(1).rolling(self.lookback).max(),
+                "stark volym": x.Volume >= self.volume_factor * x.VOL20,
+                "RSI stiger": (x.RSI14 > x.RSI14.shift(1)) & (x.RSI14 > 50) & (x.RSI14 < 80),
+                "MACD stiger": (x.MACD > x.MACD.shift(1)) & (x.MACD_HIST > x.MACD_HIST.shift(1)),
+            },
+            index=x.index,
+        )
+        if self.market_filter:
+            c["marknaden i upptrend"] = (x.MKT_CLOSE > sma(x.MKT_CLOSE, 200)) if "MKT_CLOSE" in x else False
+        return c
+
+
 def swing_variants():
     """Varianterna som jämförs i dashboarden."""
     return {
@@ -74,6 +104,9 @@ def swing_variants():
             "Swing – låt vinnare löpa", trail_atr=3.0, max_hold=120),
         "Swing + marknadsfilter – låt vinnare löpa": SwingVariant(
             "Swing + marknadsfilter – låt vinnare löpa", market_filter=True, trail_atr=3.0, max_hold=120),
+        "Utbrott – låt vinnare löpa": BreakoutVariant("Utbrott – låt vinnare löpa"),
+        "Utbrott + marknadsfilter – låt vinnare löpa": BreakoutVariant(
+            "Utbrott + marknadsfilter – låt vinnare löpa", market_filter=True),
         "Ditt upplägg: +2 % / −2 %": SwingVariant(
             "Ditt upplägg: +2 % / −2 %", stop_pct=2.0, target_pct=2.0),
     }

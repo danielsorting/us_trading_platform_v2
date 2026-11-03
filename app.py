@@ -9,7 +9,8 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 import pandas as pd
 import streamlit as st
 
-from trading_platform.backtest import buy_and_hold_by_symbol, compare_strategies, run_backtest
+from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategies, per_year, period_return,
+                                      run_backtest)
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import YahooResearchProvider
@@ -195,17 +196,26 @@ with tab_bt:
         if missing:
             st.warning("För lite data för: " + ", ".join(missing))
         cap_usd = sek_to_usd(bt_cap_sek, usd_sek)
+        mkt = None
         if module is not day:
             mkt = market_bars_for(VARIANTS["Swing + marknadsfilter"], period)
             bars = {s: add_market(b, mkt) for s, b in bars.items()}
         if strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
-                st.session_state["bt_compare"] = compare_strategies(bars, VARIANTS, cap_usd, settings)
+                st.session_state["bt_compare"] = compare_strategies(
+                    bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close)
                 st.session_state["bt_bh"] = buy_and_hold_by_symbol(bars)
             st.session_state.pop("bt", None)
         else:
             with st.spinner("Kör backtest…"):
-                st.session_state["bt"] = (strat_name, run_backtest(bars, module, cap_usd, settings))
+                res = run_backtest(bars, module, cap_usd, settings)
+                eq = res["equity"]
+                bench = None
+                if mkt is not None and len(eq):
+                    # Jämför från första dagen strategin kunde handla (efter SMA200-uppvärmning).
+                    times = sorted(set().union(*[b.index for b in bars.values() if b is not None]))
+                    bench = period_return(mkt.Close, times[min(module.MIN_BARS, len(times) - 1)])
+                st.session_state["bt"] = (strat_name, res, bench)
             st.session_state.pop("bt_compare", None)
 
     if "bt_compare" in st.session_state:
@@ -214,6 +224,12 @@ with tab_bt:
         if len(cmp):
             st.dataframe(cmp, width="stretch", hide_index=True)
             good = cmp[(cmp.get("Håller i kontroll?") == "ja")] if "Håller i kontroll?" in cmp else cmp.iloc[0:0]
+            bench = cmp["S&P 500 %"].iloc[0] if "S&P 500 %" in cmp else None
+            if bench is not None and bench == bench:
+                beats = int((cmp["Slår S&P 500?"] == "ja").sum())
+                msg = (f"S&P 500 (indexfond) gav **{bench:+.1f} %** under samma period. "
+                       f"{beats} av {len(cmp)} varianter slog den.")
+                (st.info if beats else st.warning)(msg)
             if len(good):
                 st.success(f"Bäst av de som går plus i både test- och kontrolldel: **{good.iloc[0].Strategi}**. "
                            "Välj den i sidopanelen för scanner och simulerad handel.")
@@ -221,7 +237,8 @@ with tab_bt:
                 st.warning("Ingen variant gick plus i både test- och kontrolldel med dessa aktier och denna period. "
                            "Prova fler aktier eller en längre period innan du drar slutsatser.")
             st.caption("Tips: testa på många aktier (gärna 20+) och den längsta perioden. Ju fler affärer, "
-                       "desto säkrare resultat. Jämför alltid med kolumnen 'Köp & behåll'.")
+                       "desto säkrare resultat. Jämför med **S&P 500** – 'Köp & behåll' gäller aktier "
+                       "valda i efterhand och är därför ingen rättvis jämförelse.")
             if "Testperiod" in cmp:
                 st.caption(f"Testperiod: {cmp['Testperiod'].iloc[0]} (de första ca 220 dagarna används bara "
                            "för att räkna fram SMA200).")
@@ -231,12 +248,13 @@ with tab_bt:
             st.warning("Ingen data att jämföra.")
 
     if "bt" in st.session_state:
-        name, r = st.session_state["bt"]
+        name, r, bench = st.session_state["bt"]
         s = r["stats"]
         st.subheader(f"Resultat – {name}")
         m = st.columns(4)
         m[0].metric("Avkastning", f"{s['total_return_pct']:+.1f} %")
-        m[1].metric("Köp och behåll (jämförelse)", "–" if s["buy_and_hold_pct"] is None else f"{s['buy_and_hold_pct']:+.1f} %")
+        m[1].metric("S&P 500 (indexfond)", "–" if bench is None else f"{bench:+.1f} %",
+                    help="Vad en indexfond på S&P 500 (SPY) gav under samma period. Det är den viktigaste jämförelsen.")
         m[2].metric("Största nedgång", f"{s['max_drawdown_pct']:.1f} %")
         m[3].metric("Antal affärer", s["trades"])
         m = st.columns(4)
@@ -245,6 +263,9 @@ with tab_bt:
         m[2].metric("Profit factor", "–" if s["profit_factor"] is None else f"{s['profit_factor']:.2f}",
                     help="Summa vinster / summa förluster. Över 1 = lönsam.")
         m[3].metric("Courtage totalt", f"{usd_to_sek(s['fees_usd'], usd_sek):,.0f} SEK")
+        if s["buy_and_hold_pct"] is not None:
+            st.caption(f"Köp och behåll av just dessa aktier: {s['buy_and_hold_pct']:+.1f} % "
+                       "(valda i efterhand – därför ingen rättvis jämförelse).")
         if len(r["equity"]):
             st.line_chart((r["equity"] * usd_sek).rename("Kapital (SEK)"))
         if len(r["trades"]):
@@ -335,6 +356,8 @@ with tab_info:
   Stop = pris − 2 × ATR, mål = 2 × risken, max 20 handelsdagar.
 - **Daytrading** (5-minutersdata): kurs över EMA20, EMA9 > EMA20, MACD-linjen och histogrammet stiger, RSI stiger och ligger 50–75, hög volym.
   Stop = pris − 1,5 × ATR, mål = 2 × risken, stängs senast vid dagens slut.
+- **Utbrott (trendföljning)**: köper när aktien stänger på ny 50-dagars högsta med stark volym, i en upptrend,
+  med stigande RSI och MACD. Inget fast mål – stop loss följer med uppåt (3 × ATR).
 - **Positionsstorlek**: så många aktier att du förlorar högst *risk per affär* om stop loss slår till.
 
 **Viktiga begränsningar**

@@ -201,7 +201,25 @@ def _stats(trades, equity, capital, data, window=None):
     return {k: (float(v) if hasattr(v, "item") else v) for k, v in s.items()}
 
 
-def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, split=0.7):
+def period_return(close, start, end=None):
+    """Avkastning i % för en kursserie mellan två tidpunkter (None om data saknas)."""
+    if close is None or not len(close):
+        return None
+    c = close[(close.index >= start) & ((close.index <= end) if end is not None else True)].dropna()
+    if len(c) < 2:
+        return None
+    return round((float(c.iloc[-1]) / float(c.iloc[0]) - 1) * 100, 2)
+
+
+def per_year(total_pct, start, end):
+    """Omräkning av total avkastning till genomsnitt per år."""
+    years = (pd.Timestamp(end) - pd.Timestamp(start)).days / 365.25
+    if total_pct is None or years <= 0.25:
+        return None
+    return round(((1 + total_pct / 100) ** (1 / years) - 1) * 100, 1)
+
+
+def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, split=0.7, benchmark=None):
     """Jämför flera strategier på samma aktier.
 
     Perioden delas i två delar: "test" (första split-andelen) och "kontroll"
@@ -209,6 +227,7 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
     eller överanpassad.
 
     strategies: {"namn": strategi, ...}. Returnerar en tabell, en rad per strategi.
+    benchmark: stängningskurser för jämförelseindex (t.ex. SPY = S&P 500).
     """
     settings = settings or Settings()
     times = sorted(set().union(*[b.index for b in bars_by_symbol.values() if b is not None and len(b)]))
@@ -218,10 +237,14 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
     first = times[min(220, len(times) - 1)]
     usable = [t for t in times if t >= first]
     cut = usable[int(len(usable) * split)] if len(usable) > 10 else None
+    bench = period_return(benchmark, first)
     rows = []
     for name, strat in strategies.items():
         full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first)["stats"]
         row = {"Strategi": name, "Avkastning %": full["total_return_pct"],
+               "Per år %": per_year(full["total_return_pct"], first, times[-1]),
+               "S&P 500 %": bench,
+               "Slår S&P 500?": None if bench is None else ("ja" if full["total_return_pct"] > bench else "nej"),
                "Köp & behåll %": full["buy_and_hold_pct"], "Affärer": full["trades"],
                "Vinstandel %": full["win_rate_pct"], "Snitt R": full["avg_r"],
                "Profit factor": full["profit_factor"], "Största nedgång %": full["max_drawdown_pct"]}
