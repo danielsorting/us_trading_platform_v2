@@ -125,3 +125,8 @@ tid,typ,symbol,action,detail
 2026-11-03 20:10,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:05: Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6). Nästa sökning ca 20:35 (dagskurser ändras långsamt)."
 2026-11-03 20:10,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: BRZE (5/6), VITL (5/6), ADEA (5/6), EQH (5/6), SIRI (5/6)."
 2026-11-03 20:10,day,HUT,SÄLJ,"stop loss, resultat -1.70 USD"
+2026-11-03 20:15,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.67 per nyhet, 15 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock Market Today: Dow Futures Plunge 323 Points, Apple Sinks, and Iran Strikes Send Oil Soaring""."
+2026-11-03 20:15,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:05: Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6). Nästa sökning ca 20:35 (dagskurser ändras långsamt)."
+2026-11-03 20:15,day,GPK,KÖP,"22 st à 11.20 USD (day), stop 11.13"
+2026-11-03 20:15,day,RSI,hoppar över,"Daytrading-budgeten är fullt använd (1,004 av 1,020 USD)."
+2026-11-03 20:15,day,O,hoppar över,"Daytrading-budgeten är fullt använd (1,004 av 1,020 USD)."

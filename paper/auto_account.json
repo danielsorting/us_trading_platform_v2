@@ -1,5 +1,5 @@
 {
-  "cash": 390.17537132506027,
+  "cash": 143.4434180043663,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -43,6 +43,17 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.036
+    },
+    "GPK": {
+      "quantity": 22.0,
+      "avg_price": 11.210602423667908,
+      "opened": "2026-11-03T19:16:03",
+      "entry_fee": 0.0987,
+      "stop": 11.13,
+      "target": 11.354999923706055,
+      "strategy": "day",
+      "trail_atr": null,
+      "atr": 0.05
     }
   },
   "orders": [
@@ -182,6 +193,21 @@
       "pnl": -1.7,
       "reason": "stop loss",
       "strategy": "day"
+    },
+    {
+      "id": "25c8d9985c",
+      "time": "2026-11-03T19:16:03",
+      "symbol": "GPK",
+      "side": "buy",
+      "quantity": 22.0,
+      "price": 11.2106,
+      "fee": 0.0987,
+      "pnl": null,
+      "stop": 11.13,
+      "target": 11.354999923706055,
+      "strategy": "day",
+      "trail_atr": null,
+      "atr": 0.05
     }
   ],
   "reset_id": null
