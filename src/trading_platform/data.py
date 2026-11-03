@@ -144,6 +144,32 @@ class YahooResearchProvider(MarketDataProvider):
                     rows[sym] = float(price) * float(vol)
             offset += len(quotes)
             pages += 1
+        # Yahoos färdiga lista är ofta kort (ca 50). Fyll på med en egen sökning:
+        # USA-aktier, pris över min_price, hög volym, sorterat på dagens volym.
+        EquityQuery = getattr(yf, "EquityQuery", None)
+        if len(rows) < n and EquityQuery is not None:
+            try:
+                q = EquityQuery("and", [EquityQuery("eq", ["region", "us"]),
+                                        EquityQuery("gt", ["intradayprice", min_price]),
+                                        EquityQuery("gt", ["dayvolume", 1_000_000])])
+            except Exception:
+                q = None
+            offset, pages = 0, 0
+            while q is not None and len(rows) < n and pages < 20:
+                try:
+                    res = _with_retry(lambda: screen(q, offset=offset, size=100, sortField="dayvolume",
+                                                     sortAsc=False))
+                except Exception:
+                    break
+                quotes = (res or {}).get("quotes") or []
+                if not quotes:
+                    break
+                for qq in quotes:
+                    sym, price, vol = qq.get("symbol"), qq.get("regularMarketPrice"), qq.get("regularMarketVolume")
+                    if sym and price and vol and price >= min_price and qq.get("quoteType", "EQUITY") == "EQUITY":
+                        rows.setdefault(sym, float(price) * float(vol))
+                offset += len(quotes)
+                pages += 1
         return [s for s, _ in sorted(rows.items(), key=lambda kv: kv[1], reverse=True)][:n]
 
     @staticmethod
