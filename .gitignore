@@ -1,0 +1,13 @@
+# Mac-skräpfiler
+.DS_Store
+__MACOSX/
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# Hemligheter (lösenord, API-nycklar) – får aldrig hamna på GitHub
+.env
