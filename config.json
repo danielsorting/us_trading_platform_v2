@@ -21,5 +21,11 @@
   ],
   "include_etfs": false,
   "minimum_average_daily_dollar_volume": 5000000,
-  "mode": "scan_only"
+  "mode": "scan_only",
+  "allow_fractional_shares": true,
+  "usd_sek_fallback": 10.0,
+  "commission_per_share_usd": 0.005,
+  "min_commission_usd": 1.0,
+  "slippage_pct": 0.05,
+  "max_symbols_per_scan": 300
 }

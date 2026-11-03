@@ -11,3 +11,6 @@ venv/
 
 # Hemligheter (lösenord, API-nycklar) – får aldrig hamna på GitHub
 .env
+
+# Simulerat konto (skapas när du kör simulerad handel)
+paper_account.json

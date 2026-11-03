@@ -1,59 +1,99 @@
-# US Trading Platform v2.0
+# US Trading Platform v0.3
 
-A modular, broker-independent US stock trading research platform for macOS/Linux/Windows.
-It supports:
-- Whole-market symbol-universe discovery (Nasdaq Trader symbol directory files).
-- User watchlists.
-- Separate day-trading and swing-trading strategy modules.
-- Independent capital allocations and risk budgets.
-- Broker adapter interface (paper broker included; live adapters intentionally not enabled).
-- Streamlit dashboard for configuration and scanning.
+En modulär plattform för att **skanna, backtesta och simulera handel** med amerikanska aktier.
+Skriven i Python med ett dashboard i Streamlit.
 
-## Important limitations
-This is a working research/scanning starter, **not a live-money auto-trader**.
-- Whole-market discovery does not mean every stock can be analyzed intraday for free. A market-data provider, entitlements, rate limits, symbol mapping, and costs must be chosen.
-- Yahoo Finance via `yfinance` is for research/prototyping; it is not an execution-grade real-time feed.
-- No real orders are sent. The included broker is a local paper/mock adapter.
-- Before live trading, implement and test a broker-specific adapter using that broker's official API, verify Swedish residency/account eligibility, instrument permissions, currency conversion, fees, and market-data rights.
-- Do not place API secrets in source code. Use environment variables or a secrets manager.
+> ⚠️ **Inga riktiga order skickas.** Riktig handel är avstängd i koden (`mode` får bara vara
+> `scan_only` eller `paper`). Det här är ett verktyg för forskning och övning – ingen
+> garanti för vinst och ingen finansiell rådgivning.
 
-## Install on Mac
-1. Open Terminal.
-2. Check Python: `python3 --version` (Python 3.10+ recommended).
-3. Unzip this project and enter its folder:
-   `cd ~/Downloads/us_trading_platform_v2`
-4. Create and activate an environment:
-   `python3 -m venv .venv`
-   `source .venv/bin/activate`
-5. Install:
-   `pip install -r requirements.txt`
-6. Launch dashboard:
-   `streamlit run app.py`
+## Vad som finns
 
-## First run
-- Set mode to scan-only.
-- Set capital to SEK 10,000.
-- Try a small watchlist first.
-- Whole-market symbol discovery reads the public Nasdaq Trader symbol-directory files when you click "Load US universe". You can also import a CSV with a `symbol` column.
-- Scanner uses daily candles for swing analysis and a separate intraday interval for day-trading candidates. Intraday coverage depends on the data source and may be delayed.
+| Del | Vad den gör |
+|---|---|
+| **Scanner** | Bedömer aktier med strategierna och visar köpkandidater med stop loss, kursmål, antal aktier och risk i USD och SEK. Filtrerar bort aktier med för låg omsättning. |
+| **Swingtrading** | Dagsdata. Köper rekyler i en upptrend (SMA50/SMA200, RSI, MACD, volym). Stop = pris − 2×ATR, mål = 2R, max 20 dagar. |
+| **Daytrading** | 5-minutersdata. Momentum (EMA9/EMA20, MACD, RSI 50–75, volym). Stop = pris − 1,5×ATR, mål = 2R, stängs senast vid dagens slut. |
+| **Riskhantering** | Positionsstorlek så att du förlorar högst vald risk om stop loss slår till. Stöd för delaktier. Växlar mellan SEK och USD. |
+| **Backtest** | Historiskt test utan framtidsinformation: köp på stapeln efter signalen, gap-hantering, courtage och slippage, gemensam kassa och max antal positioner. Jämför med "köp och behåll". |
+| **Simulerad handel** | Papper-konto med låtsaspengar. En *handelsrunda* säljer positioner som nått stop/mål/tidsgräns och köper nya kandidater. Kontot sparas i `paper_account.json`. |
+| **Dashboard** | Fyra flikar: Scanner, Backtest, Simulerad handel och Om. |
 
-## Project layout
-- `config.py`: capital, allocations, risk and scanner settings.
-- `universe.py`: US symbol directory + custom watchlist.
-- `data.py`: replaceable market-data provider abstraction.
-- `indicators.py`: RSI, MACD, EMA, ATR.
-- `strategies/day.py`: intraday momentum candidate logic.
-- `strategies/swing.py`: daily trend/pullback candidate logic.
-- `risk.py`: position sizing and limits.
-- `brokers/base.py`: broker interface.
-- `brokers/paper.py`: local paper broker; no real orders.
-- `scanner.py`: orchestration.
-- `app.py`: dashboard.
+## Starta dashboarden på nätet (rekommenderas för gamla Mac-datorer)
 
-## Next development milestones
-1. Choose a market-data provider with US-wide coverage and suitable real-time entitlements.
-2. Validate symbol mapping, delisted securities, ETFs/ADR filters, and corporate actions.
-3. Add robust event-driven backtesting with spreads, slippage, commissions, borrow/short constraints, and no look-ahead.
-4. Add official broker adapters one at a time (e.g. Webull/IBKR where eligible).
-5. Add order reconciliation, duplicate-order protection, market-hours calendar, disconnect handling, kill switch and audit log.
-6. Paper trade for a meaningful period before considering live orders.
+Streamlit Community Cloud kör appen gratis direkt från GitHub. Inget behöver installeras på din dator.
+
+1. Gå till **share.streamlit.io** och logga in med ditt GitHub-konto.
+2. Klicka **Create app** → **Deploy a public app from GitHub** (privata arkiv fungerar också).
+3. Välj arkivet `danielsorting/us_trading_platform_v2`, grenen `main` och filen `app.py`.
+4. Klicka **Deploy**. Efter några minuter öppnas appen i webbläsaren.
+
+Varje gång ny kod sparas på GitHub uppdateras appen automatiskt.
+
+**Bra att veta om webbversionen:** det simulerade kontot kan nollställas när appen startas om.
+Använd *Ladda ner kontot* under fliken Simulerad handel ibland, så kan du ladda upp det igen.
+
+## Köra på egen dator
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+streamlit run app.py
+```
+
+## Köra testerna
+
+```bash
+pip install pytest
+python -m pytest
+```
+
+## Inställningar (`config.json`)
+
+| Inställning | Betydelse |
+|---|---|
+| `total_capital` | Totalt kapital i SEK |
+| `day_allocation_pct` / `swing_allocation_pct` | Fördelning mellan strategierna (summa 100) |
+| `risk_per_trade_pct` | Max förlust per affär i % av strategins kapital |
+| `max_positions_per_strategy` | Max antal samtidiga positioner per strategi |
+| `max_position_pct_of_strategy_capital` | Max storlek på en position |
+| `allow_fractional_shares` | Tillåt delaktier (t.ex. 0,35 aktie) |
+| `minimum_average_daily_dollar_volume` | Minsta genomsnittliga omsättning per dag (USD) |
+| `usd_sek_fallback` | Växelkurs som används om aktuell kurs inte kan hämtas |
+| `commission_per_share_usd`, `min_commission_usd` | Courtage (liknar Interactive Brokers "Fixed") |
+| `slippage_pct` | Antagen prisförsämring per köp/sälj |
+| `watchlist` | Din bevakningslista |
+| `mode` | `scan_only` eller `paper`. Riktig handel är avstängd. |
+
+## Projektets delar
+
+- `app.py` – dashboard
+- `src/trading_platform/config.py` – inställningar
+- `src/trading_platform/data.py` – kursdata (Yahoo Finance, utbytbar)
+- `src/trading_platform/indicators.py` – SMA, EMA, RSI, MACD, ATR
+- `src/trading_platform/strategies/` – `swing.py`, `day.py` (samma regler i scanner och backtest)
+- `src/trading_platform/risk.py` – positionsstorlek, courtage, valuta
+- `src/trading_platform/scanner.py` – skanning
+- `src/trading_platform/backtest.py` – backtesting
+- `src/trading_platform/paper_trader.py` – handelsrunda för simulerad handel
+- `src/trading_platform/brokers/` – mäklargränssnitt och papper-mäklare
+- `src/trading_platform/universe.py` – lista över USA-aktier (Nasdaq Trader)
+- `tests/` – automatiska tester
+
+## Viktiga begränsningar
+
+- **Kursdata:** Yahoo Finance är gratis men kan vara fördröjd, ofullständig och begränsa många anrop.
+  5-minutersdata finns bara cirka 60 dagar bakåt. Inte lämpligt för riktig handel.
+- **Litet kapital:** courtaget (ca 1 USD per köp och sälj, högst 1 % av affären) kan äta en stor
+  del av varje affär när risken per affär bara är några dollar. Backtestet visar hur mycket.
+- **Backtest ≠ framtid:** testa många aktier och perioder och jämför med "köp och behåll".
+- **Överlevnadsbias:** dagens aktielistor saknar bolag som försvunnit, vilket kan försköna historiska tester.
+
+## Nästa steg
+
+1. Simulerad handel under en längre period (veckor–månader) och utvärdering.
+2. Förbättra strategierna utifrån backtester.
+3. Bättre datakälla med realtidskurser.
+4. Interactive Brokers-koppling – först mot IBKR:s pappershandelskonto, med dubbelorder-skydd,
+   nödstopp, loggning och marknadskalender. Riktiga pengar sist av allt.
