@@ -17,3 +17,4 @@ paper_account.json
 
 # Sparad lista över mest omsatta aktier (skapas av appen)
 cache_liquid_ranking.json
+cache_daytop.json
