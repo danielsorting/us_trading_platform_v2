@@ -28,8 +28,23 @@ st.set_page_config(page_title="Diagram – US Trading Platform", layout="wide")
 provider = YahooResearchProvider()
 settings = load_settings()
 
+def _robot_account():
+    """Robotens konto direkt från GitHub (färskast), annars webbsidans egen kopia."""
+    import tempfile
+    import requests
+    local = Path(tempfile.gettempdir()) / "robot_auto_account.json"
+    try:
+        r = requests.get("https://raw.githubusercontent.com/danielsorting/us_trading_platform_v2/main/paper/"
+                         "auto_account.json", params={"t": datetime.now().strftime("%Y%m%d%H%M")}, timeout=10)
+        r.raise_for_status()
+        local.write_bytes(r.content)
+        return local
+    except Exception:
+        return ROOT / "paper" / "auto_account.json"
+
+
 ACCOUNTS = {
-    "🤖 Automatisk handel (GitHub)": ROOT / "paper" / "auto_account.json",
+    "🤖 Automatisk handel (GitHub)": _robot_account(),
     "🧪 Simulerad handel (webbsidan)": ROOT / "paper_account.json",
 }
 INTERVALS = {

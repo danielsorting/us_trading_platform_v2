@@ -201,6 +201,34 @@ def positions_table(positions, prices, fx):
     rows.sort(key=lambda r: order.get(r["Typ"], 2))
     return pd.DataFrame(rows)
 
+
+ROBOT_RAW = "https://raw.githubusercontent.com/danielsorting/us_trading_platform_v2/main/paper/"
+ROBOT_FILES = ("auto_account.json", "auto_state.json", "auto_log.csv")
+
+
+@st.cache_data(ttl=60, show_spinner=False)
+def _download_robot_files(minute):
+    """Hämtar robotens senaste filer direkt från GitHub (webbsidans egen kopia
+    uppdateras inte efter varje runda). Returnerar mappen, eller None vid fel."""
+    import requests
+    import tempfile
+    folder = Path(tempfile.gettempdir()) / "robot_files"
+    folder.mkdir(exist_ok=True)
+    try:
+        for name in ROBOT_FILES:
+            r = requests.get(ROBOT_RAW + name, params={"t": minute}, timeout=10)
+            r.raise_for_status()
+            (folder / name).write_bytes(r.content)
+        return str(folder)
+    except Exception:
+        return None
+
+
+def fresh_robot_files():
+    """Mappen med robotens färskaste filer (GitHub), annars webbsidans egen kopia."""
+    got = _download_robot_files(datetime.now().strftime("%Y%m%d%H%M"))
+    return Path(got) if got else PROJECT_ROOT / "paper"
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -808,7 +836,7 @@ with tab_paper:
 # ---------------------------------------------------------------- om
 # ---------------------------------------------------------------- automatisk handel (GitHub)
 with tab_auto:
-    AUTO_DIR = PROJECT_ROOT / "paper"
+    AUTO_DIR = fresh_robot_files()
     st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut** under börsens öppettider "
              "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
     rb = defaults
