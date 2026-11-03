@@ -80,6 +80,11 @@ def use_best(variant, risk):
     st.session_state["best_applied"] = f"{variant} med {risk} % risk per affär"
 
 
+# Resultat från 🏆-knappen ställs in innan sidopanelen ritas (Streamlit kräver det).
+if "pending_best" in st.session_state:
+    use_best(*st.session_state.pop("pending_best"))
+
+
 with st.sidebar:
     st.header("Kapital och risk")
     capital = st.number_input("Totalt kapital (SEK)", min_value=1000, value=int(defaults.total_capital), step=1000)
@@ -98,8 +103,10 @@ with st.sidebar:
                        swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
                        max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
                        allow_fractional_shares=fractional, park_idle_in_index=park)
-    variant_name = st.selectbox("Swing-variant i scanner och simulerad handel", list(VARIANTS), key="sb_variant",
-                                help="Välj den variant som klarat sig bäst under fliken Backtest.")
+    variant_name = st.selectbox("Strategi som används (ställs in automatiskt av 🏆-knappen)", list(VARIANTS),
+                                key="sb_variant",
+                                help="Ställs in automatiskt när du kör 🏆 Hitta bästa automatiskt under Backtest. "
+                                     "Du kan också välja själv.")
     swing_strategy = VARIANTS[variant_name]
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
@@ -228,6 +235,11 @@ with tab_bt:
             bar.empty()
             st.session_state.pop("bt", None)
             st.session_state.pop("bt_compare", None)
+            best = st.session_state["bt_best"]
+            if len(best) and best.iloc[0]["Godkänd"] == "ja":
+                # Ställ in vinnaren automatiskt i scanner och simulerad handel.
+                st.session_state["pending_best"] = (best.iloc[0]["Strategi"], float(best.iloc[0]["Risk per affär %"]))
+                st.rerun()
         elif strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
                 st.session_state["bt_compare"] = compare_strategies(
@@ -249,8 +261,8 @@ with tab_bt:
             st.session_state.pop("bt_compare", None)
 
     if st.session_state.get("best_applied"):
-        st.success(f"✅ Inställt: **{st.session_state['best_applied']}**. Scanner och simulerad handel använder "
-                   "nu detta (se sidopanelen).")
+        st.success(f"✅ Inställt automatiskt: **{st.session_state['best_applied']}**. Scanner och simulerad "
+                   "handel använder nu detta (syns i sidopanelen).")
 
     if "bt_best" in st.session_state:
         best = st.session_state["bt_best"]
@@ -263,8 +275,9 @@ with tab_bt:
             st.success(f"**{top['Strategi']}** med **{top['Risk per affär %']} % risk per affär**: "
                        f"{top['Avkastning %']:+.1f} % totalt ({top['Per år %']:+.1f} % per år), största nedgång "
                        f"{top['Största nedgång %']:.1f} %, {int(top['Affärer'])} affärer.{sp}")
-            st.button("Använd den här i scanner och simulerad handel", type="primary",
-                      on_click=use_best, args=(top["Strategi"], top["Risk per affär %"]))
+            if st.session_state.get("sb_variant") != top["Strategi"]:
+                st.button("Använd den här i scanner och simulerad handel", type="primary",
+                          on_click=use_best, args=(top["Strategi"], top["Risk per affär %"]))
             if top["Slår S&P 500?"] == "nej":
                 st.warning("Ärligt: den bästa roboten slog inte en vanlig indexfond under perioden. "
                            "Fundera på om en indexfond är det bättre valet för pengarna.")
