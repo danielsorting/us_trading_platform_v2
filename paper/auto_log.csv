@@ -33,3 +33,6 @@ tid,typ,symbol,action,detail
 2026-11-03 18:15,day,NBIS,hoppar över,"Daytrading-budgeten är fullt använd (1,010 av 1,019 USD)."
 2026-11-03 18:20,swing,,swing-koll,"0 swingpositioner kontrollerade (stop loss och kursmål). Senaste swing-sökning 17:55: Granskade 291 aktier: 0 köpkandidater. Närmast: AMZN (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), HDB (5/6). Nästa sökning ca 18:25 (dagskurser ändras långsamt)."
 2026-11-03 18:20,day,ORCL,hoppar över,"Daytrading-budgeten är fullt använd (1,012 av 1,019 USD)."
+2026-11-03 18:25,swing,,swing-koll,"0 swingpositioner kontrollerade (stop loss och kursmål). Senaste swing-sökning 17:55: Granskade 291 aktier: 0 köpkandidater. Närmast: AMZN (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), HDB (5/6). Nästa sökning ca 18:25 (dagskurser ändras långsamt)."
+2026-11-03 18:25,day,SNOW,hoppar över,"Daytrading-budgeten är fullt använd (1,024 av 1,022 USD)."
+2026-11-03 18:25,day,ON,hoppar över,"Daytrading-budgeten är fullt använd (1,024 av 1,022 USD)."
