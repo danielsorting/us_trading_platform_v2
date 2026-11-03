@@ -115,6 +115,14 @@ def liquid_symbols(n=300):
 LIQUID = "Hela USA-marknaden (300 mest omsatta)"
 
 
+def sv_time(iso):
+    """ISO-tid sparad av servern → svensk tid (ÅÅÅÅ-MM-DD TT:MM)."""
+    try:
+        return datetime.fromisoformat(iso).astimezone(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
+    except Exception:
+        return iso
+
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -585,6 +593,66 @@ with tab_paper:
     st.caption((f"Dagens bästa: lista från sökningen {saved['time']} ({saved_n} aktier). Sök igen för en ny lista."
                 if saved_n else "Dagens bästa: gör först en sökning med knappen ovan."))
 
+    # ------------------------------------------------ autoläge
+    st.markdown("**🤖 Autoläge – roboten köper och säljer själv**")
+    a1, a2, a3 = st.columns(3)
+    auto_on = a1.toggle("Autoläge på", key="auto_on",
+                        help="Kör handelsrundan på dagens bästa automatiskt under börsens öppettider. "
+                             "Fungerar bara så länge den här sidan är öppen i webbläsaren.")
+    auto_every = a2.selectbox("Handelsrunda var", [5, 10, 15], key="auto_every",
+                              format_func=lambda m: f"{m}:e minut")
+    auto_research = a3.checkbox("Ny sökning efter dagens bästa var 30:e minut", value=True, key="auto_research")
+
+    @st.fragment(run_every=60 if auto_on else None)
+    def auto_runner():
+        import time as _t
+        if not st.session_state.get("auto_on"):
+            return
+        now = _t.time()
+        log = st.session_state.setdefault("auto_log", [])
+        is_open_now, _txt = market_status()
+        day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
+        if not is_open_now:
+            if day_pos:  # missade dagpositioner stängs så fort börsen är stängd
+                prices_c = latest_prices(provider, set(day_pos))
+                acts = close_all_day_positions(broker, prices_c, reason="börsen stängd")
+                log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} stängde {len(acts)} dagpositioner")
+                st.session_state["paper_actions"] = acts
+                st.rerun()
+            st.caption("🤖 Autoläget väntar – börsen är stängd (öppnar 15:30 svensk tid).")
+            return
+        wait = st.session_state.get("auto_last", 0) + auto_every * 60 - now
+        if wait > 0:
+            st.caption(f"🤖 Autoläget är på. Nästa handelsrunda om cirka {max(1, round(wait / 60))} min.")
+            for line in log[:8]:
+                st.caption(line)
+            return
+        st.session_state["auto_last"] = now
+        cur = st.session_state.get("dt_saved") or saved
+        need_search = (not cur or not cur.get("symbols")
+                       or (auto_research and now - st.session_state.get("auto_last_search", 0) >= 30 * 60))
+        try:
+            if need_search:
+                universe = liquid_symbols(300) if dt_universe.startswith("Hela") else list(settings.watchlist)
+                ranked, acts = day_round(universe, "Autoläge: söker")
+                save_daytop(ranked)
+                st.session_state["auto_last_search"] = now
+            else:
+                universe = list(dict.fromkeys(cur["symbols"] + [s for s, p in broker.positions.items()
+                                                                if p.get("strategy") == "day"]))
+                ranked, acts = day_round(universe, "Autoläge: handelsrunda")
+            buys = sum(a["action"] == "KÖP" for a in acts)
+            sells = sum(a["action"].startswith("SÄLJ") and "parkering" not in a["action"] for a in acts)
+            log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} "
+                          f"{'sökning + ' if need_search else ''}runda: {buys} köp, {sells} sälj")
+            del log[50:]
+            st.session_state["paper_actions"] = acts
+        except Exception as e:
+            log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} fel: {e}")
+        st.rerun()
+
+    auto_runner()
+
     if "dt_ranked" in st.session_state and len(st.session_state["dt_ranked"]):
         with st.expander("Rangordning från senaste sökningen (topp 30)", expanded=not is_open):
             r = st.session_state["dt_ranked"].head(30).copy()
@@ -609,14 +677,20 @@ with tab_paper:
                              "Köpkurs": round(p["avg_price"], 2), "Senaste kurs": prices.get(s),
                              "Stop loss": p.get("stop"), "Kursmål": None if p.get("target") is None else round(p["target"], 2),
                              "Orealiserat (USD)": None if s not in prices else round(p["quantity"] * (prices[s] - p["avg_price"]), 2),
-                             "Öppnad": p["opened"]} for s, p in broker.positions.items()])
+                             "Öppnad (svensk tid)": sv_time(p["opened"])} for s, p in broker.positions.items()])
         st.dataframe(pos, width="stretch", hide_index=True)
     else:
         st.caption("Inga öppna positioner.")
 
     st.subheader("Affärshistorik")
     if broker.orders:
-        st.dataframe(pd.DataFrame(broker.orders[::-1]), width="stretch", hide_index=True)
+        hist = pd.DataFrame(broker.orders[::-1])
+        if "time" in hist:
+            hist["time"] = hist["time"].map(sv_time)
+        hist = hist.rename(columns={"time": "Tid (svensk)", "symbol": "Aktie", "side": "Köp/sälj", "quantity": "Antal",
+                                    "price": "Kurs (USD)", "fee": "Courtage (USD)", "pnl": "Resultat (USD)",
+                                    "strategy": "Strategi", "reason": "Orsak"})
+        st.dataframe(hist, width="stretch", hide_index=True)
         closed = [o["pnl"] for o in broker.orders if o.get("pnl") is not None]
         if closed:
             st.caption(f"Avslutade affärer: {len(closed)} · vinstandel {sum(p > 0 for p in closed) / len(closed) * 100:.0f} % "
