@@ -189,51 +189,84 @@ if "pending_best" in st.session_state:
 from trading_platform.status import render_status_box
 render_status_box(provider, PROJECT_ROOT / "paper" / "auto_state.json")
 
-with st.sidebar:
-    st.header("Kapital och risk")
-    st.info("**Gäller bara den här webbsidan:** 🔎 Scanner, 📈 Backtest och 🧪 Simulerad handel.\n\n"
-            "🤖 **Automatisk handel (bakgrundsroboten) påverkas INTE.** Den har egna inställningar "
-            "som syns under fliken 🤖 Automatisk handel. Vill du ändra dem – säg till Claude.")
-    capital = st.number_input("Totalt kapital (SEK)", min_value=1000, value=int(defaults.total_capital), step=1000)
-    day_pct = st.slider("Andel till daytrading (%)", 0, 100, int(defaults.day_allocation_pct), 5)
-    st.caption(f"Andel till swingtrading: {100 - day_pct} %")
-    risk = st.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key="sb_risk")
-    max_pos = st.slider("Max antal positioner per strategi", 1, 10, int(defaults.max_positions_per_strategy))
-    max_pos_pct = st.slider("Max storlek per position (% av strategins kapital)", 5, 100,
-                            int(defaults.max_position_pct_of_strategy_capital), 5)
-    fractional = st.checkbox("Tillåt delaktier", value=defaults.allow_fractional_shares,
-                             help="T.ex. 0,35 aktie. Behövs ofta när kapitalet är litet.")
-    park = st.checkbox("Parkera ledigt kapital i S&P 500 (SPY)", value=defaults.park_idle_in_index,
-                       help="Pengar som inte används i affärer ligger i SPY och växer med börsen. "
-                            "SPY säljs automatiskt när roboten behöver pengar till ett köp. Gäller swingtrading.")
-    settings = replace(defaults, total_capital=float(capital), day_allocation_pct=float(day_pct),
-                       swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
-                       max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
-                       allow_fractional_shares=fractional, park_idle_in_index=park)
-    variant_name = st.selectbox("Strategi som används (ställs in automatiskt av 🏆-knappen)", list(VARIANTS),
-                                key="sb_variant",
-                                help="Ställs in automatiskt när du kör 🏆 Hitta bästa automatiskt under Backtest. "
-                                     "Du kan också välja själv.")
-    swing_strategy = VARIANTS[variant_name]
-    swing_strategy_name = variant_name
-    usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
-    st.divider()
-    st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
-    st.caption("Ändringar här gäller bara tills sidan laddas om, och bara på webbsidan – aldrig bakgrundsroboten.")
-
 st.title("US Trading Platform")
-st.caption("Scanner · Backtest · Simulerad handel — inga riktiga order skickas")
-
-c1, c2, c3 = st.columns(3)
-c1.metric("Daytrading-budget", f"{settings.day_capital:,.0f} SEK", help=f"≈ {sek_to_usd(settings.day_capital, usd_sek):,.0f} USD")
-c2.metric("Swingtrading-budget", f"{settings.swing_capital:,.0f} SEK", help=f"≈ {sek_to_usd(settings.swing_capital, usd_sek):,.0f} USD")
-c3.metric("Max risk per affär (swing)", f"{settings.swing_capital * risk / 100:,.0f} SEK")
+st.caption("Automatisk handel · Scanner · Backtest · Simulerad handel — inga riktiga order skickas")
 
 tab_auto, tab_scan, tab_bt, tab_paper, tab_info = st.tabs(
     ["🤖 Automatisk handel", "🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
 
+
+def settings_panel(base, prefix, disabled):
+    """Reglagen för kapital och risk. Används två gånger:
+    - under 🤖 Automatisk handel: robotens inställningar, låsta (bara för att visa)
+    - under 🧪 Simulerad handel: webbsidans inställningar, går att ändra"""
+    k = (lambda name: f"{prefix}_{name}") if prefix else (lambda name: None)
+    a, b, c = st.columns(3)
+    capital = a.number_input("Totalt kapital (SEK)", min_value=1000, value=int(base.total_capital), step=1000,
+                             disabled=disabled, key=k("cap"))
+    day_pct = a.slider("Andel till daytrading (%)", 0, 100, int(base.day_allocation_pct), 5,
+                       disabled=disabled, key=k("day"))
+    a.caption(f"Andel till swingtrading: {100 - day_pct} %")
+    if disabled:
+        risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
+                               value=float(base.risk_per_trade_pct), disabled=True, key=k("risk"))
+    else:
+        risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key="sb_risk")
+    max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
+                       disabled=disabled, key=k("maxpos"))
+    max_pos_pct = b.slider("Max storlek per position (% av strategins kapital)", 5, 100,
+                           int(base.max_position_pct_of_strategy_capital), 5, disabled=disabled, key=k("maxpct"))
+    fractional = c.checkbox("Tillåt delaktier", value=base.allow_fractional_shares, disabled=disabled,
+                            key=k("frac"), help="T.ex. 0,35 aktie. Avanza säljer bara hela aktier, därför är "
+                                                "det avstängt för att likna verkligheten.")
+    park = c.checkbox("Parkera ledigt kapital i S&P 500 (SPY)", value=base.park_idle_in_index, disabled=disabled,
+                      key=k("park"), help="Pengar som inte används i affärer ligger i SPY och växer med börsen. "
+                                          "SPY säljs automatiskt när roboten behöver pengar till ett köp.")
+    if disabled:
+        c.selectbox("Swing-strategi", [base.swing_variant], disabled=True, key=k("var"))
+        c.selectbox("Daytrading-strategi", [base.day_variant], disabled=True, key=k("dvar"))
+        variant = base.swing_variant
+    else:
+        variant = c.selectbox("Swing-strategi (ställs in automatiskt av 🏆-knappen under Backtest)",
+                              list(VARIANTS), key="sb_variant")
+        c.caption(f"Daytrading-strategi: **{base.day_variant}**")
+    out = replace(base, total_capital=float(capital), day_allocation_pct=float(day_pct),
+                  swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
+                  max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
+                  allow_fractional_shares=fractional, park_idle_in_index=park)
+    m = st.columns(3)
+    m[0].metric("Daytrading-budget", f"{out.day_capital:,.0f} SEK")
+    m[1].metric("Swingtrading-budget", f"{out.swing_capital:,.0f} SEK")
+    m[2].metric("Max risk per affär (swing)", f"{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} SEK")
+    return out, variant
+
+
+with tab_auto:
+    with st.expander("⚙️ Robotens inställningar (låsta – roboten på GitHub använder dessa)", expanded=True):
+        st.caption("Reglagen är låsta så att inget ändras av misstag. Vill du ändra något – säg till Claude, "
+                   "så ändras det i robotens inställningsfil (config.json).")
+        settings_panel(defaults, "rb", disabled=True)
+
+with tab_paper:
+    with st.expander("⚙️ Inställningar för simulerad handel (gäller även 🔎 Scanner och 📈 Backtest)",
+                     expanded=True):
+        st.caption("Här kan du prova fritt. Ändringarna påverkar INTE bakgrundsroboten och "
+                   "gäller tills sidan laddas om.")
+        settings, variant_name = settings_panel(defaults, None, disabled=False)
+risk = settings.risk_per_trade_pct
+swing_strategy = VARIANTS[variant_name]
+swing_strategy_name = variant_name
+usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
+with st.sidebar:
+    st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
+
+WEB_SETTINGS_NOTE = (f"Använder inställningarna under 🧪 Simulerad handel: {settings.total_capital:,.0f} SEK, "
+                     f"daytrading {settings.day_allocation_pct:.0f} %, risk {settings.risk_per_trade_pct:g} % per affär, "
+                     f"strategi {variant_name}.")
+
 # ---------------------------------------------------------------- scanner
 with tab_scan:
+    st.caption(WEB_SETTINGS_NOTE)
     mode = st.radio("Vilka aktier?", ["Min bevakningslista", LIQUID], horizontal=True)
     if mode == "Min bevakningslista":
         symbols = parse_symbols(st.text_area("Aktier (kommaseparerade)", ",".join(settings.watchlist), height=80))
@@ -278,6 +311,7 @@ with tab_scan:
 
 # ---------------------------------------------------------------- backtest
 with tab_bt:
+    st.caption(WEB_SETTINGS_NOTE)
     st.write("Testa hur en strategi hade gått historiskt. Köp sker alltid på stapeln **efter** signalen, "
              "och courtage och slippage räknas med.")
     bt_mode = st.radio("Vad vill du göra?",
@@ -713,19 +747,10 @@ with tab_auto:
     AUTO_DIR = PROJECT_ROOT / "paper"
     st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut** under börsens öppettider "
              "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
-    rb = defaults  # robotens egna inställningar (config.json) – INTE reglagen till vänster
-    with st.expander("⚙️ Robotens inställningar (påverkas inte av reglagen till vänster)", expanded=False):
-        st.markdown(
-            f"- **Kapital:** {rb.total_capital:,.0f} SEK\n"
-            f"- **Daytrading:** {rb.day_allocation_pct:.0f} % · strategi **{rb.day_variant}** · de "
-            f"{rb.auto_day_top_n} bästa bland de 300 mest omsatta · stängs före 22:00\n"
-            f"- **Swing:** {rb.swing_allocation_pct:.0f} % · strategi **{rb.swing_variant}** · söker bland "
-            f"{'de 300 mest omsatta + din bevakningslista' if rb.swing_universe == 'liquid' else 'din bevakningslista'}\n"
-            f"- **Risk per affär:** {rb.risk_per_trade_pct:g} % · **max positioner per strategi:** "
-            f"{rb.max_positions_per_strategy} · **max storlek per position:** {rb.max_position_pct_of_strategy_capital:.0f} %\n"
-            f"- **Delaktier:** {'på' if rb.allow_fractional_shares else 'av'} · **parkering i S&P 500:** "
-            f"{'på' if rb.park_idle_in_index else 'av'} · **courtage:** {rb.commission_pct:g} %\n\n"
-            "Vill du ändra något här – säg till Claude, så ändras det i robotens inställningsfil.")
+    rb = defaults
+    st.caption(f"Övrigt: daytrading väljer de {rb.auto_day_top_n} bästa bland de 300 mest omsatta och stänger före 22:00. "
+               f"Swing söker bland {'de 300 mest omsatta + din bevakningslista' if rb.swing_universe == 'liquid' else 'din bevakningslista'}. "
+               f"Courtage {rb.commission_pct:g} % (Avanza Pro).")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():
         st.info("Bakgrundsroboten har inte handlat än. Den startar automatiskt nästa gång börsen är öppen. "
