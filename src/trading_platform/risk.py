@@ -1,9 +1,42 @@
-def position_size(strategy_capital, price, stop_price, risk_pct=0.5, max_position_pct=25):
-    """Share quantity from risk budget and notional cap. Assumes same currency; FX is not handled."""
-    if price <= 0 or stop_price <= 0 or stop_price >= price: return 0
+"""Riskhantering: positionsstorlek och handelskostnader."""
+import math
+
+
+def position_size(strategy_capital, price, stop_price, risk_pct=0.5, max_position_pct=25, fractional=False):
+    """Share quantity from risk budget and notional cap.
+
+    Kapital, pris och stop måste vara i samma valuta (USD för USA-aktier).
+    - Risk: om stop loss slår till förloras högst risk_pct % av kapitalet.
+    - Tak: positionen får högst vara max_position_pct % av kapitalet.
+    - fractional=True tillåter delaktier (avrundat nedåt till 4 decimaler).
+    """
+    if price <= 0 or stop_price <= 0 or stop_price >= price:
+        return 0
     risk_cash = strategy_capital * risk_pct / 100
     per_share_risk = price - stop_price
-    by_risk = int(risk_cash // per_share_risk)
     max_notional = strategy_capital * max_position_pct / 100
+    if fractional:
+        qty = min(risk_cash / per_share_risk, max_notional / price)
+        return max(0.0, math.floor(qty * 10_000) / 10_000)
+    by_risk = int(risk_cash // per_share_risk)
     by_notional = int(max_notional // price)
     return max(0, min(by_risk, by_notional))
+
+
+def commission(quantity, per_share=0.005, minimum=1.0, price=None):
+    """Courtage i USD (modell liknande IBKR Fixed: per aktie, med minimum,
+    och högst 1 % av affärsvärdet)."""
+    if quantity <= 0:
+        return 0.0
+    fee = max(minimum, quantity * per_share)
+    if price:
+        fee = min(fee, 0.01 * quantity * price)
+    return round(fee, 2)
+
+
+def sek_to_usd(amount_sek, usd_sek_rate):
+    return amount_sek / usd_sek_rate
+
+
+def usd_to_sek(amount_usd, usd_sek_rate):
+    return amount_usd * usd_sek_rate
