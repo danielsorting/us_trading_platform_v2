@@ -7,3 +7,7 @@ tid,typ,symbol,action,detail
 2026-11-03 17:55,swing,,swing-sökning,"Granskade 291 aktier: 0 köpkandidater. Närmast: AMZN (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), HDB (5/6)."
 2026-11-03 17:55,day,PBR-A,hoppar över,Avgifterna skulle äta mer än 20 % av förväntad vinst (för liten affär).
 2026-11-03 17:55,day,CVE,hoppar över,Avgifterna skulle äta mer än 20 % av förväntad vinst (för liten affär).
+2026-11-03 18:00,swing,,swing-koll,"0 swingpositioner kontrollerade (stop loss och kursmål). Senaste swing-sökning 17:55: Granskade 291 aktier: 0 köpkandidater. Närmast: AMZN (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), HDB (5/6). Nästa sökning ca 18:25 (dagskurser ändras långsamt)."
+2026-11-03 18:00,day,SNOW,hoppar över,För lite kapital för positionen.
+2026-11-03 18:00,day,PBR-A,hoppar över,Avgifterna skulle äta mer än 20 % av förväntad vinst (för liten affär).
+2026-11-03 18:00,day,ON,hoppar över,För lite kapital för positionen.
