@@ -122,3 +122,6 @@ tid,typ,symbol,action,detail
 2026-11-03 20:00,day,DIS,hoppar över,"Daytrading-budgeten är fullt använd (963 av 1,024 USD)."
 2026-11-03 20:05,swing,,swing-sökning,"Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6)."
 2026-11-03 20:05,day,TXN,hoppar över,"För lite kapital: en aktie kostar 313.36 USD, men högst 256 USD får läggas per affär (hela aktier)."
+2026-11-03 20:10,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:05: Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6). Nästa sökning ca 20:35 (dagskurser ändras långsamt)."
+2026-11-03 20:10,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: BRZE (5/6), VITL (5/6), ADEA (5/6), EQH (5/6), SIRI (5/6)."
+2026-11-03 20:10,day,HUT,SÄLJ,"stop loss, resultat -1.70 USD"

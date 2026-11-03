@@ -1,5 +1,5 @@
 {
-  "cash": 198.91758220724714,
+  "cash": 390.17537132506027,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -43,17 +43,6 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.036
-    },
-    "HUT": {
-      "quantity": 3.0,
-      "avg_price": 64.29213213729858,
-      "opened": "2026-11-03T18:50:54",
-      "entry_fee": 0.0772,
-      "stop": 63.88,
-      "target": 65.42000213623048,
-      "strategy": "day",
-      "trail_atr": null,
-      "atr": 0.388
     }
   },
   "orders": [
@@ -181,6 +170,18 @@
       "strategy": "day",
       "trail_atr": null,
       "atr": 0.388
+    },
+    {
+      "id": "f564df30ab",
+      "time": "2026-11-03T19:11:00",
+      "symbol": "HUT",
+      "side": "sell",
+      "quantity": 3.0,
+      "price": 63.7781,
+      "fee": 0.0765,
+      "pnl": -1.7,
+      "reason": "stop loss",
+      "strategy": "day"
     }
   ],
   "reset_id": null
