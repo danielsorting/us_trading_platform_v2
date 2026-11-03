@@ -74,10 +74,13 @@ st.session_state.setdefault("sb_risk", float(defaults.risk_per_trade_pct))
 st.session_state.setdefault("sb_variant", list(VARIANTS)[0])
 
 
-def use_best(variant, risk):
+def use_best(variant, risk=None):
     st.session_state["sb_variant"] = variant
-    st.session_state["sb_risk"] = float(risk)
-    st.session_state["best_applied"] = f"{variant} med {risk} % risk per affär"
+    if risk is not None:
+        st.session_state["sb_risk"] = float(risk)
+        st.session_state["best_applied"] = f"{variant} med {risk} % risk per affär"
+    else:
+        st.session_state["best_applied"] = f"{variant} (din risk per affär behålls)"
 
 
 # Resultat från 🏆-knappen ställs in innan sidopanelen ritas (Streamlit kräver det).
@@ -177,9 +180,17 @@ with tab_bt:
     if bt_mode == "🏆 Hitta bästa automatiskt":
         strat_name = "__best__"
         module = swing
-        st.caption("Testar **alla** swing-varianter på tre risknivåer (0,5 %, 1 % och 2 % per affär) och väljer den "
-                   "bästa. Godkänd = plus i både testdel och kontrolldel och minst 20 affärer. Poäng = avkastning per år "
-                   "delat med största nedgång (belönar jämn tillväxt). Tar 1–3 minuter.")
+        choose_risk = st.checkbox("Låt knappen även välja risk per affär", value=False, key="bt_choose_risk",
+                                  help="Av: knappen behåller din risk från sidopanelen och väljer bara strategi. "
+                                       "På: den testar även 0,5 %, 1 % och 2 % och väljer den jämnaste.")
+        if choose_risk:
+            st.caption("Testar **alla** strategier på tre risknivåer (0,5 %, 1 % och 2 % per affär) och väljer den "
+                       "bästa. Tar 1–3 minuter.")
+        else:
+            st.caption(f"Testar **alla** strategier med **din risk: {risk} % per affär** och väljer den bästa. "
+                       "Tar under en minut.")
+        st.caption("Godkänd = plus i både testdel och kontrolldel och minst 20 affärer. Poäng = avkastning per år "
+                   "delat med största nedgång (belönar jämn tillväxt).")
     elif bt_mode == "Jämför swing-varianter":
         strat_name = None
         module = swing
@@ -229,8 +240,10 @@ with tab_bt:
             bars = {s: add_market(b, mkt) for s, b in bars.items()}
         if strat_name == "__best__":
             bar = st.progress(0.0, text="Testar kombinationer…")
+            pick_risk = st.session_state.get("bt_choose_risk", False)
             st.session_state["bt_best"] = find_best(
                 bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close,
+                risk_levels=(0.5, 1.0, 2.0) if pick_risk else (settings.risk_per_trade_pct,),
                 progress=lambda i, n: bar.progress(i / n, text=f"Testat {i} av {n} kombinationer"))
             bar.empty()
             st.session_state.pop("bt", None)
@@ -238,7 +251,8 @@ with tab_bt:
             best = st.session_state["bt_best"]
             if len(best) and best.iloc[0]["Godkänd"] == "ja":
                 # Ställ in vinnaren automatiskt i scanner och simulerad handel.
-                st.session_state["pending_best"] = (best.iloc[0]["Strategi"], float(best.iloc[0]["Risk per affär %"]))
+                st.session_state["pending_best"] = (
+                    best.iloc[0]["Strategi"], float(best.iloc[0]["Risk per affär %"]) if pick_risk else None)
                 st.rerun()
         elif strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
@@ -277,7 +291,7 @@ with tab_bt:
                        f"{top['Största nedgång %']:.1f} %, {int(top['Affärer'])} affärer.{sp}")
             if st.session_state.get("sb_variant") != top["Strategi"]:
                 st.button("Använd den här i scanner och simulerad handel", type="primary",
-                          on_click=use_best, args=(top["Strategi"], top["Risk per affär %"]))
+                          on_click=use_best, args=(top["Strategi"],))
             if top["Slår S&P 500?"] == "nej":
                 st.warning("Ärligt: den bästa roboten slog inte en vanlig indexfond under perioden. "
                            "Fundera på om en indexfond är det bättre valet för pengarna.")
