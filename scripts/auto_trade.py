@@ -1,5 +1,5 @@
 """Bakgrundsrobot: handlar med LÅTSASPENGAR automatiskt, även när ingen
-webbläsare är öppen. Körs av GitHub Actions var 15:e minut under börsens
+webbläsare är öppen. Körs av GitHub Actions var 5:e minut under börsens
 öppettider (se .github/workflows/auto_trade.yml).
 
 Kontot sparas i paper/auto_account.json och händelserna i paper/auto_log.csv.

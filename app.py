@@ -706,19 +706,19 @@ with tab_paper:
 # ---------------------------------------------------------------- automatisk handel (GitHub)
 with tab_auto:
     AUTO_DIR = PROJECT_ROOT / "paper"
-    st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 15:e minut** under börsens öppettider "
+    st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut** under börsens öppettider "
              "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
     st.caption(f"Daytrading: {settings.day_allocation_pct:.0f} % av kontot, strategi **{settings.day_variant}**, "
                f"de {settings.auto_day_top_n} bästa "
                f"bland de 300 mest omsatta, ny sökning var 30:e minut, stängs före 22:00. "
                f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, ny sökning var "
                f"30:e minut bland {'de 300 mest omsatta + din bevakningslista' if settings.swing_universe == 'liquid' else 'din bevakningslista'}, "
-               "stop loss kontrolleras var 15:e minut. "
+               "stop loss kontrolleras var 5:e minut. "
                f"Inställningarna hämtas från config.json.")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():
         st.info("Bakgrundsroboten har inte handlat än. Den startar automatiskt nästa gång börsen är öppen. "
-                "Sidan uppdateras när roboten har sparat (var 15:e minut).")
+                "Sidan uppdateras när roboten har sparat (var 5:e minut).")
     else:
         auto_broker = PaperBroker(state_file=auto_acc_file)
         auto_state = {}

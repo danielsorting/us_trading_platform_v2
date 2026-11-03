@@ -1,7 +1,7 @@
 """Automatisk handel med låtsaspengar – används både av webbsidan och av
 bakgrundsroboten på GitHub (scripts/auto_trade.py).
 
-En "tick" (körs t.ex. var 15:e minut):
+En "tick" (körs t.ex. var 5:e minut):
 1. Börsen stängd → stäng eventuella dagpositioner, annars inget.
 2. Daytrading: ny sökning efter dagens bästa var 30:e minut, annars färska kurser
    för den sparade listan. Rangordna, förhandelskoll, köp de bästa, sälj vid
