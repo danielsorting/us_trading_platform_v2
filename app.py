@@ -20,8 +20,8 @@ from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategie
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import AlpacaRealtime, HybridProvider, PrefetchedProvider, YahooResearchProvider
-from trading_platform.daytop import (add_extended_check, market_status, most_liquid, rank_day_candidates,
-                                    yahoo_symbol)
+from trading_platform.daytop import (add_extended_check, liquid_universe, market_status, most_liquid,
+                                    rank_day_candidates, yahoo_symbol)
 from trading_platform.autotrader import day_round, tick
 from trading_platform.paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
 from trading_platform.risk import sek_to_usd, usd_to_sek
@@ -117,10 +117,7 @@ def get_liquid_ranking(include_etfs=False):
             return saved["symbols"]
     except Exception:
         pass
-    uni = get_symbols("us_market", [], include_etfs)
-    syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
-    daily = provider.history_many(syms, "1mo", "1d")
-    ranking = most_liquid(daily, None)
+    ranking = liquid_universe(provider, 1000, fallback_symbols=defaults.watchlist)
     try:
         LIQUID_FILE.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
     except Exception:

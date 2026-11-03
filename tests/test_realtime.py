@@ -50,3 +50,49 @@ def test_hybrid_survives_realtime_error(provider):
 
     hp = HybridProvider(provider(), Broken())
     assert "AAPL" in latest_prices(hp, ["AAPL"])
+
+
+def test_retry_on_rate_limit(monkeypatch):
+    import time
+    from trading_platform import data
+    monkeypatch.setattr(time, "sleep", lambda s: None)
+    calls = []
+
+    class YFRateLimitError(Exception):
+        pass
+
+    def flaky():
+        calls.append(1)
+        if len(calls) < 3:
+            raise YFRateLimitError("Too Many Requests. Rate limited.")
+        return "ok"
+
+    assert data._with_retry(flaky) == "ok" and len(calls) == 3
+
+
+def test_most_active_parses_yahoo_screen(monkeypatch):
+    import sys
+    import types
+    from trading_platform.data import YahooResearchProvider
+    fake = types.ModuleType("yfinance")
+    quotes = [{"symbol": f"S{i}", "regularMarketPrice": 10 + i, "regularMarketVolume": 1_000_000,
+               "quoteType": "EQUITY"} for i in range(30)]
+    quotes.append({"symbol": "PENNY", "regularMarketPrice": 1.0, "regularMarketVolume": 9e9, "quoteType": "EQUITY"})
+    quotes.append({"symbol": "SOMEETF", "regularMarketPrice": 50, "regularMarketVolume": 9e9, "quoteType": "ETF"})
+    fake.screen = lambda q, offset=None, count=None: {"quotes": quotes if offset == 0 else []}
+    monkeypatch.setitem(sys.modules, "yfinance", fake)
+    out = YahooResearchProvider().most_active(10)
+    assert out[0] == "S29" and len(out) == 10 and "PENNY" not in out and "SOMEETF" not in out
+
+
+def test_liquid_universe_falls_back(provider):
+    from trading_platform.daytop import liquid_universe
+
+    class P(provider):
+        def most_active(self, n):
+            raise RuntimeError("spärrad")
+
+        def history_many(self, *a, **k):
+            raise RuntimeError("spärrad")
+
+    assert liquid_universe(P(), 5, fallback_symbols=["AAPL", "MSFT"]) == ["AAPL", "MSFT"]

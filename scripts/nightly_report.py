@@ -7,7 +7,9 @@ som använder den för att förbättra roboten.
 Kör lokalt:  python scripts/nightly_report.py
 """
 import csv
+import json
 import sys
+import time
 import traceback
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -18,12 +20,11 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from trading_platform.backtest import find_best, per_year, period_return, run_backtest  # noqa: E402
 from trading_platform.config import load_settings  # noqa: E402
-from trading_platform.daytop import most_liquid, yahoo_symbol  # noqa: E402
+from trading_platform.daytop import liquid_universe  # noqa: E402
 from trading_platform.data import YahooResearchProvider  # noqa: E402
 from trading_platform.risk import sek_to_usd  # noqa: E402
 from trading_platform.strategies.day_variants import day_variants  # noqa: E402
 from trading_platform.strategies.variants import add_market, swing_variants  # noqa: E402
-from trading_platform.universe import get_symbols  # noqa: E402
 
 REPORTS = ROOT / "reports"
 DAY_SHARE = 0.20          # daytrading testas som experiment med 20 % av kapitalet
@@ -57,22 +58,31 @@ def main():
 
     liquid = []
     try:
-        uni = get_symbols("us_market", [], False)
-        syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
-        liquid = most_liquid(p.history_many(syms, "1mo", "1d"), max(SWING_LIQUID, DAY_UNIVERSE))
-    except Exception as e:
-        lines += [f"> Kunde inte hämta de mest omsatta aktierna: {e}", ""]
+        saved = json.loads((ROOT / "paper" / "liquid_ranking.json").read_text())
+        if time.time() - saved.get("time", 0) < 24 * 3600:
+            liquid = saved.get("symbols", [])
+    except Exception:
+        pass
+    if not liquid:
+        try:
+            liquid = liquid_universe(p, max(SWING_LIQUID, DAY_UNIVERSE))
+        except Exception as e:
+            lines += [f"> Kunde inte hämta de mest omsatta aktierna: {e}", ""]
 
     # ---------------- swing
-    spy5 = p.history("SPY", "5y", "1d")
+    spy5 = p.history("SPY", "5y", "1d")  # (har inbyggt omförsök vid spärr)
     lists = {"Bevakningslistan": list(s.watchlist)}
     if liquid:
         lists[f"{SWING_LIQUID} mest omsatta"] = liquid[:SWING_LIQUID]
     lines += ["## Swingtrading (5 år, dagsdata)", ""]
     for list_name, syms in lists.items():
-        bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
-        df = find_best(bars, swing_variants(), swing_cap, s, benchmark=spy5.Close,
-                       risk_levels=(s.risk_per_trade_pct,))
+        try:
+            bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
+            df = find_best(bars, swing_variants(), swing_cap, s, benchmark=spy5.Close,
+                           risk_levels=(s.risk_per_trade_pct,))
+        except Exception as e:
+            lines += [f"### {list_name}", "", f"> Fel: {type(e).__name__}: {e}", ""]
+            continue
         lines += [f"### {list_name} ({len(bars)} aktier, testperiod {df.attrs.get('period', '')})", "",
                   md_table(df, ["Strategi", "Per år %", "Avkastning %", "S&P 500 %", "Slår S&P 500?",
                                 "Största nedgång %", "Affärer", "Vinstandel %", "Testdel %", "Kontrolldel %",
@@ -86,11 +96,19 @@ def main():
     lines += ["## Daytrading (senaste ca 60 dagarna, 5-minutersdata)", "",
               f"Testas som experiment med {DAY_SHARE:.0%} av kapitalet på de {DAY_UNIVERSE} mest omsatta aktierna. "
               "Courtage och slippage ingår. Inga positioner över natten.", ""]
-    if liquid:
-        dbars = {k: v for k, v in p.history_many(liquid[:DAY_UNIVERSE], "60d", "5m").items() if v is not None}
+    try:
+        dbars = ({k: v for k, v in p.history_many(liquid[:DAY_UNIVERSE], "60d", "5m").items() if v is not None}
+                 if liquid else {})
+    except Exception as e:
+        dbars = {}
+        lines += [f"> Fel vid hämtning av 5-minutersdata: {type(e).__name__}: {e}", ""]
+    if dbars:
         s_day = replace(s, max_positions_per_strategy=10, max_position_pct_of_strategy_capital=10.0,
                         park_idle_in_index=False)
-        spy_d = p.history("SPY", "60d", "5m")
+        try:
+            spy_d = p.history("SPY", "60d", "5m")
+        except Exception:
+            spy_d = None
         rows = []
         for name, strat in day_variants().items():
             st = run_backtest(dbars, strat, day_cap, s_day)
@@ -107,7 +125,7 @@ def main():
         lines += [md_table(pd.DataFrame(rows), ["Strategi", "Avkastning %", "S&P 500 %", "Affärer", "Vinstandel %",
                                                 "Snitt R", "Profit factor", "Största nedgång %", "Courtage USD"]), ""]
     else:
-        lines += ["Hoppades över (ingen lista över mest omsatta aktier).", ""]
+        lines += ["Hoppades över (ingen data).", ""]
 
     lines += ["---", "Rapporten är underlag för morgonsessionen. Historiska resultat är ingen garanti för framtiden."]
     REPORTS.mkdir(exist_ok=True)

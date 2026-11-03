@@ -44,6 +44,20 @@ class MarketDataProvider(ABC):
         return out
 
 
+def _with_retry(fn, tries=4, wait=20):
+    """Kör fn(); om Yahoo svarar 'för många anrop' väntar vi och försöker igen."""
+    import time
+    for i in range(tries):
+        try:
+            return fn()
+        except Exception as e:  # yfinance.exceptions.YFRateLimitError m.fl.
+            text = f"{type(e).__name__} {e}"
+            if ("RateLimit" in text or "Too Many Requests" in text) and i < tries - 1:
+                time.sleep(wait * (i + 1))
+                continue
+            raise
+
+
 class YahooResearchProvider(MarketDataProvider):
     """Research/demo data adapter. Not a real-time execution feed.
 
@@ -54,7 +68,7 @@ class YahooResearchProvider(MarketDataProvider):
     def history(self, symbol, period="1y", interval="1d"):
         import yfinance as yf
 
-        df = yf.Ticker(symbol).history(period=period, interval=interval, auto_adjust=True)
+        df = _with_retry(lambda: yf.Ticker(symbol).history(period=period, interval=interval, auto_adjust=True))
         if df is None or df.empty:
             return None
         df.columns = [str(c).title() for c in df.columns]
@@ -81,8 +95,9 @@ class YahooResearchProvider(MarketDataProvider):
         for start in range(0, len(symbols), chunk):
             part = symbols[start:start + chunk]
             try:
-                df = yf.download(part, period=period, interval=interval, group_by="ticker",
-                                 auto_adjust=True, threads=True, progress=False, prepost=prepost)
+                df = _with_retry(lambda: yf.download(part, period=period, interval=interval, group_by="ticker",
+                                                     auto_adjust=True, threads=True, progress=False,
+                                                     prepost=prepost))
             except Exception:
                 df = None
             for sym in part:
@@ -102,6 +117,30 @@ class YahooResearchProvider(MarketDataProvider):
             if progress:
                 progress(min(start + chunk, len(symbols)), len(symbols))
         return out
+
+    def most_active(self, n=300, min_price=5.0):
+        """Dagens mest handlade USA-aktier från Yahoos färdiga lista (få anrop).
+        Sorterat efter omsättning i dollar. Tom lista om det inte går."""
+        import yfinance as yf
+
+        rows = {}
+        screen = getattr(yf, "screen", None)
+        if screen is None:
+            return []
+        for offset in range(0, max(n, 250) + 250, 250):
+            try:
+                # offset gör att yfinance använder sökvägen som stöder sidor; max 250 per anrop.
+                res = _with_retry(lambda: screen("most_actives", offset=offset, count=250))
+            except Exception:
+                break
+            quotes = (res or {}).get("quotes") or []
+            for q in quotes:
+                sym, price, vol = q.get("symbol"), q.get("regularMarketPrice"), q.get("regularMarketVolume")
+                if sym and price and vol and price >= min_price and q.get("quoteType", "EQUITY") == "EQUITY":
+                    rows[sym] = float(price) * float(vol)
+            if len(quotes) < 250 or len(rows) >= n:
+                break
+        return [s for s, _ in sorted(rows.items(), key=lambda kv: kv[1], reverse=True)][:n]
 
     @staticmethod
     def _clean(df):

@@ -19,11 +19,10 @@ sys.path.insert(0, str(ROOT / "src"))
 from trading_platform.autotrader import tick  # noqa: E402
 from trading_platform.brokers.paper import PaperBroker  # noqa: E402
 from trading_platform.config import load_settings  # noqa: E402
-from trading_platform.daytop import market_status, most_liquid, yahoo_symbol  # noqa: E402
+from trading_platform.daytop import liquid_universe, market_status  # noqa: E402
 from trading_platform.data import YahooResearchProvider  # noqa: E402
 from trading_platform.risk import sek_to_usd  # noqa: E402
 from trading_platform.strategies.variants import MARKET_SYMBOL, needs_market, swing_variants  # noqa: E402
-from trading_platform.universe import get_symbols  # noqa: E402
 
 PAPER = ROOT / "paper"
 ACCOUNT = PAPER / "auto_account.json"
@@ -44,9 +43,7 @@ def liquid_list(provider, n=300):
     saved = load_json(LIQUID, {})
     if saved.get("symbols") and time.time() - saved.get("time", 0) < LIQUID_MAX_AGE:
         return saved["symbols"][:n]
-    uni = get_symbols("us_market", [], False)
-    syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
-    ranking = most_liquid(provider.history_many(syms, "1mo", "1d"), 1000)
+    ranking = liquid_universe(provider, max(n, 300), fallback_symbols=load_settings().watchlist)
     LIQUID.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
     return ranking[:n]
 

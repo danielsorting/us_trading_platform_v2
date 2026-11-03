@@ -93,3 +93,28 @@ def add_extended_check(ranked, extended, max_move_pct=2.0):
     df["ext_move_pct"] = ((ext / df.price - 1) * 100).round(2)
     df["move_ok"] = df.ext_move_pct.abs().le(max_move_pct) | df.ext_move_pct.isna()
     return df
+
+
+def liquid_universe(provider, n=300, fallback_symbols=None):
+    """De n mest omsatta USA-aktierna.
+
+    1) Yahoos färdiga lista "most actives" (ett fåtal anrop) om den finns.
+    2) Annars: dagsdata för hela Nasdaq-listan (tungt – ca 6 000 aktier).
+    3) Sista utväg: fallback_symbols (t.ex. bevakningslistan).
+    """
+    try:
+        fast = provider.most_active(n) if hasattr(provider, "most_active") else []
+    except Exception:
+        fast = []
+    if len(fast) >= min(n, 100):
+        return fast[:n]
+    try:
+        from .universe import get_symbols
+        uni = get_symbols("us_market", [], False)
+        syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
+        heavy = most_liquid(provider.history_many(syms, "1mo", "1d"), n)
+        if heavy:
+            return heavy
+    except Exception:
+        pass
+    return list(fallback_symbols or [])[:n]
