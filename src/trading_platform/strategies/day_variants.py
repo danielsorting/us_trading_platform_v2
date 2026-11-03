@@ -61,4 +61,6 @@ def day_variants():
         "Day – momentum (nuvarande)": sys.modules[day.__name__],
         "Day – ORB 15 min": DayORB("Day – ORB 15 min", opening_bars=3),
         "Day – ORB 30 min": DayORB("Day – ORB 30 min", opening_bars=6),
+        "Day – ORB 30 min, hela dagen": DayORB("Day – ORB 30 min, hela dagen", opening_bars=6,
+                                                last_entry_bar=72),  # köp fram till 15:30 New York
     }

@@ -84,7 +84,7 @@ def test_orb_buys_only_after_opening_range_and_above_its_high(intraday):
     t = r["trades"]
     if len(t):
         assert (t.entry_time.dt.date == t.exit_time.dt.date).all()
-    assert len(day_variants()) == 3
+    assert len(day_variants()) == 4
 
 
 def test_configured_day_variant_is_used(intraday):
