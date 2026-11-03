@@ -40,7 +40,12 @@ jobs:
           git config user.name "autohandel-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           LIMIT=$((340 * 60))   # sluta efter ca 5 h 40 min så nästa körning kan ta vid
+          sync() {   # hämta senaste versionen (kod + konto) innan varje runda
+            git rebase --abort 2>/dev/null || true
+            git fetch -q origin main && git reset -q --hard origin/main
+          }
           while [ $SECONDS -lt $LIMIT ]; do
+            sync || echo "Kunde inte hämta senaste versionen – kör med den vi har."
             PHASE=$(python scripts/market_phase.py)
             if [ "$PHASE" = "weekend" ]; then echo "Helg – inget att göra."; break; fi
             if [ "$PHASE" = "after" ]; then
@@ -56,7 +61,12 @@ jobs:
             if [ "$SAVE" = "1" ]; then
               git add paper/ || true
               if git commit -q -m "Automatisk handel $(date -u +%H:%M) UTC"; then
-                for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
+                for i in 1 2 3; do
+                  # Robotens filer (paper/) vinner vid krock; misslyckas det avbryts sammanslagningen rent.
+                  if git pull -q --rebase -X theirs origin main && git push -q origin HEAD:main; then break; fi
+                  git rebase --abort 2>/dev/null || true
+                  sleep 5
+                done
               fi
             fi
             if [ "$PHASE" = "after" ]; then echo "Börsen har stängt – klart för i dag."; break; fi
