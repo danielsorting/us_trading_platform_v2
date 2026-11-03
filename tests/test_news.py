@@ -66,3 +66,9 @@ def test_mixed_world_news_is_not_risk_off():
         "Oil Prices Plunge as talks take new turn", "Chip stocks rally", "Dow dips slightly")]
     m = news.market_mood({}, now=NOW, fetch=lambda: mixed)
     assert not m["risk_off"]
+
+
+def test_mildly_negative_news_does_not_block():
+    feed = [item_new("Apple warning on memory prices: should investors worry?"),
+            item_new("Apple stock fell after record quarter"), item_new("Analysts see weak demand in China")]
+    assert not news.judge(feed, NOW)["block"]

@@ -44,7 +44,7 @@ POSITIVE = {
 }
 MARKET_QUERIES = ("stock market today", "oil prices", "Trump tariffs", "Federal Reserve interest rates",
                   "Wall Street stocks")
-BLOCK_SCORE = -3        # så här dåligt (summa) räcker för att inte köpa
+BLOCK_SCORE = -6        # så här dåligt (summa av många negativa rubriker) räcker för att inte köpa
 MARKET_RISK_OFF = -1.0  # snittpoäng per världsnyhet under detta → halverad risk per ny affär
 MARKET_POSITIVE = 1.0
 MARKET_MIN_NEWS = 5     # minst så många färska världsnyheter för att dra slutsatser
