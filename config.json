@@ -1,11 +1,11 @@
 {
   "account_currency": "SEK",
-  "total_capital": 10000,
-  "day_allocation_pct": 50,
-  "swing_allocation_pct": 50,
-  "risk_per_trade_pct": 0.5,
-  "max_positions_per_strategy": 3,
-  "max_position_pct_of_strategy_capital": 25,
+  "total_capital": 50000,
+  "day_allocation_pct": 0,
+  "swing_allocation_pct": 100,
+  "risk_per_trade_pct": 2.0,
+  "max_positions_per_strategy": 8,
+  "max_position_pct_of_strategy_capital": 70,
   "scan_mode": "watchlist",
   "watchlist": [
     "AAPL",
