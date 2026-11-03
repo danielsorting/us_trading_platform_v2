@@ -59,7 +59,7 @@
   "max_fee_share_of_profit_pct": 20.0,
   "commission_pct": 0.04,
   "fx_fee_pct": 0.0,
-  "day_variant": "Day – ORB 30 min",
+  "day_variant": "Day – ORB 30 min, hela dagen",
   "swing_universe": "liquid",
   "paper_reset_id": "2026-11-03-1"
 }

@@ -91,12 +91,16 @@ def test_day_summary_explains_closed_orb_window(intraday):
     from trading_platform.config import load_settings
     from trading_platform.daytop import rank_day_candidates
     from trading_platform.autotrader import day_strategy_for
-    s = load_settings()
+    from dataclasses import replace
+    s = replace(load_settings(), day_variant="Day – ORB 30 min")
     ranked = rank_day_candidates({f"S{i}": intraday(3, seed=i) for i in range(5)}, day_strategy_for(s))
     d = day_summary(ranked, s, datetime(2026, 11, 3, 12, 30, tzinfo=NY))["detail"]
     assert d.startswith("Granskade 5 aktier") and "fönstret stängt" in d and "15:30–17:30" in d
     d2 = day_summary(ranked, s, datetime(2026, 11, 3, 10, 30, tzinfo=NY))["detail"]
     assert "fönstret stängt" not in d2
+    hela = replace(s, day_variant="Day – ORB 30 min, hela dagen")  # köper fram till 21:30 svensk tid
+    assert "fönstret stängt" not in day_summary(ranked, hela, datetime(2026, 11, 3, 15, 0, tzinfo=NY))["detail"]
+    assert "15:30–21:30" in day_summary(ranked, hela, datetime(2026, 11, 3, 15, 45, tzinfo=NY))["detail"]
 
 
 def test_skip_reason_when_price_below_stop(tmp_path):
