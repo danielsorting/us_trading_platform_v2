@@ -85,3 +85,14 @@ def test_orb_buys_only_after_opening_range_and_above_its_high(intraday):
     if len(t):
         assert (t.entry_time.dt.date == t.exit_time.dt.date).all()
     assert len(day_variants()) == 3
+
+
+def test_configured_day_variant_is_used(intraday):
+    from trading_platform.autotrader import day_strategy_for
+    from trading_platform.config import load_settings
+    from trading_platform.strategies.day_variants import DayORB
+    s = load_settings()
+    strat = day_strategy_for(s)
+    assert isinstance(strat, DayORB) and strat.label == s.day_variant
+    ranked = rank_day_candidates({"A": intraday(5, seed=1)}, strat)
+    assert "efter öppningsintervallet" in ranked.conditions.iloc[0]

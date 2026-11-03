@@ -23,11 +23,17 @@ SWING_TIME_NY = time(15, 30)   # 21:30 svensk tid
 SEARCH_EVERY_MIN = 30
 
 
+def day_strategy_for(settings):
+    """Daytrading-strategin som valts i inställningarna (standard: nuvarande momentum)."""
+    from .strategies.day_variants import day_variants
+    return day_variants().get(getattr(settings, "day_variant", ""), None)
+
+
 def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, max_move_pct=2.0,
               is_open=True, progress=None, ny_now=None):
     """Daytrading-runda. Returnerar (rangordning, händelser, priser)."""
     intraday = provider.history_many(list(universe), "5d", "5m", progress=progress)
-    ranked = rank_day_candidates(intraday)
+    ranked = rank_day_candidates(intraday, day_strategy_for(settings))
     ext = {}
     if len(ranked):
         try:

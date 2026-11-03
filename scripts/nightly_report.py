@@ -140,6 +140,7 @@ def main():
             w.writerow(["datum", "typ", "lista", "strategi", "per_ar_pct", "avkastning_pct", "sp500_pct",
                         "storsta_nedgang_pct", "affarer", "godkand"])
         w.writerows(history_rows)
+    (REPORTS / "latest_error.txt").unlink(missing_ok=True)  # gammalt fel är inte längre aktuellt
     print(text)
 
 

@@ -483,7 +483,8 @@ with tab_paper:
         " Roboten köper först när börsen är öppen."))
     st.caption(f"Roboten handlar **både swing** ({settings.swing_allocation_pct:.0f} % av kontot, strategi "
                f"**{swing_strategy_name}**, din bevakningslista) **och daytrading** "
-               f"({settings.day_allocation_pct:.0f} %, de bästa bland de 300 mest omsatta). Den köper och säljer, "
+               f"({settings.day_allocation_pct:.0f} %, strategi **{settings.day_variant}**, de bästa bland de 300 "
+               "mest omsatta). Den köper och säljer, "
                "flyttar stop loss uppåt på vinnare, stänger alla dagpositioner före 22:00 och använder parkerade "
                "pengar i SPY när det behövs. Andelarna ställs in i sidopanelen.")
     d1, d2, d3 = st.columns(3)
@@ -674,10 +675,11 @@ with tab_auto:
     AUTO_DIR = PROJECT_ROOT / "paper"
     st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 15:e minut** under börsens öppettider "
              "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
-    st.caption(f"Daytrading: {settings.day_allocation_pct:.0f} % av kontot, de {settings.auto_day_top_n} bästa "
+    st.caption(f"Daytrading: {settings.day_allocation_pct:.0f} % av kontot, strategi **{settings.day_variant}**, "
+               f"de {settings.auto_day_top_n} bästa "
                f"bland de 300 mest omsatta, ny sökning var 30:e minut, stängs före 22:00. "
-               f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, köp en gång per "
-               f"dag kl 21:30 på din bevakningslista, stop loss kontrolleras var 15:e minut. "
+               f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, ny sökning var "
+               f"30:e minut på din bevakningslista, stop loss kontrolleras var 15:e minut. "
                f"Inställningarna hämtas från config.json.")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():

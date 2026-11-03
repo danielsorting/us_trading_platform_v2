@@ -49,9 +49,9 @@ def most_liquid(daily_by_symbol, n=300, min_price=MIN_PRICE, min_dollar_volume=0
     return [s for s, _ in (rows if n is None else rows[:n])]
 
 
-def score_day(symbol, bars):
+def score_day(symbol, bars, strategy=None):
     """Bedömer en aktie för daytrading och ger den en poäng (högre = bättre)."""
-    row = day.evaluate(symbol, bars)
+    row = (strategy or day).evaluate(symbol, bars)
     if row.get("signal") not in ("CANDIDATE", "WATCH"):
         return row
     x = bars.dropna()
@@ -67,9 +67,9 @@ def score_day(symbol, bars):
     return row
 
 
-def rank_day_candidates(intraday_by_symbol):
+def rank_day_candidates(intraday_by_symbol, strategy=None):
     """Rangordnar alla aktier. Köpkandidater (alla villkor uppfyllda) överst."""
-    rows = [score_day(s, b) for s, b in intraday_by_symbol.items() if b is not None]
+    rows = [score_day(s, b, strategy) for s, b in intraday_by_symbol.items() if b is not None]
     df = pd.DataFrame(rows)
     if df.empty:
         return df

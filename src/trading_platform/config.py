@@ -46,6 +46,8 @@ class Settings:
     auto_max_move_pct: float = 2.0
     # Vilken swing-variant scanner och simulerad handel använder som standard.
     swing_variant: str = "Swing – grund"
+    # Vilken daytrading-variant som används (se strategies/day_variants.py).
+    day_variant: str = "Day – momentum (nuvarande)"
     # Max antal aktier per skanning när hela marknaden väljs.
     max_symbols_per_scan: int = 300
 
