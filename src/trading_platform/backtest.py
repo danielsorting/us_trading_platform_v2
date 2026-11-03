@@ -24,15 +24,27 @@ import pandas as pd
 
 from .config import Settings
 from .risk import commission, position_size
+from .indicators import enrich
 from .strategies import entry_signals
 
 
-def _prepare(bars_by_symbol, module):
+def enrich_all(bars_by_symbol):
+    """Räknar indikatorerna EN gång per aktie (återanvänds av alla strategier)."""
+    return {sym: enrich(b.dropna(subset=["Open", "High", "Low", "Close", "Volume"]))
+            for sym, b in bars_by_symbol.items() if b is not None and len(b)}
+
+
+def _prepare(bars_by_symbol, module, enriched=None):
     prepared = {}
     for sym, bars in bars_by_symbol.items():
         if bars is None or len(bars) < module.MIN_BARS:
             continue
-        x, sig = entry_signals(module, bars)
+        if enriched is not None and sym in enriched:
+            x = enriched[sym]
+            cond = module.conditions(x)
+            sig = cond.all(axis=1) & cond.notna().all(axis=1)
+        else:
+            x, sig = entry_signals(module, bars)
         x = x.assign(SIGNAL=sig)
         dates = pd.Series(x.index.normalize(), index=x.index)
         # Sista stapeln för dagen (för daytrading: tvingad stängning).
@@ -52,7 +64,8 @@ def stop_and_target(module, signal_close, atr, entry):
     return float(stop), float(target)
 
 
-def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None, start=None, end=None):
+def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None, start=None, end=None,
+                 prepared=None):
     """Kör ett backtest. bars_by_symbol: {"AAPL": kurstabell, ...}.
 
     start/end: handla bara inom detta tidsfönster (indikatorerna räknas ändå
@@ -64,7 +77,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
     max_positions = max_positions or settings.max_positions_per_strategy
     slip = settings.slippage_pct / 100
     is_day = module.NAME == "day"
-    data = _prepare(bars_by_symbol, module)
+    data = prepared if prepared is not None else _prepare(bars_by_symbol, module)
     if not data:
         return {"trades": pd.DataFrame(), "equity": pd.Series(dtype=float), "stats": _empty_stats(capital_usd)}
 
@@ -279,8 +292,10 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
     cut = usable[int(len(usable) * split)] if len(usable) > 10 else None
     bench = period_return(benchmark, first)
     rows = []
+    enriched = enrich_all(bars_by_symbol)
     for name, strat in strategies.items():
-        full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first)["stats"]
+        prep = _prepare(bars_by_symbol, strat, enriched)
+        full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, prepared=prep)["stats"]
         row = {"Strategi": name, "Avkastning %": full["total_return_pct"],
                "Per år %": per_year(full["total_return_pct"], first, times[-1]),
                "S&P 500 %": bench,
@@ -289,8 +304,8 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
                "Vinstandel %": full["win_rate_pct"], "Snitt R": full["avg_r"],
                "Profit factor": full["profit_factor"], "Största nedgång %": full["max_drawdown_pct"]}
         if cut is not None:
-            a = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, end=cut)["stats"]
-            b = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=cut)["stats"]
+            a = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, end=cut, prepared=prep)["stats"]
+            b = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=cut, prepared=prep)["stats"]
             row["Testdel %"] = a["total_return_pct"]
             row["Kontrolldel %"] = b["total_return_pct"]
             row["Håller i kontroll?"] = "ja" if (a["total_return_pct"] > 0 and b["total_return_pct"] > 0) else "nej"
@@ -342,12 +357,15 @@ def find_best(bars_by_symbol, strategies, capital_usd, settings=None, benchmark=
     bench = period_return(benchmark, first)
     total = len(strategies) * len(risk_levels)
     rows, done = [], 0
+    enriched = enrich_all(bars_by_symbol)
     for name, strat in strategies.items():
+        prep = _prepare(bars_by_symbol, strat, enriched)
         for risk in risk_levels:
             s = replace(settings, risk_per_trade_pct=risk)
-            full = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first)["stats"]
-            a = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, end=cut)["stats"] if cut else full
-            b = run_backtest(bars_by_symbol, strat, capital_usd, s, start=cut)["stats"] if cut else full
+            full = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, prepared=prep)["stats"]
+            a = (run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, end=cut, prepared=prep)["stats"]
+                 if cut else full)
+            b = run_backtest(bars_by_symbol, strat, capital_usd, s, start=cut, prepared=prep)["stats"] if cut else full
             yearly = per_year(full["total_return_pct"], first, times[-1])
             dd = abs(full["max_drawdown_pct"]) or 0.0
             ok = a["total_return_pct"] > 0 and b["total_return_pct"] > 0 and full["trades"] >= min_trades

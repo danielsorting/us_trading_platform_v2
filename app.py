@@ -52,6 +52,21 @@ def get_history(symbol, period, interval):
     return provider.history(symbol, period, interval)
 
 
+@st.cache_data(ttl=900, show_spinner=False)
+def get_history_many(symbols, period, interval):
+    """Hämtar kurser för många aktier samtidigt (parallellt) – mycket snabbare."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    def one(sym):
+        try:
+            return sym, provider.history(sym, period, interval)
+        except Exception:
+            return sym, None
+
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        return dict(pool.map(one, symbols))
+
+
 def market_bars_for(strategy, period="2y"):
     """SPY-kurser om strategin behöver marknadsdata, annars None."""
     if not needs_market([strategy]):
@@ -223,13 +238,8 @@ with tab_bt:
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
-        bars = {}
         with st.spinner("Hämtar historiska kurser…"):
-            for s in bt_symbols:
-                try:
-                    bars[s] = get_history(s, period, interval)
-                except Exception:
-                    bars[s] = None
+            bars = get_history_many(tuple(bt_symbols), period, interval)
         missing = [s for s, b in bars.items() if b is None or len(b) < module.MIN_BARS]
         if missing:
             st.warning("För lite data för: " + ", ".join(missing))
