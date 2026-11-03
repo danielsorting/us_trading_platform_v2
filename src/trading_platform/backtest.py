@@ -13,6 +13,10 @@ Regler (för att resultatet ska vara ärligt):
   alltid vid dagens sista stapel (inga positioner över natten).
 - Courtage och slippage dras på varje köp och sälj.
 - Gemensam kassa för alla aktier, högst max_positions samtidigt.
+- Med park_idle_in_index ligger ledig kassa i S&P 500 (SPY, kolumnen
+  MKT_CLOSE) och växer/krymper med den. SPY säljs när roboten köper en aktie
+  och köps igen när den säljer – med courtage och slippage båda gångerna.
+  Gäller bara swing (daytrading har ingen kassa över natten).
 
 Alla belopp är i USD.
 """
@@ -75,6 +79,25 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
     if not timeline:
         return {"trades": pd.DataFrame(), "equity": pd.Series(dtype=float), "stats": _empty_stats(capital_usd)}
     pos_in = {s: {t: i for i, t in enumerate(x.index)} for s, x in data.items()}
+    # Parkering i indexfond: SPY-kurs per tidpunkt.
+    park = None
+    if settings.park_idle_in_index and not is_day:
+        series = [x["MKT_CLOSE"] for x in data.values() if "MKT_CLOSE" in x]
+        if series:
+            s_all = pd.concat(series).groupby(level=0).last().sort_index().dropna()
+            if len(s_all):
+                park = s_all.reindex(timeline, method="ffill").to_dict()
+    park_state = {"price": None, "fees": 0.0}
+
+    def park_cost(amount):
+        """Kostnad för att sälja eller köpa SPY för ett visst belopp."""
+        price = park_state["price"]
+        if park is None or not price or amount <= 0:
+            return 0.0
+        c = amount * slip + commission(amount / price, settings.commission_per_share_usd,
+                                       settings.min_commission_usd, price)
+        park_state["fees"] += c
+        return c
     # Snabb åtkomst till staplarna (mycket snabbare än .iloc i loopen).
     cols = ["Open", "High", "Low", "Close", "ATR14", "SIGNAL", "LAST_OF_DAY"]
     rows = {s: list(x[cols].itertuples(index=False)) for s, x in data.items()}
@@ -86,6 +109,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         exit_px = price * (1 - slip)
         c = fee(p["qty"], exit_px)
         cash += p["qty"] * exit_px - c
+        cash -= park_cost(p["qty"] * exit_px - c)  # pengarna parkeras igen i SPY
         pnl = p["qty"] * (exit_px - p["entry"]) - p["fees"] - c
         risk = p["qty"] * (p["entry"] - p["init_stop"])
         trades.append({
@@ -118,6 +142,15 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         return False
 
     for t in timeline:
+        # 0) Parkerad kassa följer SPY.
+        if park is not None:
+            px = park.get(t)
+            if px is not None and px == px:
+                if park_state["price"] is None:
+                    cash -= park_cost(cash)  # första köpet av SPY
+                elif park_state["price"] > 0:
+                    cash *= px / park_state["price"]
+                park_state["price"] = px
         # 1) Hantera öppna positioner.
         for sym in list(open_pos):
             i = pos_in[sym].get(t)
@@ -147,9 +180,10 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
                                 settings.max_position_pct_of_strategy_capital,
                                 settings.allow_fractional_shares)
             c = fee(qty, entry)
-            if qty <= 0 or qty * entry + c > cash:
+            if qty <= 0 or qty * entry + c + (qty * entry + c) * 0.01 > cash:
                 continue
             cash -= qty * entry + c
+            cash -= park_cost(qty * entry + c)  # sälj SPY för att betala köpet
             p = {"entry": entry, "qty": qty, "stop": stop, "init_stop": stop,
                  "target": target,
                  "time": t, "fees": c, "bars": 0}
@@ -171,7 +205,10 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
     equity = pd.Series(dict(equity_points), name="equity")
     equity.iloc[-1] = cash
     trades_df = pd.DataFrame(trades)
-    return {"trades": trades_df, "equity": equity, "stats": _stats(trades_df, equity, capital_usd, data, window)}
+    stats = _stats(trades_df, equity, capital_usd, data, window)
+    stats["park_fees_usd"] = round(park_state["fees"], 2)
+    stats["fees_usd"] = round(stats["fees_usd"] + park_state["fees"], 2)
+    return {"trades": trades_df, "equity": equity, "stats": stats}
 
 
 def _empty_stats(capital):

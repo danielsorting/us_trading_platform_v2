@@ -32,6 +32,9 @@ class Settings:
     commission_per_share_usd: float = 0.005
     min_commission_usd: float = 1.0
     slippage_pct: float = 0.05
+    # Parkera ledigt kapital i en indexfond (SPY) när roboten inte har affärer.
+    park_idle_in_index: bool = False
+    park_symbol: str = "SPY"
     # Max antal aktier per skanning när hela marknaden väljs.
     max_symbols_per_scan: int = 300
 

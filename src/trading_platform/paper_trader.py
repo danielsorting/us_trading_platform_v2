@@ -3,6 +3,8 @@
 En runda gör två saker:
 1. Säljer positioner som nått stop loss, kursmål eller tidsgräns.
 2. Köper nya köpkandidater från scannern, inom risk- och positionsgränser.
+3. Om parkering är på: ledig kassa köps in i SPY (S&P 500). SPY säljs
+   automatiskt när pengarna behövs till ett aktieköp.
 
 Köp och sälj sker till senaste kända kurs från datakällan (kan vara
 fördröjd). Inga riktiga order skickas.
@@ -12,6 +14,53 @@ from datetime import datetime
 from .risk import position_size
 
 SWING_MAX_CALENDAR_DAYS = 28  # ungefär 20 handelsdagar
+PARK = "park"                 # strategi-märkning för parkerat kapital
+PARK_BUFFER_PCT = 1.0         # så mycket kontanter (%) som alltid lämnas kvar
+
+
+def _free_cash_from_park(broker, settings, prices, needed, actions):
+    """Säljer SPY så att det finns minst `needed` USD i kassan."""
+    sym = settings.park_symbol
+    pos = broker.positions.get(sym)
+    price = prices.get(sym)
+    if broker.cash >= needed or not pos or pos.get("strategy") != PARK or not price:
+        return
+    qty = min(pos["quantity"], round((needed - broker.cash) * 1.02 / price + 0.00005, 4))
+    if qty > 0:
+        broker.submit_order(sym, "sell", qty, price=price, strategy=PARK, reason="pengar till aktieköp")
+        actions.append({"symbol": sym, "action": "SÄLJ (parkering)", "detail": f"{qty} st för att betala köp"})
+
+
+def _park_idle_cash(broker, settings, prices, actions):
+    """Köper SPY för ledig kassa (utom en liten buffert)."""
+    sym = settings.park_symbol
+    price = prices.get(sym)
+    if not price:
+        actions.append({"symbol": sym, "action": "ingen kurs", "detail": "Kunde inte parkera kassan."})
+        return
+    held = broker.positions.get(sym)
+    if held and held.get("strategy") != PARK:
+        return  # roboten äger redan SPY som vanlig affär
+    equity = broker.get_account(prices)["equity"]
+    spend = broker.cash - equity * PARK_BUFFER_PCT / 100
+    if spend < 50:
+        return
+    qty = round(spend * 0.98 / price - 0.00005, 4)
+    if qty <= 0:
+        return
+    if held:  # öka befintlig parkering: sälj inte, köp till som ny post
+        old = broker.positions.pop(sym)
+        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK)
+        new = broker.positions[sym]
+        total = old["quantity"] + new["quantity"]
+        new["avg_price"] = (old["quantity"] * old["avg_price"] + new["quantity"] * new["avg_price"]) / total
+        new["entry_fee"] = old.get("entry_fee", 0) + new.get("entry_fee", 0)
+        new["quantity"] = total
+        new["opened"] = old["opened"]
+        broker.save()
+    else:
+        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK)
+    actions.append({"symbol": sym, "action": "KÖP (parkering)", "detail": f"{qty} st ledig kassa i S&P 500"})
 
 
 def latest_prices(provider, symbols):
@@ -36,6 +85,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
 
     # 1) Sälj.
     for sym, pos in broker.get_positions().items():
+        if pos.get("strategy") == PARK:
+            continue
         price = prices.get(sym)
         if price is None:
             actions.append({"symbol": sym, "action": "ingen kurs", "detail": "Kunde inte hämta aktuell kurs."})
@@ -70,7 +121,7 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
     alloc = {"day": settings.day_allocation_pct, "swing": settings.swing_allocation_pct}
     for row in scan_rows:
         sym, strat = row.get("symbol"), row.get("strategy")
-        if row.get("signal") != "CANDIDATE" or sym in held:
+        if row.get("signal") != "CANDIDATE" or sym in held or sym == settings.park_symbol:
             continue
         if sum(1 for p in held.values() if p.get("strategy") == strat) >= settings.max_positions_per_strategy:
             actions.append({"symbol": sym, "action": "hoppar över", "detail": f"Max antal {strat}-positioner nått."})
@@ -88,6 +139,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
             continue
         target = price + (row["target_reference"] - row["price"]) if row.get("target_reference") else None
         try:
+            if settings.park_idle_in_index:
+                _free_cash_from_park(broker, settings, prices, qty * price * 1.01 + 2, actions)
             broker.submit_order(sym, "buy", qty, price=price, stop=stop, target=target, strategy=strat,
                                 trail_atr=row.get("trail_atr"), atr=row.get("atr"))
             held = broker.get_positions()
@@ -95,6 +148,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
                             "detail": f"{qty} st à {price:.2f} USD ({strat}), stop {stop:.2f}"})
         except ValueError as e:
             actions.append({"symbol": sym, "action": "hoppar över", "detail": str(e)})
+    if settings.park_idle_in_index:
+        _park_idle_cash(broker, settings, prices, actions)
     if not actions:
         actions.append({"symbol": "", "action": "inget att göra", "detail": "Inga säljsignaler och inga nya köpkandidater."})
     return actions

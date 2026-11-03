@@ -91,10 +91,13 @@ with st.sidebar:
                             int(defaults.max_position_pct_of_strategy_capital), 5)
     fractional = st.checkbox("Tillåt delaktier", value=defaults.allow_fractional_shares,
                              help="T.ex. 0,35 aktie. Behövs ofta när kapitalet är litet.")
+    park = st.checkbox("Parkera ledigt kapital i S&P 500 (SPY)", value=defaults.park_idle_in_index,
+                       help="Pengar som inte används i affärer ligger i SPY och växer med börsen. "
+                            "SPY säljs automatiskt när roboten behöver pengar till ett köp. Gäller swingtrading.")
     settings = replace(defaults, total_capital=float(capital), day_allocation_pct=float(day_pct),
                        swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
                        max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
-                       allow_fractional_shares=fractional)
+                       allow_fractional_shares=fractional, park_idle_in_index=park)
     variant_name = st.selectbox("Swing-variant i scanner och simulerad handel", list(VARIANTS), key="sb_variant",
                                 help="Välj den variant som klarat sig bäst under fliken Backtest.")
     swing_strategy = VARIANTS[variant_name]
@@ -317,7 +320,8 @@ with tab_bt:
         m[1].metric("Snitt per affär (R)", f"{s['avg_r']:+.2f}", help="R = risken per affär. +1R betyder att du vann lika mycket som du riskerade.")
         m[2].metric("Profit factor", "–" if s["profit_factor"] is None else f"{s['profit_factor']:.2f}",
                     help="Summa vinster / summa förluster. Över 1 = lönsam.")
-        m[3].metric("Courtage totalt", f"{usd_to_sek(s['fees_usd'], usd_sek):,.0f} SEK")
+        m[3].metric("Courtage totalt", f"{usd_to_sek(s['fees_usd'], usd_sek):,.0f} SEK",
+                    help="Inklusive kostnader för att flytta pengar in och ut ur SPY när parkering är på.")
         if s["buy_and_hold_pct"] is not None:
             st.caption(f"Köp och behåll av just dessa aktier: {s['buy_and_hold_pct']:+.1f} % "
                        "(valda i efterhand – därför ingen rättvis jämförelse).")
@@ -352,7 +356,8 @@ with tab_paper:
         with st.spinner("Skannar och handlar…"):
             rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek,
                         swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
-            prices = latest_prices(provider, set(paper_syms) | set(broker.positions))
+            prices = latest_prices(provider, set(paper_syms) | set(broker.positions)
+                                   | ({settings.park_symbol} if settings.park_idle_in_index else set()))
             st.session_state["paper_prices"] = prices
             st.session_state["paper_actions"] = run_paper_cycle(broker, rows, settings, prices)
         st.rerun()
@@ -413,6 +418,7 @@ with tab_info:
   Stop = pris − 1,5 × ATR, mål = 2 × risken, stängs senast vid dagens slut.
 - **Utbrott (trendföljning)**: köper när aktien stänger på ny 50-dagars högsta med stark volym, i en upptrend,
   med stigande RSI och MACD. Inget fast mål – stop loss följer med uppåt (3 × ATR).
+- **Parkering i S&P 500**: ledigt kapital ligger i SPY och säljs automatiskt när roboten behöver pengar till ett köp.
 - **Positionsstorlek**: så många aktier att du förlorar högst *risk per affär* om stop loss slår till.
 
 **Viktiga begränsningar**

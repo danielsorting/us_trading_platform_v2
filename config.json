@@ -27,5 +27,7 @@
   "commission_per_share_usd": 0.005,
   "min_commission_usd": 1.0,
   "slippage_pct": 0.05,
-  "max_symbols_per_scan": 300
+  "max_symbols_per_scan": 300,
+  "park_idle_in_index": true,
+  "park_symbol": "SPY"
 }

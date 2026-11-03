@@ -62,3 +62,24 @@ def test_stop_loss_and_gap_handling():
     assert t.exit_reason == "stop (gap)"
     assert t.exit_price == 80.0  # säljs till öppningskursen, inte till stop-nivån
     assert t.r_multiple < -1  # gap ger större förlust än planerat
+
+
+def test_parking_follows_index_when_robot_is_idle(bars):
+    """Utan signaler ska parkerad kassa följa SPY (minus små avgifter)."""
+    from dataclasses import replace
+    from trading_platform.strategies.variants import add_market
+
+    class Never:
+        NAME, MIN_BARS, STOP_ATR, TARGET_R, MAX_HOLD_BARS = "swing", 30, 2.0, 2.0, 20
+
+        @staticmethod
+        def conditions(x):
+            return pd.DataFrame({"aldrig": pd.Series(False, index=x.index)})
+
+    mkt = bars(600, seed=9, drift=0.001, vol=0.01)
+    data = {"A": add_market(bars(600, seed=1), mkt)}
+    off = run_backtest(data, Never, 1000, Settings())["stats"]
+    on = run_backtest(data, Never, 1000, replace(Settings(), park_idle_in_index=True))["stats"]
+    spy = (mkt.Close.iloc[-1] / mkt.Close.iloc[0] - 1) * 100
+    assert off["total_return_pct"] == 0
+    assert abs(on["total_return_pct"] - spy) < 1.5

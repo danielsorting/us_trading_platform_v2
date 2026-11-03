@@ -49,3 +49,20 @@ def test_cycle_sells_on_stop_target_and_old_day_positions(tmp_path):
     reasons = {a["symbol"]: a["detail"] for a in acts if a["action"] == "SÄLJ"}
     assert "stop" in reasons["S"] and "kursmål" in reasons["T"] and "dagposition" in reasons["D"]
     assert b.positions == {}
+
+
+def test_parking_buys_spy_and_sells_it_to_fund_trades(tmp_path):
+    from dataclasses import replace
+    b = broker(tmp_path, cash=1000)
+    s = replace(Settings(), park_idle_in_index=True)
+    run_paper_cycle(b, [], s, {"SPY": 500})
+    assert b.positions["SPY"]["strategy"] == "park"
+    assert b.cash < 50  # nästan allt parkerat
+    rows = [{"symbol": "A", "strategy": "swing", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 95.0, "target_reference": 110.0}]
+    acts = run_paper_cycle(b, rows, s, {"SPY": 500, "A": 100})
+    assert "A" in b.positions  # köpet gick igenom tack vare såld SPY
+    assert any(a["action"] == "SÄLJ (parkering)" for a in acts)
+    assert b.positions["SPY"]["strategy"] == "park"  # resten parkerad igen
+    run_paper_cycle(b, [], s, {"SPY": 400, "A": 100})
+    assert "SPY" in b.positions  # parkering har ingen stop loss
