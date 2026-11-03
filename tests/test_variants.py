@@ -49,3 +49,27 @@ def test_scanner_can_use_a_variant(provider, bars):
     rows = scan(["AAPL"], include_day=False, provider=provider(), settings=Settings(),
                 swing_strategy=SwingVariant("f", market_filter=True), market_bars=mkt)
     assert rows[0]["strategy"] == "swing" and "marknaden i upptrend" in rows[0]["conditions"]
+
+
+def test_trailing_stop_lets_winners_run_and_only_moves_up(bars):
+    from trading_platform.strategies.variants import SwingVariant
+    v = SwingVariant("löpa", trail_atr=3.0, max_hold=120)
+    up = {f"U{i}": bars(1200, seed=i, drift=0.0015) for i in range(5)}
+    r = run_backtest(up, v, 1000, Settings())
+    t = r["trades"]
+    assert len(t) and t.target.isna().all()  # inget fast kursmål
+    assert "följande stop" in set(t.exit_reason)
+    assert t.bars_held.max() > 20  # vinnare får ligga längre än 20 dagar
+
+
+def test_paper_cycle_moves_trailing_stop_up(tmp_path):
+    from trading_platform.brokers.paper import PaperBroker
+    from trading_platform.paper_trader import run_paper_cycle
+    b = PaperBroker(1000, tmp_path / "a.json", slippage_pct=0)
+    b.submit_order("A", "buy", 1, price=100, stop=94, target=None, strategy="swing", trail_atr=3.0, atr=2.0)
+    run_paper_cycle(b, [], Settings(), {"A": 110})
+    assert b.positions["A"]["stop"] == 104  # 110 − 3 × 2
+    run_paper_cycle(b, [], Settings(), {"A": 107})
+    assert b.positions["A"]["stop"] == 104  # flyttas aldrig ned
+    run_paper_cycle(b, [], Settings(), {"A": 103})
+    assert "A" not in b.positions  # såld på följande stop

@@ -4,6 +4,9 @@ Regler (för att resultatet ska vara ärligt):
 - Ingen framtidsinformation: signalen räknas på en stapels stängningskurs
   och köpet sker först vid NÄSTA stapels öppningskurs.
 - Stop loss = signalkurs − STOP_ATR × ATR. Kursmål = TARGET_R × risken.
+- Strategier med TRAIL_ATR har inget fast kursmål. I stället flyttas stop
+  loss upp efter varje stängning till (högsta stängning − TRAIL_ATR × ATR),
+  så att vinnare får löpa. Flytten gäller från NÄSTA stapel.
 - Om kursen öppnar under stop (gap) säljs till öppningskursen, inte stop.
 - Om både stop och mål nås under samma stapel antas stop (det sämre utfallet).
 - Positionen säljs senast efter MAX_HOLD_BARS staplar. Daytrading stänger
@@ -39,6 +42,8 @@ def stop_and_target(module, signal_close, atr, entry):
     stop_pct = getattr(module, "STOP_PCT", None)
     target_pct = getattr(module, "TARGET_PCT", None)
     stop = signal_close * (1 - stop_pct / 100) if stop_pct else signal_close - module.STOP_ATR * atr
+    if getattr(module, "TRAIL_ATR", None):
+        return float(stop), float("inf")
     target = entry * (1 + target_pct / 100) if target_pct else entry + module.TARGET_R * (entry - stop)
     return float(stop), float(target)
 
@@ -79,11 +84,12 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         c = fee(p["qty"], exit_px)
         cash += p["qty"] * exit_px - c
         pnl = p["qty"] * (exit_px - p["entry"]) - p["fees"] - c
-        risk = p["qty"] * (p["entry"] - p["stop"])
+        risk = p["qty"] * (p["entry"] - p["init_stop"])
         trades.append({
             "symbol": sym, "entry_time": p["time"], "exit_time": t,
             "entry_price": round(p["entry"], 4), "exit_price": round(exit_px, 4),
-            "shares": p["qty"], "stop": round(p["stop"], 4), "target": round(p["target"], 4),
+            "shares": p["qty"], "stop": round(p["init_stop"], 4),
+            "target": None if p["target"] == float("inf") else round(p["target"], 4),
             "pnl_usd": round(pnl, 2), "r_multiple": round(pnl / risk, 2) if risk > 0 else 0.0,
             "fees_usd": round(p["fees"] + c, 2), "bars_held": p["bars"], "exit_reason": reason,
         })
@@ -93,7 +99,8 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         if bar.Open <= p["stop"]:
             return close(sym, p, t, bar.Open, "stop (gap)") or True
         if bar.Low <= p["stop"]:
-            return close(sym, p, t, p["stop"], "stop") or True
+            reason = "följande stop" if p["stop"] > p["init_stop"] else "stop"
+            return close(sym, p, t, p["stop"], reason) or True
         if bar.Open >= p["target"]:
             return close(sym, p, t, bar.Open, "mål (gap)") or True
         if bar.High >= p["target"]:
@@ -102,6 +109,9 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             return close(sym, p, t, bar.Close, "tidsgräns") or True
         if is_day and bar.LAST_OF_DAY:
             return close(sym, p, t, bar.Close, "dagens slut") or True
+        trail = getattr(module, "TRAIL_ATR", None)
+        if trail and bar.ATR14 == bar.ATR14:  # flytta upp stop (gäller från nästa stapel)
+            p["stop"] = max(p["stop"], float(bar.Close - trail * bar.ATR14))
         return False
 
     for t in timeline:
@@ -137,7 +147,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             if qty <= 0 or qty * entry + c > cash:
                 continue
             cash -= qty * entry + c
-            p = {"entry": entry, "qty": qty, "stop": stop,
+            p = {"entry": entry, "qty": qty, "stop": stop, "init_stop": stop,
                  "target": target,
                  "time": t, "fees": c, "bars": 0}
             open_pos[sym] = p
@@ -221,5 +231,27 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
             row["Testdel %"] = a["total_return_pct"]
             row["Kontrolldel %"] = b["total_return_pct"]
             row["Håller i kontroll?"] = "ja" if (a["total_return_pct"] > 0 and b["total_return_pct"] > 0) else "nej"
+        row["Testperiod"] = f"{first:%Y-%m-%d} – {times[-1]:%Y-%m-%d}"
         rows.append(row)
     return pd.DataFrame(rows).sort_values("Avkastning %", ascending=False).reset_index(drop=True)
+
+
+def buy_and_hold_by_symbol(bars_by_symbol, start_bar=220):
+    """Köp och behåll per aktie över samma period som jämförelsen (kontroll)."""
+    times = sorted(set().union(*[b.index for b in bars_by_symbol.values() if b is not None and len(b)]))
+    if not times:
+        return pd.DataFrame()
+    first = times[min(start_bar, len(times) - 1)]
+    rows = []
+    for sym, b in bars_by_symbol.items():
+        if b is None or not len(b):
+            rows.append({"Aktie": sym, "Från": None, "Till": None, "Köp & behåll %": None})
+            continue
+        c = b.Close[b.index >= first]
+        if len(c) < 2:
+            rows.append({"Aktie": sym, "Från": None, "Till": None, "Köp & behåll %": None})
+            continue
+        rows.append({"Aktie": sym, "Från": f"{c.index[0]:%Y-%m-%d}", "Till": f"{c.index[-1]:%Y-%m-%d}",
+                     "Startkurs": round(float(c.iloc[0]), 2), "Slutkurs": round(float(c.iloc[-1]), 2),
+                     "Köp & behåll %": round((float(c.iloc[-1]) / float(c.iloc[0]) - 1) * 100, 1)})
+    return pd.DataFrame(rows)

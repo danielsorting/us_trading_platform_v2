@@ -3,7 +3,8 @@
 Alla varianter använder swing-strategins grundvillkor och kan dessutom ha:
 - marknadsfilter: köp bara när S&P 500 (SPY) ligger över sitt SMA200,
 - relativ styrka: köp bara aktier som gått bättre än SPY senaste 3 månaderna,
-- egna regler för stop loss och kursmål (ATR-baserat eller fast procent).
+- egna regler för stop loss och kursmål (ATR-baserat eller fast procent),
+- "låt vinnare löpa": inget fast mål, stop loss följer med uppåt (trailing stop).
 
 Marknadsdata läggs till som kolumnen MKT_CLOSE med add_market().
 """
@@ -30,13 +31,15 @@ class SwingVariant:
     MIN_BARS = swing.MIN_BARS
 
     def __init__(self, label, stop_atr=swing.STOP_ATR, target_r=swing.TARGET_R, stop_pct=None,
-                 target_pct=None, market_filter=False, relative_strength=False, max_hold=swing.MAX_HOLD_BARS):
+                 target_pct=None, market_filter=False, relative_strength=False, max_hold=swing.MAX_HOLD_BARS,
+                 trail_atr=None):
         self.label = label
         self.STOP_ATR = stop_atr
         self.TARGET_R = target_r
         self.STOP_PCT = stop_pct
         self.TARGET_PCT = target_pct
         self.MAX_HOLD_BARS = max_hold
+        self.TRAIL_ATR = trail_atr
         self.market_filter = market_filter
         self.relative_strength = relative_strength
 
@@ -67,6 +70,10 @@ def swing_variants():
             "Swing + marknadsfilter + relativ styrka", market_filter=True, relative_strength=True),
         "Swing + marknadsfilter, mål 3R": SwingVariant(
             "Swing + marknadsfilter, mål 3R", market_filter=True, target_r=3.0),
+        "Swing – låt vinnare löpa": SwingVariant(
+            "Swing – låt vinnare löpa", trail_atr=3.0, max_hold=120),
+        "Swing + marknadsfilter – låt vinnare löpa": SwingVariant(
+            "Swing + marknadsfilter – låt vinnare löpa", market_filter=True, trail_atr=3.0, max_hold=120),
         "Ditt upplägg: +2 % / −2 %": SwingVariant(
             "Ditt upplägg: +2 % / −2 %", stop_pct=2.0, target_pct=2.0),
     }

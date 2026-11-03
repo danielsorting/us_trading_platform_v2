@@ -31,7 +31,12 @@ def evaluate_last(module, symbol, bars):
     stop_pct = getattr(module, "STOP_PCT", None)
     target_pct = getattr(module, "TARGET_PCT", None)
     stop = float(a.Close * (1 - stop_pct / 100)) if stop_pct else float(a.Close - module.STOP_ATR * a.ATR14)
-    target = float(a.Close * (1 + target_pct / 100)) if target_pct else float(a.Close + module.TARGET_R * (a.Close - stop))
+    if getattr(module, "TRAIL_ATR", None):
+        target = None  # inget fast mål – följande stop
+    elif target_pct:
+        target = float(a.Close * (1 + target_pct / 100))
+    else:
+        target = float(a.Close + module.TARGET_R * (a.Close - stop))
     return {
         "symbol": symbol,
         "strategy": name,
@@ -40,7 +45,8 @@ def evaluate_last(module, symbol, bars):
         "rsi": round(float(a.RSI14), 1),
         "atr": round(float(a.ATR14), 3),
         "stop_reference": round(stop, 2),
-        "target_reference": round(target, 2),
+        "target_reference": None if target is None else round(target, 2),
+        "trail_atr": getattr(module, "TRAIL_ATR", None),
         "conditions_met": f"{ok}/{len(cond)}",
         "conditions": ", ".join(f"{k}: {'ja' if v else 'nej'}" for k, v in cond.items()),
     }

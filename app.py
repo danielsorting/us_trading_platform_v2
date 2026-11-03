@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 import pandas as pd
 import streamlit as st
 
-from trading_platform.backtest import compare_strategies, run_backtest
+from trading_platform.backtest import buy_and_hold_by_symbol, compare_strategies, run_backtest
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import YahooResearchProvider
@@ -23,6 +23,8 @@ from trading_platform.universe import get_symbols
 PAPER_FILE = PROJECT_ROOT / "paper_account.json"
 STRATEGIES = {"Swingtrading": swing, "Daytrading": day}
 VARIANTS = swing_variants()
+LARGE_US = ("AAPL,MSFT,NVDA,AMZN,GOOGL,META,TSLA,AVGO,JPM,V,MA,UNH,XOM,JNJ,PG,"
+            "HD,COST,LLY,ABBV,MRK,PEP,KO,WMT,BAC,CRM,ORCL,AMD,NFLX,ADBE,CSCO,IREN,NBIS")
 
 COLUMN_NAMES = {
     "symbol": "Aktie", "strategy": "Strategi", "signal": "Signal", "price": "Pris (USD)",
@@ -168,7 +170,16 @@ with tab_bt:
                                   format_func=lambda p: {"5d": "5 dagar", "1mo": "1 månad", "60d": "60 dagar"}[p])
         interval = "5m"
         st.caption("Yahoo har bara 5-minutersdata cirka 60 dagar bakåt, så daytrading kan bara testas på kort period.")
-    bt_symbols = parse_symbols(st.text_area("Aktier", ",".join(settings.watchlist), height=70, key="bt_syms"))
+    bt_list = st.radio("Aktielista", ["Min bevakningslista", "30 stora USA-aktier + IREN, NBIS", "Egen lista"],
+                       horizontal=True, key="bt_list",
+                       help="Fler aktier ger fler affärer och därmed säkrare slutsatser.")
+    if bt_list == "Min bevakningslista":
+        bt_default = ",".join(settings.watchlist)
+    elif bt_list == "30 stora USA-aktier + IREN, NBIS":
+        bt_default = LARGE_US
+    else:
+        bt_default = ""
+    bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
     default_cap = int(settings.day_capital if module is day else settings.swing_capital)
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
 
@@ -190,6 +201,7 @@ with tab_bt:
         if strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
                 st.session_state["bt_compare"] = compare_strategies(bars, VARIANTS, cap_usd, settings)
+                st.session_state["bt_bh"] = buy_and_hold_by_symbol(bars)
             st.session_state.pop("bt", None)
         else:
             with st.spinner("Kör backtest…"):
@@ -210,6 +222,11 @@ with tab_bt:
                            "Prova fler aktier eller en längre period innan du drar slutsatser.")
             st.caption("Tips: testa på många aktier (gärna 20+) och den längsta perioden. Ju fler affärer, "
                        "desto säkrare resultat. Jämför alltid med kolumnen 'Köp & behåll'.")
+            if "Testperiod" in cmp:
+                st.caption(f"Testperiod: {cmp['Testperiod'].iloc[0]} (de första ca 220 dagarna används bara "
+                           "för att räkna fram SMA200).")
+            with st.expander("Köp och behåll per aktie (kontroll av siffrorna)"):
+                st.dataframe(st.session_state.get("bt_bh", pd.DataFrame()), width="stretch", hide_index=True)
         else:
             st.warning("Ingen data att jämföra.")
 

@@ -40,6 +40,14 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
         if price is None:
             actions.append({"symbol": sym, "action": "ingen kurs", "detail": "Kunde inte hämta aktuell kurs."})
             continue
+        # Följande stop: flytta upp stop loss när kursen stiger (aldrig ned).
+        if pos.get("trail_atr") and pos.get("atr") and pos.get("stop") is not None:
+            new_stop = round(price - pos["trail_atr"] * pos["atr"], 2)
+            if new_stop > pos["stop"] and price > new_stop:
+                broker.positions[sym]["stop"] = new_stop
+                broker.save()
+                actions.append({"symbol": sym, "action": "stop flyttad", "detail": f"Ny stop loss {new_stop:.2f}"})
+                pos["stop"] = new_stop
         opened = datetime.fromisoformat(pos["opened"])
         reason = None
         if pos.get("stop") is not None and price <= pos["stop"]:
@@ -48,7 +56,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
             reason = "kursmål"
         elif pos.get("strategy") == "day" and opened.date() < now.date():
             reason = "dagposition från tidigare dag"
-        elif pos.get("strategy") == "swing" and (now - opened).days >= SWING_MAX_CALENDAR_DAYS:
+        elif (pos.get("strategy") == "swing" and not pos.get("trail_atr")
+              and (now - opened).days >= SWING_MAX_CALENDAR_DAYS):
             reason = "tidsgräns"
         if reason:
             order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason,
@@ -79,7 +88,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None):
             continue
         target = price + (row["target_reference"] - row["price"]) if row.get("target_reference") else None
         try:
-            broker.submit_order(sym, "buy", qty, price=price, stop=stop, target=target, strategy=strat)
+            broker.submit_order(sym, "buy", qty, price=price, stop=stop, target=target, strategy=strat,
+                                trail_atr=row.get("trail_atr"), atr=row.get("atr"))
             held = broker.get_positions()
             actions.append({"symbol": sym, "action": "KÖP",
                             "detail": f"{qty} st à {price:.2f} USD ({strat}), stop {stop:.2f}"})
