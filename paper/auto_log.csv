@@ -55,3 +55,5 @@ tid,typ,symbol,action,detail
 2026-11-03 18:55,day,SNOW,hoppar över,"För lite kapital: en aktie kostar 296.11 USD, men högst 255 USD får läggas per affär (hela aktier)."
 2026-11-03 18:55,day,ACN,hoppar över,"För lite kapital: en aktie kostar 255.49 USD, men högst 255 USD får läggas per affär (hela aktier)."
 2026-11-03 18:55,day,KO,hoppar över,"Daytrading-budgeten är fullt använd (1,020 av 1,020 USD)."
+2026-11-03 19:00,swing,,swing-sökning,"Granskade 291 aktier: 0 köpkandidater. Närmast: BETA (5/6), CNH (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6)."
+2026-11-03 19:00,day,BAC,hoppar över,"Daytrading-budgeten är fullt använd (1,024 av 1,021 USD)."
