@@ -549,7 +549,7 @@ with tab_paper:
                  help="Skannar aktierna i rutan ovan med swing-strategin, köper kandidater och säljer det "
                       "som nått stop loss/kursmål."):
         with st.spinner("Skannar och handlar…"):
-            rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek,
+            rows = scan(paper_syms, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
                         swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
             prices = latest_prices(provider, set(paper_syms) | set(broker.positions)
                                    | ({settings.park_symbol} if settings.park_idle_in_index else set()))
