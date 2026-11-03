@@ -1,0 +1,29 @@
+{
+  "cash": 1148.9257839218103,
+  "starting_cash": 5103.884385367959,
+  "usd_sek_at_start": 9.796460151672363,
+  "created": "2026-11-03T16:25:15",
+  "positions": {
+    "SPY": {
+      "quantity": 5.2298,
+      "avg_price": 755.9327701721191,
+      "opened": "2026-11-03T16:26:33",
+      "entry_fee": 1.5814,
+      "strategy": "park"
+    }
+  },
+  "orders": [
+    {
+      "id": "d3b74d59fa",
+      "time": "2026-11-03T16:26:33",
+      "symbol": "SPY",
+      "side": "buy",
+      "quantity": 5.2298,
+      "price": 755.9328,
+      "fee": 1.5814,
+      "pnl": null,
+      "strategy": "park"
+    }
+  ],
+  "reset_id": null
+}
