@@ -232,8 +232,9 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
         nxt = last + timedelta(minutes=search_every_min)
         n_open = sum(1 for p in broker.positions.values() if p.get("strategy") == "swing")
         add("swing", [{"symbol": "", "action": "swing-koll",
-                       "detail": f"{n_open} swingpositioner kontrollerade (stop loss och kursmål). "
-                                 f"Senaste swing-sökning {last:%H:%M}: {state.get('swing_summary', 'inga kandidater')} "
+                       "detail": ((f"Kontrollerade stop loss och kursmål för {n_open} öppna swingaffärer. ")
+                                  if n_open else "Inga swingaffärer öppna just nu (inget att kontrollera). ")
+                                 + f"Senaste swing-sökning {last:%H:%M}: {state.get('swing_summary', 'inga kandidater')} "
                                  f"Nästa sökning ca {nxt:%H:%M} (dagskurser ändras långsamt)."}])
 
     if settings.day_allocation_pct > 0:
