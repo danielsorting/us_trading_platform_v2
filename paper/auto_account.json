@@ -1,5 +1,5 @@
 {
-  "cash": 143.4434180043663,
+  "cash": 195.2717805043663,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -10,17 +10,6 @@
       "opened": "2026-11-03T16:26:33",
       "entry_fee": 1.5814,
       "strategy": "park"
-    },
-    "VITL": {
-      "quantity": 5.0,
-      "avg_price": 9.834914923667908,
-      "opened": "2026-11-03T17:08:03",
-      "entry_fee": 0.0197,
-      "stop": 9.68,
-      "target": 10.149999923706055,
-      "strategy": "day",
-      "trail_atr": NaN,
-      "atr": 0.107
     },
     "AEHR": {
       "quantity": 11.0,
@@ -208,6 +197,18 @@
       "strategy": "day",
       "trail_atr": null,
       "atr": 0.05
+    },
+    {
+      "id": "ae7cc07d74",
+      "time": "2026-11-03T19:31:08",
+      "symbol": "VITL",
+      "side": "sell",
+      "quantity": 5.0,
+      "price": 10.3698,
+      "fee": 0.0207,
+      "pnl": 2.63,
+      "reason": "kursmål",
+      "strategy": "day"
     }
   ],
   "reset_id": null

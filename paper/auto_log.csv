@@ -136,3 +136,6 @@ tid,typ,symbol,action,detail
 2026-11-03 20:20,day,TXN,hoppar över,"För lite kapital: en aktie kostar 313.35 USD, men högst 255 USD får läggas per affär (hela aktier)."
 2026-11-03 20:25,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:05: Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6). Nästa sökning ca 20:35 (dagskurser ändras långsamt)."
 2026-11-03 20:25,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: AEHR (5/6), VITL (5/6), RSI (5/6), CVS (5/6), PBR-A (5/6)."
+2026-11-03 20:30,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 20:05: Granskade 291 aktier: 0 köpkandidater. Närmast: CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6), LBTYA (5/6). Nästa sökning ca 20:35 (dagskurser ändras långsamt)."
+2026-11-03 20:30,day,VITL,SÄLJ,"kursmål, resultat +2.63 USD"
+2026-11-03 20:30,day,SPCX,hoppar över,"Daytrading-budgeten är fullt använd (959 av 1,021 USD)."
