@@ -54,6 +54,9 @@ def to_ny(iso):
     return datetime.fromisoformat(iso).astimezone(NY).replace(tzinfo=None)
 
 
+from trading_platform.status import render_status_box
+render_status_box(provider, ROOT / "paper" / "auto_state.json")
+
 st.title("📊 Diagram")
 st.caption("Kurser från Yahoo (kan vara något fördröjda). Gröna pilar = robotens köp, röda pilar = robotens sälj. "
            "Streckade linjer = stop loss (röd) och kursmål (grön) för öppna positioner.")

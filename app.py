@@ -186,6 +186,9 @@ if "pending_best" in st.session_state:
     use_best(*st.session_state.pop("pending_best"))
 
 
+from trading_platform.status import render_status_box
+render_status_box(provider, PROJECT_ROOT / "paper" / "auto_state.json")
+
 with st.sidebar:
     st.header("Kapital och risk")
     st.info("**Gäller bara den här webbsidan:** 🔎 Scanner, 📈 Backtest och 🧪 Simulerad handel.\n\n"
@@ -216,8 +219,6 @@ with st.sidebar:
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
-    rt_ok, rt_text = realtime_status()
-    (st.success if rt_ok else st.info)(rt_text)
     st.caption("Ändringar här gäller bara tills sidan laddas om, och bara på webbsidan – aldrig bakgrundsroboten.")
 
 st.title("US Trading Platform")
