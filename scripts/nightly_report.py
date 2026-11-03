@@ -65,7 +65,7 @@ def main():
         pass
     if not liquid:
         try:
-            liquid = liquid_universe(p, max(SWING_LIQUID, DAY_UNIVERSE))
+            liquid = liquid_universe(p, max(SWING_LIQUID, DAY_UNIVERSE), allow_heavy=False)
         except Exception as e:
             lines += [f"> Kunde inte hämta de mest omsatta aktierna: {e}", ""]
 

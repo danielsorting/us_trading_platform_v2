@@ -43,9 +43,16 @@ def liquid_list(provider, n=300):
     saved = load_json(LIQUID, {})
     if saved.get("symbols") and time.time() - saved.get("time", 0) < LIQUID_MAX_AGE:
         return saved["symbols"][:n]
-    ranking = liquid_universe(provider, max(n, 300), fallback_symbols=load_settings().watchlist)
+    ranking = liquid_universe(provider, max(n, 300), fallback_symbols=load_settings().watchlist, allow_heavy=False)
     LIQUID.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
     return ranking[:n]
+
+
+T0 = time.time()
+
+
+def log(msg):
+    print(f"[{time.time() - T0:6.1f}s] {msg}", flush=True)
 
 
 def main():
@@ -63,12 +70,15 @@ def main():
     if not is_open and not has_day_pos:
         print(text, "Inget att göra.")
         return
+    log(f"{text} Startar. USD/SEK {fx:.2f}.")
     state = load_json(STATE, {})
     variant = swing_variants().get(s.swing_variant)
     mkt = provider.history(MARKET_SYMBOL, "2y", "1d") if variant is not None and needs_market([variant]) else None
     liquid = liquid_list(provider) if (is_open and s.day_allocation_pct > 0) else []
+    log(f"Lista över mest omsatta: {len(liquid)} aktier.")
     events = tick(provider, broker, s, state, liquid, swing_strategy=variant, market_bars=mkt, usd_sek=fx,
                   top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct)
+    log(f"Runda klar: {len(events)} händelser.")
     broker.save()
     state["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     STATE.write_text(json.dumps(state, indent=2, default=str, ensure_ascii=False))

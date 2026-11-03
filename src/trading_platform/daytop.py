@@ -95,7 +95,7 @@ def add_extended_check(ranked, extended, max_move_pct=2.0):
     return df
 
 
-def liquid_universe(provider, n=300, fallback_symbols=None):
+def liquid_universe(provider, n=300, fallback_symbols=None, allow_heavy=True):
     """De n mest omsatta USA-aktierna.
 
     1) Yahoos färdiga lista "most actives" (ett fåtal anrop) om den finns.
@@ -108,6 +108,10 @@ def liquid_universe(provider, n=300, fallback_symbols=None):
         fast = []
     if len(fast) >= min(n, 100):
         return fast[:n]
+    if fast and not allow_heavy:
+        return fast[:n]
+    if not allow_heavy:
+        return list(fallback_symbols or [])[:n]
     try:
         from .universe import get_symbols
         uni = get_symbols("us_market", [], False)
