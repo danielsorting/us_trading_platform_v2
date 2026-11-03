@@ -5,6 +5,10 @@ from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "src"))
+# Läs alltid in robotens senaste kod. Streamlit Cloud behåller annars gamla
+# versioner av modulerna i minnet efter en uppdatering (gav ImportError).
+for _m in [m for m in sys.modules if m == "trading_platform" or m.startswith("trading_platform.")]:
+    del sys.modules[_m]
 
 import pandas as pd
 import streamlit as st
