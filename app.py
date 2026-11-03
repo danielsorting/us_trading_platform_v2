@@ -75,14 +75,32 @@ def market_bars_for(strategy, period="2y"):
         return None
 
 
-@st.cache_data(ttl=6 * 3600, show_spinner=False)
+LIQUID_FILE = PROJECT_ROOT / "cache_liquid_ranking.json"
+LIQUID_MAX_AGE_H = 6
+
+
+@st.cache_data(ttl=LIQUID_MAX_AGE_H * 3600, show_spinner=False)
 def get_liquid_ranking(include_etfs=False):
-    """Alla USA-aktier (pris ≥ 5 USD) sorterade efter omsättning. Tungt (~6 000 aktier)
-    – görs en gång och sparas i 6 timmar. Delas av Scanner, Backtest och Simulerad handel."""
+    """Alla USA-aktier (pris ≥ 5 USD) sorterade efter omsättning. Tungt (~6 000 aktier).
+
+    Resultatet sparas både i minnet och i en fil i 6 timmar, så att det finns kvar
+    även när appen uppdateras. Delas av Scanner, Backtest och Simulerad handel."""
+    import time
+    try:
+        saved = json.loads(LIQUID_FILE.read_text())
+        if time.time() - saved["time"] < LIQUID_MAX_AGE_H * 3600 and saved["symbols"]:
+            return saved["symbols"]
+    except Exception:
+        pass
     uni = get_symbols("us_market", [], include_etfs)
     syms = [yahoo_symbol(x) for x in uni["symbol"].tolist() if "$" not in x]
     daily = provider.history_many(syms, "1mo", "1d")
-    return most_liquid(daily, None)
+    ranking = most_liquid(daily, None)
+    try:
+        LIQUID_FILE.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
+    except Exception:
+        pass
+    return ranking
 
 
 def liquid_symbols(n=300):

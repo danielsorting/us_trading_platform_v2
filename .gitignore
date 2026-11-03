@@ -14,3 +14,6 @@ venv/
 
 # Simulerat konto (skapas när du kör simulerad handel)
 paper_account.json
+
+# Sparad lista över mest omsatta aktier (skapas av appen)
+cache_liquid_ranking.json
