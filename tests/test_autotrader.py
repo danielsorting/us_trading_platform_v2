@@ -20,18 +20,31 @@ def test_tick_closed_market_does_nothing(tmp_path, provider):
     assert ev == [] and b.positions == {}
 
 
-def test_tick_day_then_swing_near_close(tmp_path, provider):
+def test_tick_does_swing_and_day_and_saves_rankings(tmp_path, provider):
     b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
     state = {}
     universe = [f"S{i}" for i in range(20)]
-    ev = tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 0, tzinfo=NY))
-    assert state.get("day_list") and "last_swing_date" not in state  # swing väntar till nära stängning
-    assert all(e["tid"] and e["typ"] in ("day", "swing") for e in ev)
-    tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 15, 35, tzinfo=NY))
+    tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 0, tzinfo=NY))
+    assert state.get("day_list") and state.get("day_top") and "swing_top" in state
     assert state["last_swing_date"] == "2026-11-03"
-    # efter 15:50 finns inga dagpositioner kvar
+    first = state["last_search_ts"]
+    tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 5, tzinfo=NY))
+    assert state["last_search_ts"] == first  # ingen ny sökning efter 5 min
+    tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 31, tzinfo=NY))
+    assert state["last_search_ts"] > first  # ny sökning efter 30 min
     tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 15, 55, tzinfo=NY))
     assert not any(p.get("strategy") == "day" for p in b.positions.values())
+    import json
+    json.dumps(state, default=str)  # måste gå att spara
+
+
+def test_tick_force_searches_again(tmp_path, provider):
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    state = {}
+    t = datetime(2026, 11, 3, 11, 0, tzinfo=NY)
+    tick(provider(), b, settings(), state, ["S1", "S2"], now_ny=t)
+    tick(provider(), b, settings(), state, ["S1", "S2"], now_ny=t.replace(minute=2), force=True)
+    assert state["last_search_time"].endswith("17:02")
 
 
 def test_tick_closes_leftover_day_positions_when_closed(tmp_path, provider):

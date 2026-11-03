@@ -74,7 +74,7 @@ def main():
                   top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct)
     broker.save()
     state["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
-    STATE.write_text(json.dumps(state, indent=2))
+    STATE.write_text(json.dumps(state, indent=2, default=str, ensure_ascii=False))
     new = not LOG.exists()
     with LOG.open("a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=["tid", "typ", "symbol", "action", "detail"], extrasaction="ignore")

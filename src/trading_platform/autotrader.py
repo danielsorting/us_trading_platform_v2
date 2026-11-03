@@ -6,8 +6,8 @@ En "tick" (körs t.ex. var 15:e minut):
 2. Daytrading: ny sökning efter dagens bästa var 30:e minut, annars färska kurser
    för den sparade listan. Rangordna, förhandelskoll, köp de bästa, sälj vid
    stop/mål/dagens slut.
-3. Swing: en gång per dag nära stängning (då dagsstapeln nästan är klar) –
-   skanna listan och köp kandidater. Stop/mål för swing kontrolleras varje tick.
+3. Swing: var 30:e minut – skanna bevakningslistan och köp kandidater.
+   Stop/mål för alla positioner kontrolleras varje tick.
 4. Ledigt kapital parkeras i SPY (om påslaget).
 """
 from dataclasses import replace
@@ -69,19 +69,45 @@ def swing_round(provider, broker, settings, symbols, swing_strategy=None, market
     return run_paper_cycle(broker, rows, settings, prices, ny_now=ny_now), prices
 
 
-def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None, market_bars=None,
-         usd_sek=10.0, top_n=10, max_move_pct=2.0, now_ny=None):
-    """En automatisk runda. `state` är en dict som sparas mellan körningarna.
+def _records(df, cols, n=30):
+    """Tabell → lista med enkla dictar (sparbar som JSON)."""
+    if df is None or not len(df):
+        return []
+    cols = [c for c in cols if c in df]
+    out = df[cols].head(n).copy()
+    return [{k: (None if v != v else (v.item() if hasattr(v, "item") else v)) for k, v in r.items()}
+            for r in out.to_dict("records")]
 
-    Returnerar en lista med händelser (med tid och typ)."""
+
+DAY_COLS = ["symbol", "signal", "score", "price", "ext_price", "ext_move_pct", "change_today_pct", "rel_volume",
+            "rsi", "stop_reference", "target_reference", "conditions_met", "conditions"]
+SWING_COLS = ["symbol", "signal", "price", "rsi", "stop_reference", "target_reference", "conditions_met",
+              "conditions"]
+
+
+def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None, market_bars=None,
+         usd_sek=10.0, top_n=10, max_move_pct=2.0, now_ny=None, force=False, swing_symbols=None,
+         search_every_min=SEARCH_EVERY_MIN, progress=None):
+    """En automatisk runda för BÅDE daytrading och swing. `state` sparas mellan körningarna.
+
+    - Daytrading: ny sökning bland `liquid_symbols` var `search_every_min` minut (eller om
+      force=True), annars färska kurser för den sparade listan. Köp/sälj varje runda.
+    - Swing: skanna `swing_symbols` (standard: bevakningslistan) var `search_every_min` minut
+      (eller om force=True) och köp kandidater. Stop/mål för ALLA positioner kontrolleras varje runda.
+    - Parkerade pengar i SPY säljs automatiskt när ett köp behöver dem.
+
+    Returnerar en lista med händelser (med tid och typ). Rangordningarna sparas i
+    state["day_top"] och state["swing_top"]."""
     now_ny = (now_ny or datetime.now(NY)).astimezone(NY)
     stamp = now_ny.astimezone(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
     is_open, _ = market_status(now_ny)
     events = []
+    swing_symbols = list(swing_symbols or settings.watchlist)
 
     def add(kind, acts):
         for a in acts:
-            events.append({"tid": stamp, "typ": kind, **a})
+            if a.get("action") != "inget att göra":
+                events.append({"tid": stamp, "typ": kind, **a})
 
     if not is_open:
         day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
@@ -89,34 +115,41 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
             add("day", close_all_day_positions(broker, latest_prices(provider, day_pos), reason="börsen stängd"))
         return events
 
-    # Daytrading
+    due = force or now_ny.timestamp() - state.get("last_search_ts", 0) >= search_every_min * 60
+
+    # Swing först (få men större affärer), sedan daytrading.
+    if settings.swing_allocation_pct > 0 and (due or not state.get("swing_top")):
+        rows = scan(swing_symbols, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
+                    swing_strategy=swing_strategy, market_bars=market_bars)
+        prices = latest_prices(provider, set(swing_symbols) | set(broker.positions)
+                               | ({settings.park_symbol} if settings.park_idle_in_index else set()))
+        add("swing", run_paper_cycle(broker, rows, settings, prices, ny_now=now_ny))
+        import pandas as pd
+        state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
+        state["last_swing_date"] = now_ny.strftime("%Y-%m-%d")
+
     if settings.day_allocation_pct > 0:
-        last_search = state.get("last_search_ts", 0)
         saved = state.get("day_list") or []
-        if not saved or now_ny.timestamp() - last_search >= SEARCH_EVERY_MIN * 60:
+        searched = due or not saved
+        if searched:
             universe = list(liquid_symbols)
-            state["last_search_ts"] = now_ny.timestamp()
         else:
             universe = list(dict.fromkeys(saved + [s for s, p in broker.positions.items()
                                                    if p.get("strategy") == "day"]))
         ranked, acts, _ = day_round(provider, broker, settings, universe, top_n=top_n,
                                     day_share=settings.day_allocation_pct, max_move_pct=max_move_pct,
-                                    is_open=True, ny_now=now_ny)
-        if universe == list(liquid_symbols) and len(ranked):
+                                    is_open=True, progress=progress, ny_now=now_ny)
+        if searched and len(ranked):
             state["day_list"] = ranked.symbol.head(30).tolist()
-        add("day", [a for a in acts if a["action"] not in ("inget att göra",)])
-
-    # Swing: en gång per dag nära stängning; stop/mål kontrolleras ändå varje tick ovan.
-    today = now_ny.strftime("%Y-%m-%d")
-    if (settings.swing_allocation_pct > 0 and now_ny.time() >= SWING_TIME_NY
-            and state.get("last_swing_date") != today):
-        acts, _ = swing_round(provider, broker, settings, list(settings.watchlist), swing_strategy,
-                              market_bars, usd_sek, ny_now=now_ny)
-        state["last_swing_date"] = today
-        add("swing", [a for a in acts if a["action"] not in ("inget att göra",)])
-    elif settings.day_allocation_pct <= 0:
-        # Ingen daytrading: kontrollera ändå swing-positionernas stop/mål.
+        state["day_top"] = _records(ranked, DAY_COLS)
+        add("day", acts)
+    else:
+        # Ingen daytrading: kontrollera ändå stop/mål för alla positioner.
         prices = latest_prices(provider, set(broker.positions))
-        add("swing", [a for a in run_paper_cycle(broker, [], settings, prices, ny_now=now_ny)
-                      if a["action"] != "inget att göra"])
+        add("swing", run_paper_cycle(broker, [], settings, prices, ny_now=now_ny))
+
+    if due:
+        state["last_search_ts"] = now_ny.timestamp()
+        state["last_search_time"] = stamp
+    state["last_tick_time"] = stamp
     return events

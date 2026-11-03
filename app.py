@@ -22,6 +22,7 @@ from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import AlpacaRealtime, HybridProvider, PrefetchedProvider, YahooResearchProvider
 from trading_platform.daytop import (add_extended_check, market_status, most_liquid, rank_day_candidates,
                                     yahoo_symbol)
+from trading_platform.autotrader import day_round, tick
 from trading_platform.paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
 from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
@@ -100,7 +101,6 @@ def market_bars_for(strategy, period="2y"):
 
 
 LIQUID_FILE = PROJECT_ROOT / "cache_liquid_ranking.json"
-DAYTOP_FILE = PROJECT_ROOT / "cache_daytop.json"
 LIQUID_MAX_AGE_H = 6
 
 
@@ -194,6 +194,7 @@ with st.sidebar:
                                 help="Ställs in automatiskt när du kör 🏆 Hitta bästa automatiskt under Backtest. "
                                      "Du kan också välja själv.")
     swing_strategy = VARIANTS[variant_name]
+    swing_strategy_name = variant_name
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
@@ -452,8 +453,8 @@ with tab_bt:
 
 # ---------------------------------------------------------------- simulerad handel
 with tab_paper:
-    st.write("Handla med **låtsaspengar** enligt strategierna. Varje gång du trycker på *Kör handelsrunda* "
-             "säljs positioner som nått stop/mål/tidsgräns och nya köpkandidater köps.")
+    st.write("Handla med **låtsaspengar** – swing och daytrading på samma ställe. Slå på **Autoläge** så "
+             "köper och säljer roboten själv medan sidan är öppen.")
     broker = PaperBroker(sek_to_usd(settings.total_capital, usd_sek), PAPER_FILE,
                          settings.commission_per_share_usd, settings.min_commission_usd,
                          settings.slippage_pct, usd_sek)
@@ -471,167 +472,102 @@ with tab_paper:
     m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_val, usd_sek):,.0f} SEK",
                 help="Ledigt kapital som väntar i SPY. Säljs automatiskt när roboten köper aktier.")
     m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK",
-                help="Liten buffert (ca 1 %) som inte är parkerad.")
+                help="Daytrading-andelen och en liten buffert ligger som kontanter. Resten parkeras i SPY.")
     m[4].metric("Resultat sedan start", f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
                 help="Inklusive courtage och slippage, även för att köpa och sälja SPY. "
                      "Direkt efter start är det därför lite minus.")
 
-    paper_syms = parse_symbols(st.text_area("Aktier som handelsrundan skannar", ",".join(settings.watchlist),
-                                            height=70, key="paper_syms"))
-    # ------------------------------------------------ dagens bästa daytrades
+    # ------------------------------------------------ dagens bästa trades (swing + daytrading)
     st.divider()
-    st.subheader("⚡ Dagens bästa daytrades")
+    st.subheader("⚡ Dagens bästa trades")
     is_open, status_text = market_status()
     (st.success if is_open else st.warning)(status_text + ("" if is_open else
-        " Kör du nu används senaste kända kurser – bäst är att köra under börsens öppettider."))
+        " Roboten köper först när börsen är öppen."))
+    st.caption(f"Roboten handlar **både swing** ({settings.swing_allocation_pct:.0f} % av kontot, strategi "
+               f"**{swing_strategy_name}**, din bevakningslista) **och daytrading** "
+               f"({settings.day_allocation_pct:.0f} %, de bästa bland de 300 mest omsatta). Den köper och säljer, "
+               "flyttar stop loss uppåt på vinnare, stänger alla dagpositioner före 22:00 och använder parkerade "
+               "pengar i SPY när det behövs. Andelarna ställs in i sidopanelen.")
     d1, d2, d3 = st.columns(3)
-    dt_universe = d1.radio("Vilka aktier?", [LIQUID, "Min bevakningslista"],
-                           key="dt_universe")
-    dt_top = d2.slider("Antal aktier att köpa", 1, 20, int(settings.auto_day_top_n), key="dt_top",
+    dt_universe = d1.radio("Daytrading bland", [LIQUID, "Min bevakningslista"], key="dt_universe")
+    dt_top = d2.slider("Max antal daytrades", 1, 20, int(settings.auto_day_top_n), key="dt_top",
                        help=f"Bakgrundsroboten på GitHub använder {settings.auto_day_top_n} (från config.json).")
-    dt_share = settings.day_allocation_pct
-    d3.metric("Andel av kontot till daytrading", f"{dt_share:.0f} %",
-              help="Ställs in i sidopanelen ('Andel till daytrading'). Samma värde används av knapparna, "
-                   "autoläget och bakgrundsroboten.")
-    if dt_share <= 0:
-        st.warning("Andel till daytrading är 0 % i sidopanelen – då köper daytrading-knapparna ingenting.")
-    dt_maxmove = st.slider("Max prisrörelse sedan signalen, inkl. förhandel (%)", 0.5, 10.0,
+    dt_maxmove = d3.slider("Max prisrörelse sedan signalen, inkl. förhandel (%)", 0.5, 10.0,
                            float(settings.auto_max_move_pct), 0.5, key="dt_maxmove",
-                           help="Har aktien rört sig mer än så här sedan signalen (t.ex. stort fall i förhandeln) "
-                                "köps den inte.")
-    st.caption("Roboten letar bland aktierna efter de som just nu uppfyller **alla** daytrading-villkor "
-               "(trend, stigande MACD och RSI, hög volym), rangordnar dem och köper de bästa med låtsaspengar. "
-               "Dagpositioner stängs när du kör en runda efter **21:50 svensk tid**, eller med knappen nedan. "
-               "Första sökningen i hela marknaden per dag tar några minuter.")
-    k1, k2 = st.columns(2)
-    btn_text = (f"⚡ Hitta och köp dagens {dt_top} bästa" if is_open
-                else "🔎 Visa dagens kandidater och förhandeln (köper först efter 15:30)")
-    def day_round(universe, step_text):
-        """Hämtar 5-minutersdata för aktierna, rangordnar, gör förhandelskoll och handlar."""
-        bar = st.progress(0.0, text=f"{step_text}: hämtar 5-minutersdata…")
-        intraday = provider.history_many(universe, "5d", "5m",
-                                         progress=lambda i, n: bar.progress(i / n, text=f"{step_text}: {i} av {n} aktier"))
+                           help="Har aktien rört sig mer än så här sedan signalen köps den inte.")
+    with st.expander("Swing-lista (din bevakningslista)"):
+        swing_syms = parse_symbols(st.text_area("Aktier för swing", ",".join(settings.watchlist), height=70,
+                                                key="paper_syms"))
+
+    tick_state = st.session_state.setdefault("tick_state", {})
+
+    def run_tick(force):
+        universe = (liquid_symbols(300) if dt_universe == LIQUID else list(settings.watchlist)) \
+            if (force or not tick_state.get("day_list")) and settings.day_allocation_pct > 0 else []
+        if not universe and settings.day_allocation_pct > 0:
+            universe = tick_state.get("day_list") or list(settings.watchlist)
+        bar = st.progress(0.0, text="Hämtar kurser…")
+        events = tick(provider, broker, settings, tick_state, universe, swing_strategy=swing_strategy,
+                      market_bars=market_bars_for(swing_strategy), usd_sek=usd_sek, top_n=dt_top,
+                      max_move_pct=dt_maxmove, force=force, swing_symbols=swing_syms,
+                      progress=lambda i, n: bar.progress(i / n, text=f"Hämtar kurser: {i} av {n} aktier"))
         bar.empty()
-        ranked = rank_day_candidates(intraday)
-        # Förhandelskoll: senaste pris inklusive förhandel för de 50 bästa.
-        ext = {}
-        if len(ranked):
-            with st.spinner("Kontrollerar senaste pris inklusive förhandel…"):
-                try:
-                    ext = provider.latest_extended(ranked.symbol.head(50).tolist())
-                except Exception:
-                    ext = {}
-            ranked = add_extended_check(ranked, ext, dt_maxmove)
-        st.session_state["dt_ranked"] = ranked
-        prices = {sym: float(df.Close.iloc[-1]) for sym, df in intraday.items() if df is not None and len(df)}
-        prices.update({sym: p for sym, (p, _) in ext.items() if p})
-        extra = (set(broker.positions) | ({settings.park_symbol} if settings.park_idle_in_index else set())) - set(prices)
-        prices.update(latest_prices(provider, extra))
-        st.session_state["paper_prices"] = prices
-        top = ranked[ranked.is_candidate].head(dt_top) if len(ranked) else ranked
-        if not is_open:
-            acts = [{"symbol": "", "action": "väntar",
-                     "detail": "Börsen är stängd – inget köpt. Se rangordningen och förhandeln nedan. "
-                               "Kör igen efter 15:30 för att köpa."}]
-        else:
-            acts = []
-            if len(top) and "move_ok" in top:
-                for r in top[~top.move_ok].itertuples():
-                    acts.append({"symbol": r.symbol, "action": "hoppar över",
-                                 "detail": f"Har rört sig {r.ext_move_pct:+.1f} % sedan signalen (gräns {dt_maxmove} %)."})
-                top = top[top.move_ok]
-            cands = top.to_dict("records") if len(top) else []
-            s_day = replace(settings, day_allocation_pct=float(dt_share), swing_allocation_pct=float(100 - dt_share),
-                            max_position_pct_of_strategy_capital=min(settings.max_position_pct_of_strategy_capital,
-                                                                     100.0 / dt_top))
-            acts += run_paper_cycle(broker, cands, s_day, prices, limits={"day": dt_top})
-            if not cands:
-                acts.insert(0, {"symbol": "", "action": "inga kandidater",
-                                "detail": "Ingen aktie uppfyller alla daytrading-villkor just nu."})
-        return ranked, acts
+        st.session_state["paper_actions"] = events or [{"symbol": "", "action": "inget att göra",
+                                                        "detail": "Inga köp eller sälj just nu."}]
+        log = st.session_state.setdefault("auto_log", [])
+        buys = sum(e["action"] == "KÖP" for e in events)
+        sells = sum(e["action"] == "SÄLJ" for e in events)
+        swing_n = sum(e["typ"] == "swing" and e["action"] in ("KÖP", "SÄLJ") for e in events)
+        log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} runda: {buys} köp, {sells} sälj "
+                      f"(varav swing {swing_n})")
+        del log[50:]
 
-    def save_daytop(ranked):
-        """Sparar de 30 bästa från sökningen så att handelsrundan kan köras på dem senare."""
-        syms = ranked.symbol.head(30).tolist() if len(ranked) else []
-        when = datetime.now(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
-        try:
-            DAYTOP_FILE.write_text(json.dumps({"time": when, "symbols": syms}))
-        except Exception:
-            pass
-        st.session_state["dt_saved"] = {"time": when, "symbols": syms}
-
-    saved = st.session_state.get("dt_saved")
-    if saved is None:
-        try:
-            saved = json.loads(DAYTOP_FILE.read_text())
-        except Exception:
-            saved = None
-
-    if st.button(btn_text):
-        try:
-            if dt_universe.startswith("Hela"):
-                universe = liquid_symbols(300)
-            else:
-                universe = list(settings.watchlist)
-            ranked, acts = day_round(universe, "Söker")
-            save_daytop(ranked)
-            st.session_state["paper_actions"] = acts
-        except Exception as e:
-            st.error(f"Något gick fel vid hämtning av data: {e}")
-        st.rerun()
-    saved_n = len(saved["symbols"]) if saved else 0
     st.markdown("**Handelsrundor**")
     r0, r1, r2, r3 = st.columns(4)
-    if r0.button("▶️ Kör handelsrunda (swing, din lista)", type="primary", disabled=not paper_syms,
-                 width="stretch",
-                 help="Skannar aktierna i rutan ovan med swing-strategin, köper kandidater och säljer det "
-                      "som nått stop loss/kursmål."):
-        with st.spinner("Skannar och handlar…"):
-            rows = scan(paper_syms, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
-                        swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
-            prices = latest_prices(provider, set(paper_syms) | set(broker.positions)
-                                   | ({settings.park_symbol} if settings.park_idle_in_index else set()))
-            st.session_state["paper_prices"] = prices
-            st.session_state["paper_actions"] = run_paper_cycle(broker, rows, settings, prices)
-        st.rerun()
-    saved_n = len(saved["symbols"]) if saved else 0
-    if r1.button(f"▶️ Kör handelsrunda på dagens bästa ({dt_top} st)", type="primary", disabled=not saved_n,
-                 width="stretch",
-                 help="Använder listan från senaste sökningen. Hämtar färska kurser bara för de aktierna, "
-                      "kontrollerar villkor och förhandel igen och köper de bästa. Säljer dagpositioner som "
-                      "nått stop loss, kursmål eller dagens slut."):
+    if r0.button("▶️ Kör handelsrunda nu", type="primary", width="stretch", disabled=not is_open,
+                 help="Söker dagens bästa (swing + daytrading), köper och säljer direkt."):
         try:
-            universe = list(dict.fromkeys(saved["symbols"] + [s for s, p in broker.positions.items()
-                                                              if p.get("strategy") == "day"]))
-            ranked, acts = day_round(universe, "Handelsrunda")
-            st.session_state["paper_actions"] = acts
+            run_tick(force=True)
         except Exception as e:
-            st.error(f"Något gick fel vid hämtning av data: {e}")
+            st.error(f"Något gick fel: {e}")
+        st.rerun()
+    if r1.button("🔎 Visa dagens bästa (köper inte)", width="stretch",
+                 help="Visar rangordningen för swing och daytrading utan att handla."):
+        try:
+            prices_v = {}
+            uni = liquid_symbols(300) if dt_universe == LIQUID else list(settings.watchlist)
+            ranked, _a, _p = day_round(provider, broker, settings, uni, top_n=dt_top,
+                                       day_share=settings.day_allocation_pct, max_move_pct=dt_maxmove,
+                                       is_open=False)
+            from trading_platform.autotrader import DAY_COLS, SWING_COLS, _records
+            tick_state["day_top"] = _records(ranked, DAY_COLS)
+            tick_state["day_list"] = ranked.symbol.head(30).tolist() if len(ranked) else []
+            rows = scan(swing_syms, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
+                        swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
+            tick_state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
+            tick_state["last_search_time"] = datetime.now(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
+        except Exception as e:
+            st.error(f"Något gick fel: {e}")
         st.rerun()
     if r2.button("🔄 Uppdatera kurser", disabled=not broker.positions, width="stretch"):
         st.session_state["paper_prices"] = latest_prices(provider, list(broker.positions))
         st.rerun()
-
     day_open = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
     if r3.button("⏹ Stäng alla dagpositioner", disabled=not day_open, width="stretch"):
-        prices = latest_prices(provider, set(day_open) | ({settings.park_symbol} if settings.park_idle_in_index else set()))
-        acts = close_all_day_positions(broker, prices)
-        acts += [a for a in run_paper_cycle(broker, [], settings, prices) if a["action"] != "inget att göra"]
-        st.session_state["paper_actions"] = acts
-        st.session_state["paper_prices"] = {**st.session_state.get("paper_prices", {}), **prices}
+        prices_c = latest_prices(provider, set(day_open))
+        st.session_state["paper_actions"] = close_all_day_positions(broker, prices_c)
         st.rerun()
-    st.caption((f"Dagens bästa: lista från sökningen {saved['time']} ({saved_n} aktier). Sök igen för en ny lista."
-                if saved_n else "Dagens bästa: gör först en sökning med knappen ovan."))
 
     # ------------------------------------------------ autoläge
-    st.markdown("**🤖 Autoläge – roboten köper och säljer själv**")
-    a1, a2, a3 = st.columns(3)
+    st.markdown("**🤖 Autoläge – roboten köper och säljer själv (swing + daytrading)**")
+    a1, a2 = st.columns(2)
     auto_on = a1.toggle("Autoläge på", key="auto_on",
-                        help="Kör handelsrundan på dagens bästa automatiskt under börsens öppettider. "
-                             "Fungerar bara så länge den här sidan är öppen i webbläsaren.")
-    auto_every = a2.selectbox("Handelsrunda var", [5, 10, 15], key="auto_every",
-                              format_func=lambda m: f"{m}:e minut")
-    auto_research = a3.checkbox("Ny sökning efter dagens bästa var 30:e minut", value=True, key="auto_research")
+                        help="Kör handelsrundan automatiskt under börsens öppettider. Fungerar bara så länge "
+                             "den här sidan är öppen. Bakgrundsroboten på GitHub gör samma sak även när datorn är "
+                             "avstängd (fliken 🤖 Automatisk handel).")
+    auto_every = a2.selectbox("Handelsrunda var", [5, 10, 15], key="auto_every", format_func=lambda m: f"{m}:e minut")
+    st.caption("Varje runda: kontrollerar alla positioner (stop loss, kursmål, dagens slut) och köper nya. "
+               "Ny sökning efter dagens bästa – både swing och daytrading – var 30:e minut.")
 
     @st.fragment(run_every=60 if auto_on else None)
     def auto_runner():
@@ -640,14 +576,12 @@ with tab_paper:
             return
         now = _t.time()
         log = st.session_state.setdefault("auto_log", [])
-        is_open_now, _txt = market_status()
-        day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
-        if not is_open_now:
-            if day_pos:  # missade dagpositioner stängs så fort börsen är stängd
-                prices_c = latest_prices(provider, set(day_pos))
-                acts = close_all_day_positions(broker, prices_c, reason="börsen stängd")
-                log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} stängde {len(acts)} dagpositioner")
-                st.session_state["paper_actions"] = acts
+        if not market_status()[0]:
+            if any(p.get("strategy") == "day" for p in broker.positions.values()):
+                try:
+                    run_tick(force=False)  # stänger kvarvarande dagpositioner
+                except Exception as e:
+                    log.insert(0, f"fel: {e}")
                 st.rerun()
             st.caption("🤖 Autoläget väntar – börsen är stängd (öppnar 15:30 svensk tid).")
             return
@@ -658,43 +592,31 @@ with tab_paper:
                 st.caption(line)
             return
         st.session_state["auto_last"] = now
-        cur = st.session_state.get("dt_saved") or saved
-        need_search = (not cur or not cur.get("symbols")
-                       or (auto_research and now - st.session_state.get("auto_last_search", 0) >= 30 * 60))
         try:
-            if need_search:
-                universe = liquid_symbols(300) if dt_universe.startswith("Hela") else list(settings.watchlist)
-                ranked, acts = day_round(universe, "Autoläge: söker")
-                save_daytop(ranked)
-                st.session_state["auto_last_search"] = now
-            else:
-                universe = list(dict.fromkeys(cur["symbols"] + [s for s, p in broker.positions.items()
-                                                                if p.get("strategy") == "day"]))
-                ranked, acts = day_round(universe, "Autoläge: handelsrunda")
-            buys = sum(a["action"] == "KÖP" for a in acts)
-            sells = sum(a["action"].startswith("SÄLJ") and "parkering" not in a["action"] for a in acts)
-            log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} "
-                          f"{'sökning + ' if need_search else ''}runda: {buys} köp, {sells} sälj")
-            del log[50:]
-            st.session_state["paper_actions"] = acts
+            run_tick(force=False)
         except Exception as e:
             log.insert(0, f"{datetime.now(ZoneInfo('Europe/Stockholm')):%H:%M} fel: {e}")
         st.rerun()
 
     auto_runner()
 
-    if "dt_ranked" in st.session_state and len(st.session_state["dt_ranked"]):
-        with st.expander("Rangordning från senaste sökningen (topp 30)", expanded=not is_open):
-            r = st.session_state["dt_ranked"].head(30).copy()
-            cols = [c for c in ["symbol", "signal", "score", "price", "ext_price", "ext_move_pct", "change_today_pct",
-                                "rel_volume", "rsi", "stop_reference", "target_reference", "conditions_met",
-                                "conditions"] if c in r]
-            r = r[cols].rename(columns={**COLUMN_NAMES, "score": "Poäng", "change_today_pct": "Idag %",
-                                        "rel_volume": "Relativ volym", "price": "Signalpris (USD)",
-                                        "ext_price": "Senaste inkl. förhandel", "ext_move_pct": "Rörelse sedan signal %"})
-            if "Signal" in r:
-                r["Signal"] = r["Signal"].map(SIGNAL_NAMES).fillna(r["Signal"])
-            st.dataframe(r, width="stretch", hide_index=True)
+    # ------------------------------------------------ rangordning
+    if tick_state.get("day_top") or tick_state.get("swing_top"):
+        with st.expander(f"Dagens bästa – rangordning (senaste sökning {tick_state.get('last_search_time', '')})",
+                         expanded=not is_open):
+            rows = [{"Typ": "Swing", **r} for r in tick_state.get("swing_top", [])
+                    if r.get("signal") in ("CANDIDATE", "WATCH")]
+            rows += [{"Typ": "Daytrade", **r} for r in tick_state.get("day_top", [])]
+            r = pd.DataFrame(rows)
+            if len(r):
+                r["_c"] = (r["signal"] == "CANDIDATE")
+                r = r.sort_values(["_c", "Typ"], ascending=[False, False]).drop(columns="_c")
+                r = r.rename(columns={**COLUMN_NAMES, "score": "Poäng", "change_today_pct": "Idag %",
+                                      "rel_volume": "Relativ volym", "price": "Signalpris (USD)",
+                                      "ext_price": "Senaste inkl. förhandel", "ext_move_pct": "Rörelse sedan signal %"})
+                if "Signal" in r:
+                    r["Signal"] = r["Signal"].map(SIGNAL_NAMES).fillna(r["Signal"])
+                st.dataframe(r, width="stretch", hide_index=True)
 
     if st.session_state.get("paper_actions"):
         st.subheader("Senaste handelsrundan")
