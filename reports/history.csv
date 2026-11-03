@@ -20,3 +20,25 @@ datum,typ,lista,strategi,per_ar_pct,avkastning_pct,sp500_pct,storsta_nedgang_pct
 2026-11-03,day,50 mest omsatta,Day – momentum (nuvarande),,-38.44,-2.51,-40.4,2842,
 2026-11-03,day,50 mest omsatta,Day – ORB 15 min,,-2.61,-2.51,-3.64,278,
 2026-11-03,day,50 mest omsatta,Day – ORB 30 min,,-0.56,-2.51,-2.24,157,
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter + relativ styrka,22.1,127.94,106.93,-22.27,111,ja
+2026-11-03,swing,Bevakningslistan,Utbrott – låt vinnare löpa,21.6,123.88,106.93,-23.05,74,ja
+2026-11-03,swing,Bevakningslistan,Utbrott + marknadsfilter – låt vinnare löpa,21.4,122.7,106.93,-23.06,75,ja
+2026-11-03,swing,Bevakningslistan,Swing – låt vinnare löpa,20.3,113.96,106.93,-33.76,113,ja
+2026-11-03,swing,Bevakningslistan,Ditt upplägg: +2 % / −2 %,5.3,23.8,106.93,-21.16,279,ja
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter – låt vinnare löpa,13.3,67.48,106.93,-36.02,105,nej
+2026-11-03,swing,Bevakningslistan,Swing – grund,9.1,43.2,106.93,-27.02,164,nej
+2026-11-03,swing,Bevakningslistan,"Swing + marknadsfilter, mål 3R",6.8,31.26,106.93,-29.93,143,nej
+2026-11-03,swing,Bevakningslistan,Swing + marknadsfilter,4.6,20.54,106.93,-33.59,157,nej
+2026-11-03,swing,100 mest omsatta,Swing – låt vinnare löpa,59.6,586.25,106.93,-32.66,143,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter – låt vinnare löpa,59.8,589.79,106.93,-33.64,138,ja
+2026-11-03,swing,100 mest omsatta,Utbrott + marknadsfilter – låt vinnare löpa,44.1,351.07,106.93,-28.58,136,ja
+2026-11-03,swing,100 mest omsatta,Utbrott – låt vinnare löpa,40.6,307.55,106.93,-35.28,139,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter + relativ styrka,36.7,262.56,106.93,-33.27,221,ja
+2026-11-03,swing,100 mest omsatta,"Swing + marknadsfilter, mål 3R",24.4,146.15,106.93,-32.16,237,ja
+2026-11-03,swing,100 mest omsatta,Swing – grund,26.0,158.9,106.93,-34.56,279,ja
+2026-11-03,swing,100 mest omsatta,Swing + marknadsfilter,19.3,107.2,106.93,-35.78,267,ja
+2026-11-03,swing,100 mest omsatta,Ditt upplägg: +2 % / −2 %,-25.1,-69.66,106.93,-69.87,579,nej
+2026-11-03,day,50 mest omsatta,Day – momentum (nuvarande),,-7.92,-2.41,-8.65,456,
+2026-11-03,day,50 mest omsatta,Day – ORB 15 min,,0.45,-2.41,-0.38,15,
+2026-11-03,day,50 mest omsatta,Day – ORB 30 min,,0.47,-2.41,-0.38,14,
+2026-11-03,day,50 mest omsatta,"Day – ORB 30 min, hela dagen",,1.11,-2.41,-0.53,25,
