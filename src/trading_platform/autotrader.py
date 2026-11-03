@@ -16,6 +16,7 @@ from zoneinfo import ZoneInfo
 
 from .daytop import add_extended_check, market_status, rank_day_candidates
 from .paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
+from .data import PrefetchedProvider
 from .scanner import scan
 
 NY = ZoneInfo("America/New_York")
@@ -108,12 +109,19 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
     stamp = now_ny.astimezone(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
     is_open, _ = market_status(now_ny)
     events = []
-    swing_symbols = list(swing_symbols or settings.watchlist)
+    if swing_symbols is None:
+        swing_symbols = list(settings.watchlist)
+        if getattr(settings, "swing_universe", "watchlist") == "liquid":
+            # De mest omsatta (samma lista som daytrading) + din bevakningslista.
+            swing_symbols = list(dict.fromkeys(list(liquid_symbols) + swing_symbols))
+    swing_symbols = list(swing_symbols)
 
     def add(kind, acts):
         for a in acts:
             if a.get("action") != "inget att göra":
-                events.append({"tid": stamp, "typ": kind, **a})
+                typ = "park" if ("parkering" in a.get("action", "") or a.get("symbol") == settings.park_symbol) \
+                    else kind
+                events.append({"tid": stamp, "typ": typ, **a})
 
     if not is_open:
         day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
@@ -125,7 +133,13 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
 
     # Swing först (få men större affärer), sedan daytrading.
     if settings.swing_allocation_pct > 0 and (due or not state.get("swing_top")):
-        rows = scan(swing_symbols, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
+        # Hämta dagsdata för alla swing-aktier i ett svep (få anrop till Yahoo).
+        fast = PrefetchedProvider(provider)
+        try:
+            fast.add(provider.history_many(swing_symbols, "2y", "1d"), "2y", "1d")
+        except Exception:
+            pass
+        rows = scan(swing_symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                     swing_strategy=swing_strategy, market_bars=market_bars)
         prices = latest_prices(provider, set(swing_symbols) | set(broker.positions)
                                | ({settings.park_symbol} if settings.park_idle_in_index else set()))

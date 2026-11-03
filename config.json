@@ -52,12 +52,13 @@
   "max_symbols_per_scan": 300,
   "park_idle_in_index": true,
   "park_symbol": "SPY",
-  "swing_variant": "Swing + marknadsfilter + relativ styrka",
+  "swing_variant": "Swing – låt vinnare löpa",
   "auto_trading_enabled": true,
   "auto_day_top_n": 20,
   "auto_max_move_pct": 2.0,
   "max_fee_share_of_profit_pct": 20.0,
   "commission_pct": 0.04,
   "fx_fee_pct": 0.0,
-  "day_variant": "Day – ORB 30 min"
+  "day_variant": "Day – ORB 30 min",
+  "swing_universe": "liquid"
 }

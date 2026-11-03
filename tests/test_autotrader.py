@@ -52,3 +52,15 @@ def test_tick_closes_leftover_day_positions_when_closed(tmp_path, provider):
     b.submit_order("AAPL", "buy", 1, price=100, strategy="day")
     ev = tick(provider(), b, settings(), {}, [], now_ny=datetime(2026, 11, 3, 17, 0, tzinfo=NY))
     assert "AAPL" not in b.positions and ev and ev[0]["action"] == "SÄLJ"
+
+
+def test_swing_searches_liquid_list_and_parking_is_labelled(tmp_path, provider):
+    from dataclasses import replace
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    s = replace(settings(), swing_universe="liquid")
+    state = {}
+    liquid = [f"L{i}" for i in range(15)]
+    ev = tick(provider(), b, s, state, liquid, now_ny=datetime(2026, 11, 3, 11, 0, tzinfo=NY))
+    swung = {r["symbol"] for r in state["swing_top"]}
+    assert set(liquid) <= swung and {"AAPL", "MSFT", "NVDA"} <= swung
+    assert all(e["typ"] == "park" for e in ev if "parkering" in e["action"])

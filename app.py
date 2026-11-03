@@ -500,7 +500,9 @@ with tab_paper:
     (st.success if is_open else st.warning)(status_text + ("" if is_open else
         " Roboten köper först när börsen är öppen."))
     st.caption(f"Roboten handlar **både swing** ({settings.swing_allocation_pct:.0f} % av kontot, strategi "
-               f"**{swing_strategy_name}**, din bevakningslista) **och daytrading** "
+               f"**{swing_strategy_name}**, "
+               f"{'de 300 mest omsatta + din bevakningslista' if settings.swing_universe == 'liquid' else 'din bevakningslista'}) "
+               "**och daytrading** "
                f"({settings.day_allocation_pct:.0f} %, strategi **{settings.day_variant}**, de bästa bland de 300 "
                "mest omsatta). Den köper och säljer, "
                "flyttar stop loss uppåt på vinnare, stänger alla dagpositioner före 22:00 och använder parkerade "
@@ -512,7 +514,8 @@ with tab_paper:
     dt_maxmove = d3.slider("Max prisrörelse sedan signalen, inkl. förhandel (%)", 0.5, 10.0,
                            float(settings.auto_max_move_pct), 0.5, key="dt_maxmove",
                            help="Har aktien rört sig mer än så här sedan signalen köps den inte.")
-    with st.expander("Swing-lista (din bevakningslista)"):
+    with st.expander("Din bevakningslista (swing söker även bland de 300 mest omsatta)"
+                     if settings.swing_universe == "liquid" else "Swing-lista (din bevakningslista)"):
         swing_syms = parse_symbols(st.text_area("Aktier för swing", ",".join(settings.watchlist), height=70,
                                                 key="paper_syms"))
 
@@ -524,9 +527,11 @@ with tab_paper:
         if not universe and settings.day_allocation_pct > 0:
             universe = tick_state.get("day_list") or list(settings.watchlist)
         bar = st.progress(0.0, text="Hämtar kurser…")
+        swing_list = (list(dict.fromkeys(liquid_symbols(300) + swing_syms))
+                      if settings.swing_universe == "liquid" else swing_syms)
         events = tick(provider, broker, settings, tick_state, universe, swing_strategy=swing_strategy,
                       market_bars=market_bars_for(swing_strategy), usd_sek=usd_sek, top_n=dt_top,
-                      max_move_pct=dt_maxmove, force=force, swing_symbols=swing_syms,
+                      max_move_pct=dt_maxmove, force=force, swing_symbols=swing_list,
                       progress=lambda i, n: bar.progress(i / n, text=f"Hämtar kurser: {i} av {n} aktier"))
         bar.empty()
         st.session_state["paper_actions"] = events or [{"symbol": "", "action": "inget att göra",
@@ -559,7 +564,11 @@ with tab_paper:
             from trading_platform.autotrader import DAY_COLS, SWING_COLS, _records
             tick_state["day_top"] = _records(ranked, DAY_COLS)
             tick_state["day_list"] = ranked.symbol.head(30).tolist() if len(ranked) else []
-            rows = scan(swing_syms, False, True, provider=provider, settings=settings, usd_sek=usd_sek,
+            swing_list = (list(dict.fromkeys(liquid_symbols(300) + swing_syms))
+                          if settings.swing_universe == "liquid" else swing_syms)
+            fast = PrefetchedProvider(provider)
+            fast.add(get_history_many(tuple(swing_list), "2y", "1d"), "2y", "1d")
+            rows = scan(swing_list, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                         swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
             tick_state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
             tick_state["last_search_time"] = datetime.now(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
@@ -697,7 +706,8 @@ with tab_auto:
                f"de {settings.auto_day_top_n} bästa "
                f"bland de 300 mest omsatta, ny sökning var 30:e minut, stängs före 22:00. "
                f"Swing: {settings.swing_allocation_pct:.0f} %, strategi **{settings.swing_variant}**, ny sökning var "
-               f"30:e minut på din bevakningslista, stop loss kontrolleras var 15:e minut. "
+               f"30:e minut bland {'de 300 mest omsatta + din bevakningslista' if settings.swing_universe == 'liquid' else 'din bevakningslista'}, "
+               "stop loss kontrolleras var 15:e minut. "
                f"Inställningarna hämtas från config.json.")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():
