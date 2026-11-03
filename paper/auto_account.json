@@ -1,5 +1,5 @@
 {
-  "cash": 1105.456668616482,
+  "cash": 1056.2623939981424,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -21,6 +21,17 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.15
+    },
+    "VITL": {
+      "quantity": 5.0,
+      "avg_price": 9.834914923667908,
+      "opened": "2026-11-03T17:08:03",
+      "entry_fee": 0.0197,
+      "stop": 9.68,
+      "target": 10.149999923706055,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.107
     }
   },
   "orders": [
@@ -49,6 +60,21 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.15
+    },
+    {
+      "id": "6d9f41f959",
+      "time": "2026-11-03T17:08:03",
+      "symbol": "VITL",
+      "side": "buy",
+      "quantity": 5.0,
+      "price": 9.8349,
+      "fee": 0.0197,
+      "pnl": null,
+      "stop": 9.68,
+      "target": 10.149999923706055,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.107
     }
   ],
   "reset_id": null
