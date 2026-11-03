@@ -79,10 +79,11 @@ def test_most_active_parses_yahoo_screen(monkeypatch):
                "quoteType": "EQUITY"} for i in range(30)]
     quotes.append({"symbol": "PENNY", "regularMarketPrice": 1.0, "regularMarketVolume": 9e9, "quoteType": "EQUITY"})
     quotes.append({"symbol": "SOMEETF", "regularMarketPrice": 50, "regularMarketVolume": 9e9, "quoteType": "ETF"})
-    fake.screen = lambda q, offset=None, count=None: {"quotes": quotes if offset == 0 else []}
+    # Yahoo skickar bara 25 per sida – roboten ska bläddra vidare
+    fake.screen = lambda q, offset=None, count=None: {"quotes": quotes[offset:offset + 25]}
     monkeypatch.setitem(sys.modules, "yfinance", fake)
-    out = YahooResearchProvider().most_active(10)
-    assert out[0] == "S29" and len(out) == 10 and "PENNY" not in out and "SOMEETF" not in out
+    out = YahooResearchProvider().most_active(28)
+    assert out[0] == "S29" and len(out) == 28 and "PENNY" not in out and "SOMEETF" not in out
 
 
 def test_liquid_universe_falls_back(provider):

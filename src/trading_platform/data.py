@@ -127,19 +127,23 @@ class YahooResearchProvider(MarketDataProvider):
         screen = getattr(yf, "screen", None)
         if screen is None:
             return []
-        for offset in range(0, max(n, 250) + 250, 250):
+        offset, pages = 0, 0
+        while len(rows) < n and pages < 40:
             try:
-                # offset gör att yfinance använder sökvägen som stöder sidor; max 250 per anrop.
+                # offset gör att yfinance använder sökvägen som stöder sidor. Yahoo kan skicka färre
+                # än vi ber om (ofta 25), så vi bläddrar vidare med det antal vi faktiskt fick.
                 res = _with_retry(lambda: screen("most_actives", offset=offset, count=250))
             except Exception:
                 break
             quotes = (res or {}).get("quotes") or []
+            if not quotes:
+                break
             for q in quotes:
                 sym, price, vol = q.get("symbol"), q.get("regularMarketPrice"), q.get("regularMarketVolume")
                 if sym and price and vol and price >= min_price and q.get("quoteType", "EQUITY") == "EQUITY":
                     rows[sym] = float(price) * float(vol)
-            if len(quotes) < 250 or len(rows) >= n:
-                break
+            offset += len(quotes)
+            pages += 1
         return [s for s, _ in sorted(rows.items(), key=lambda kv: kv[1], reverse=True)][:n]
 
     @staticmethod

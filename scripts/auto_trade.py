@@ -41,7 +41,8 @@ def load_json(p, default):
 
 def liquid_list(provider, n=300):
     saved = load_json(LIQUID, {})
-    if saved.get("symbols") and time.time() - saved.get("time", 0) < LIQUID_MAX_AGE:
+    if (len(saved.get("symbols") or []) >= min(n, 100)
+            and time.time() - saved.get("time", 0) < LIQUID_MAX_AGE):
         return saved["symbols"][:n]
     ranking = liquid_universe(provider, max(n, 300), fallback_symbols=load_settings().watchlist, allow_heavy=False)
     LIQUID.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
