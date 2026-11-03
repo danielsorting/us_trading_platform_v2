@@ -95,3 +95,18 @@ def test_compare_includes_sp500_benchmark(bars):
     assert df["S&P 500 %"].notna().all()
     assert set(df["Slår S&P 500?"]) <= {"ja", "nej"}
     assert "Per år %" in df
+
+
+def test_find_best_ranks_approved_first(bars):
+    from trading_platform.backtest import find_best
+    mkt = bars(900, seed=50, drift=0.0004, vol=0.01)
+    data = {f"S{i}": add_market(bars(900, seed=i, drift=0.001), mkt) for i in range(6)}
+    calls = []
+    df = find_best(data, swing_variants(), 1000, Settings(), benchmark=mkt.Close,
+                   progress=lambda i, n: calls.append((i, n)))
+    assert len(df) == len(swing_variants()) * 3 and calls[-1][0] == calls[-1][1]
+    ok = (df["Godkänd"] == "ja").tolist()
+    assert ok == sorted(ok, reverse=True)  # godkända först
+    approved = df[df["Godkänd"] == "ja"]
+    assert (approved["Testdel %"] > 0).all() and (approved["Kontrolldel %"] > 0).all()
+    assert (approved["Affärer"] >= 20).all()

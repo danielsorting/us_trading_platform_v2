@@ -9,8 +9,8 @@ sys.path.insert(0, str(Path(__file__).parent / "src"))
 import pandas as pd
 import streamlit as st
 
-from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategies, per_year, period_return,
-                                      run_backtest)
+from trading_platform.backtest import (buy_and_hold_by_symbol, compare_strategies, find_best, per_year,
+                                      period_return, run_backtest)
 from trading_platform.brokers.paper import PaperBroker
 from trading_platform.config import PROJECT_ROOT, load_settings
 from trading_platform.data import YahooResearchProvider
@@ -69,13 +69,23 @@ def parse_symbols(text):
 
 # ---------------------------------------------------------------- sidopanel
 defaults = load_settings()
+RISK_OPTIONS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
+st.session_state.setdefault("sb_risk", float(defaults.risk_per_trade_pct))
+st.session_state.setdefault("sb_variant", list(VARIANTS)[0])
+
+
+def use_best(variant, risk):
+    st.session_state["sb_variant"] = variant
+    st.session_state["sb_risk"] = float(risk)
+    st.session_state["best_applied"] = f"{variant} med {risk} % risk per affär"
+
+
 with st.sidebar:
     st.header("Kapital och risk")
     capital = st.number_input("Totalt kapital (SEK)", min_value=1000, value=int(defaults.total_capital), step=1000)
     day_pct = st.slider("Andel till daytrading (%)", 0, 100, int(defaults.day_allocation_pct), 5)
     st.caption(f"Andel till swingtrading: {100 - day_pct} %")
-    risk = st.select_slider("Risk per affär (% av strategins kapital)", options=[0.25, 0.5, 0.75, 1.0, 1.5, 2.0],
-                            value=float(defaults.risk_per_trade_pct))
+    risk = st.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key="sb_risk")
     max_pos = st.slider("Max antal positioner per strategi", 1, 10, int(defaults.max_positions_per_strategy))
     max_pos_pct = st.slider("Max storlek per position (% av strategins kapital)", 5, 100,
                             int(defaults.max_position_pct_of_strategy_capital), 5)
@@ -85,8 +95,8 @@ with st.sidebar:
                        swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
                        max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
                        allow_fractional_shares=fractional)
-    variant_name = st.selectbox("Swing-variant i scanner och simulerad handel", list(VARIANTS),
-                                help="Välj den variant som klarat sig bäst under fliken Backtest → Jämför.")
+    variant_name = st.selectbox("Swing-variant i scanner och simulerad handel", list(VARIANTS), key="sb_variant",
+                                help="Välj den variant som klarat sig bäst under fliken Backtest.")
     swing_strategy = VARIANTS[variant_name]
     usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
     st.divider()
@@ -151,9 +161,16 @@ with tab_scan:
 with tab_bt:
     st.write("Testa hur en strategi hade gått historiskt. Köp sker alltid på stapeln **efter** signalen, "
              "och courtage och slippage räknas med.")
-    bt_mode = st.radio("Vad vill du göra?", ["Jämför swing-varianter", "Testa en strategi i detalj"],
+    bt_mode = st.radio("Vad vill du göra?",
+                       ["🏆 Hitta bästa automatiskt", "Jämför swing-varianter", "Testa en strategi i detalj"],
                        horizontal=True, key="bt_mode")
-    if bt_mode == "Jämför swing-varianter":
+    if bt_mode == "🏆 Hitta bästa automatiskt":
+        strat_name = "__best__"
+        module = swing
+        st.caption("Testar **alla** swing-varianter på tre risknivåer (0,5 %, 1 % och 2 % per affär) och väljer den "
+                   "bästa. Godkänd = plus i både testdel och kontrolldel och minst 20 affärer. Poäng = avkastning per år "
+                   "delat med största nedgång (belönar jämn tillväxt). Tar 1–3 minuter.")
+    elif bt_mode == "Jämför swing-varianter":
         strat_name = None
         module = swing
         st.caption("Alla varianter testas på samma aktier och period. Perioden delas: de första 70 % är "
@@ -200,13 +217,23 @@ with tab_bt:
         if module is not day:
             mkt = market_bars_for(VARIANTS["Swing + marknadsfilter"], period)
             bars = {s: add_market(b, mkt) for s, b in bars.items()}
-        if strat_name is None:
+        if strat_name == "__best__":
+            bar = st.progress(0.0, text="Testar kombinationer…")
+            st.session_state["bt_best"] = find_best(
+                bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close,
+                progress=lambda i, n: bar.progress(i / n, text=f"Testat {i} av {n} kombinationer"))
+            bar.empty()
+            st.session_state.pop("bt", None)
+            st.session_state.pop("bt_compare", None)
+        elif strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
                 st.session_state["bt_compare"] = compare_strategies(
                     bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close)
                 st.session_state["bt_bh"] = buy_and_hold_by_symbol(bars)
             st.session_state.pop("bt", None)
+            st.session_state.pop("bt_best", None)
         else:
+            st.session_state.pop("bt_best", None)
             with st.spinner("Kör backtest…"):
                 res = run_backtest(bars, module, cap_usd, settings)
                 eq = res["equity"]
@@ -217,6 +244,34 @@ with tab_bt:
                     bench = period_return(mkt.Close, times[min(module.MIN_BARS, len(times) - 1)])
                 st.session_state["bt"] = (strat_name, res, bench)
             st.session_state.pop("bt_compare", None)
+
+    if st.session_state.get("best_applied"):
+        st.success(f"✅ Inställt: **{st.session_state['best_applied']}**. Scanner och simulerad handel använder "
+                   "nu detta (se sidopanelen).")
+
+    if "bt_best" in st.session_state:
+        best = st.session_state["bt_best"]
+        st.subheader("🏆 Bästa kombinationen")
+        if len(best) and best.iloc[0]["Godkänd"] == "ja":
+            top = best.iloc[0]
+            sp = "" if top["S&P 500 %"] is None else (
+                f" S&P 500 gav {top['S&P 500 %']:+.1f} % under samma tid, så den "
+                + ("**slog indexfonden**." if top["Slår S&P 500?"] == "ja" else "**slog inte indexfonden**."))
+            st.success(f"**{top['Strategi']}** med **{top['Risk per affär %']} % risk per affär**: "
+                       f"{top['Avkastning %']:+.1f} % totalt ({top['Per år %']:+.1f} % per år), största nedgång "
+                       f"{top['Största nedgång %']:.1f} %, {int(top['Affärer'])} affärer.{sp}")
+            st.button("Använd den här i scanner och simulerad handel", type="primary",
+                      on_click=use_best, args=(top["Strategi"], top["Risk per affär %"]))
+            if top["Slår S&P 500?"] == "nej":
+                st.warning("Ärligt: den bästa roboten slog inte en vanlig indexfond under perioden. "
+                           "Fundera på om en indexfond är det bättre valet för pengarna.")
+        elif len(best):
+            st.warning("Ingen kombination blev godkänd (plus i både test- och kontrolldel med minst 20 affärer). "
+                       "Prova fler aktier eller längre period.")
+        st.caption(f"Testperiod: {best.attrs.get('period', '')}. Tabellen är sorterad: godkända först, högst poäng överst.")
+        st.dataframe(best, width="stretch", hide_index=True)
+        st.caption("Varning för överanpassning: ju fler kombinationer som testas, desto större risk att den bästa "
+                   "bara hade tur. Kör därför den valda strategin i simulerad handel en tid innan du litar på den.")
 
     if "bt_compare" in st.session_state:
         cmp = st.session_state["bt_compare"]

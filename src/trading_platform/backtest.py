@@ -75,6 +75,9 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
     if not timeline:
         return {"trades": pd.DataFrame(), "equity": pd.Series(dtype=float), "stats": _empty_stats(capital_usd)}
     pos_in = {s: {t: i for i, t in enumerate(x.index)} for s, x in data.items()}
+    # Snabb åtkomst till staplarna (mycket snabbare än .iloc i loopen).
+    cols = ["Open", "High", "Low", "Close", "ATR14", "SIGNAL", "LAST_OF_DAY"]
+    rows = {s: list(x[cols].itertuples(index=False)) for s, x in data.items()}
     cash = float(capital_usd)
     open_pos, trades, equity_points, last_close = {}, [], [], {}
 
@@ -122,7 +125,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
                 continue
             p = open_pos[sym]
             p["bars"] += 1
-            check_exit(sym, p, data[sym].iloc[i], t)
+            check_exit(sym, p, rows[sym][i], t)
 
         # 2) Nya köp på signaler från föregående stapel.
         for sym in sorted(data):
@@ -130,7 +133,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             if i is None or i == 0 or sym in open_pos or len(open_pos) >= max_positions:
                 continue
             x = data[sym]
-            prev, bar = x.iloc[i - 1], x.iloc[i]
+            prev, bar = rows[sym][i - 1], rows[sym][i]
             if not prev.SIGNAL:
                 continue
             if is_day and (prev.LAST_OF_DAY or bar.LAST_OF_DAY):
@@ -157,7 +160,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         for sym, x in data.items():
             i = pos_in[sym].get(t)
             if i is not None:
-                last_close[sym] = float(x.Close.iloc[i])
+                last_close[sym] = float(rows[sym][i].Close)
         equity_points.append((t, cash + sum(q["qty"] * last_close[s] for s, q in open_pos.items())))
 
     # Stäng det som är kvar vid testets slut.
@@ -278,3 +281,53 @@ def buy_and_hold_by_symbol(bars_by_symbol, start_bar=220):
                      "Startkurs": round(float(c.iloc[0]), 2), "Slutkurs": round(float(c.iloc[-1]), 2),
                      "Köp & behåll %": round((float(c.iloc[-1]) / float(c.iloc[0]) - 1) * 100, 1)})
     return pd.DataFrame(rows)
+
+
+def find_best(bars_by_symbol, strategies, capital_usd, settings=None, benchmark=None,
+              risk_levels=(0.5, 1.0, 2.0), split=0.7, min_trades=20, progress=None):
+    """Testar alla strategier på alla risknivåer och rangordnar dem.
+
+    En kombination räknas bara som godkänd om den
+    - går plus både i testdelen (första 70 %) och kontrolldelen (sista 30 %),
+    - har minst min_trades affärer (färre är för osäkert).
+    Poäng = avkastning per år / största nedgång. Det belönar jämn tillväxt
+    framför hög avkastning med stora ras.
+    """
+    from dataclasses import replace
+
+    settings = settings or Settings()
+    times = sorted(set().union(*[b.index for b in bars_by_symbol.values() if b is not None and len(b)]))
+    if not times:
+        return pd.DataFrame()
+    first = times[min(220, len(times) - 1)]
+    usable = [t for t in times if t >= first]
+    cut = usable[int(len(usable) * split)] if len(usable) > 10 else None
+    bench = period_return(benchmark, first)
+    total = len(strategies) * len(risk_levels)
+    rows, done = [], 0
+    for name, strat in strategies.items():
+        for risk in risk_levels:
+            s = replace(settings, risk_per_trade_pct=risk)
+            full = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first)["stats"]
+            a = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, end=cut)["stats"] if cut else full
+            b = run_backtest(bars_by_symbol, strat, capital_usd, s, start=cut)["stats"] if cut else full
+            yearly = per_year(full["total_return_pct"], first, times[-1])
+            dd = abs(full["max_drawdown_pct"]) or 0.0
+            ok = a["total_return_pct"] > 0 and b["total_return_pct"] > 0 and full["trades"] >= min_trades
+            rows.append({
+                "Strategi": name, "Risk per affär %": risk, "Per år %": yearly,
+                "Avkastning %": full["total_return_pct"], "S&P 500 %": bench,
+                "Slår S&P 500?": None if bench is None else ("ja" if full["total_return_pct"] > bench else "nej"),
+                "Största nedgång %": full["max_drawdown_pct"], "Affärer": full["trades"],
+                "Vinstandel %": full["win_rate_pct"], "Testdel %": a["total_return_pct"],
+                "Kontrolldel %": b["total_return_pct"], "Godkänd": "ja" if ok else "nej",
+                "Poäng": round((yearly or 0) / max(dd, 5.0), 2),
+            })
+            done += 1
+            if progress:
+                progress(done, total)
+    df = pd.DataFrame(rows)
+    df["_ok"] = df["Godkänd"] == "ja"
+    df = df.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok").reset_index(drop=True)
+    df.attrs["period"] = f"{first:%Y-%m-%d} – {times[-1]:%Y-%m-%d}"
+    return df
