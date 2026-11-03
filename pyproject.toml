@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "us-trading-platform"
 version = "0.3.0"
 requires-python = ">=3.10"
-dependencies = ["pandas>=2.2", "numpy>=1.26", "yfinance>=0.2.54", "requests>=2.31", "streamlit>=1.50"]
+dependencies = ["pandas>=2.2", "numpy>=1.26", "yfinance>=0.2.54", "requests>=2.31", "streamlit>=1.50", "plotly>=5.20"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

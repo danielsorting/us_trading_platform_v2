@@ -3,3 +3,4 @@ numpy>=1.26
 yfinance>=0.2.54
 requests>=2.31
 streamlit>=1.50
+plotly>=5.20
