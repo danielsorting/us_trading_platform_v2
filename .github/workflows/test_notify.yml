@@ -1,0 +1,19 @@
+name: Testnotis till mobilen
+
+# Starta manuellt (Actions → Testnotis till mobilen → Run workflow) för att
+# kontrollera att notiserna når ntfy-appen.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Skicka testnotis
+        env:
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+        run: |
+          if [ -z "$NTFY_TOPIC" ]; then echo "NTFY_TOPIC saknas bland hemligheterna."; exit 1; fi
+          curl -sS --fail -H "Title: Testnotis fran tradingroboten" -H "Tags: white_check_mark" -H "Priority: high" \
+            -d "Det fungerar! Har kommer notiser nar roboten koper eller saljer en swingaffar." \
+            "https://ntfy.sh/$NTFY_TOPIC"
