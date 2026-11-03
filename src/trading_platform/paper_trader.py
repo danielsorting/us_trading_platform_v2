@@ -20,7 +20,7 @@ PARK_BUFFER_PCT = 1.0         # så mycket kontanter (%) som alltid lämnas kvar
 PARK_SLIPPAGE_PCT = 0.005     # SPY är världens mest handlade aktie: skillnaden köp/sälj är ca 1 cent
 
 
-def _free_cash_from_park(broker, settings, prices, needed, actions):
+def _free_cash_from_park(broker, settings, prices, needed, actions, slippage_pct=None):
     """Säljer SPY så att det finns minst `needed` USD i kassan."""
     sym = settings.park_symbol
     pos = broker.positions.get(sym)
@@ -30,7 +30,7 @@ def _free_cash_from_park(broker, settings, prices, needed, actions):
     qty = min(pos["quantity"], round((needed - broker.cash) * 1.02 / price + 0.00005, 4))
     if qty > 0:
         broker.submit_order(sym, "sell", qty, price=price, strategy=PARK, reason="pengar till aktieköp",
-                            slippage_pct=PARK_SLIPPAGE_PCT)
+                            slippage_pct=PARK_SLIPPAGE_PCT if slippage_pct is None else slippage_pct)
         actions.append({"symbol": sym, "action": "SÄLJ (parkering)", "detail": f"{qty} st för att betala köp"})
 
 
@@ -113,7 +113,8 @@ def close_all_day_positions(broker, prices, reason="stängd manuellt"):
     return actions
 
 
-def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, ny_now=None):
+def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, ny_now=None, slippage_pct=None,
+                    park=True):
     """Kör en handelsrunda. Returnerar en lista med vad som hände.
 
     limits: valfritt max antal positioner per strategi, t.ex. {"day": 10}.
@@ -154,7 +155,7 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
             reason = "tidsgräns"
         if reason:
             order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason,
-                                        strategy=pos.get("strategy"))
+                                        strategy=pos.get("strategy"), slippage_pct=slippage_pct)
             actions.append({"symbol": sym, "action": "SÄLJ", "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
 
     # 2) Köp.
@@ -216,15 +217,15 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
             continue
         try:
             if settings.park_idle_in_index:
-                _free_cash_from_park(broker, settings, prices, qty * price * 1.01 + 2, actions)
+                _free_cash_from_park(broker, settings, prices, qty * price * 1.01 + 2, actions, slippage_pct)
             broker.submit_order(sym, "buy", qty, price=price, stop=stop, target=target, strategy=strat,
-                                trail_atr=row.get("trail_atr"), atr=row.get("atr"))
+                                trail_atr=row.get("trail_atr"), atr=row.get("atr"), slippage_pct=slippage_pct)
             held = broker.get_positions()
             actions.append({"symbol": sym, "action": "KÖP",
                             "detail": f"{qty} st à {price:.2f} USD ({strat}), stop {stop:.2f}"})
         except ValueError as e:
             actions.append({"symbol": sym, "action": "hoppar över", "detail": str(e)})
-    if settings.park_idle_in_index:
+    if settings.park_idle_in_index and park:
         _park_idle_cash(broker, settings, prices, actions)
     if not actions:
         actions.append({"symbol": "", "action": "inget att göra", "detail": "Inga säljsignaler och inga nya köpkandidater."})

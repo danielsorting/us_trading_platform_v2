@@ -13,7 +13,7 @@ from dataclasses import replace
 from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 
-from .daytop import add_extended_check, market_status, rank_day_candidates
+from .daytop import add_extended_check, extended_phase, market_status, rank_day_candidates
 from .paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
 from .data import PrefetchedProvider
 from .scanner import scan
@@ -159,6 +159,73 @@ SWING_COLS = ["symbol", "signal", "price", "rsi", "stop_reference", "target_refe
               "conditions"]
 
 
+def _swing_scan(provider, settings, symbols, swing_strategy, market_bars, usd_sek, now_ny):
+    """Hämtar dagsdata (och ev. timdata) i ett svep och skannar swing."""
+    fast = PrefetchedProvider(provider)
+    try:
+        daily = provider.history_many(symbols, "2y", "1d")
+        fast.add({k: project_today_volume(v, now_ny) for k, v in daily.items()}, "2y", "1d")
+    except Exception:
+        pass
+    want = getattr(swing_strategy, "DATA", None)
+    if want:
+        try:
+            fast.add(provider.history_many(symbols, *want), *want)
+        except Exception:
+            pass
+    return scan(symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
+                swing_strategy=swing_strategy, market_bars=market_bars)
+
+
+CAND_COLS = ["symbol", "strategy", "signal", "price", "stop_reference", "target_reference", "atr", "trail_atr",
+             "conditions_met"]
+
+
+def _extended_swing_round(provider, broker, settings, state, symbols, swing_strategy, market_bars, usd_sek,
+                          now_ny, phase, force, search_every_min):
+    """Swing i Avanzas förhandel (11:00–15:30) och efterhandel (22:00–22:30).
+
+    Förhandel: swing-signaler bygger på gårdagens färdiga dagsstapel; köp sker till
+    förhandelskursen. Efterhandel: bara stop loss och kursmål kontrolleras.
+    Ingen daytrading och ingen parkering utanför ordinarie tid. Slippage är högre."""
+    import pandas as pd
+    acts = []
+    slip = getattr(settings, "extended_slippage_pct", 0.15)
+    cands = []
+    if phase == "pre":
+        due = force or now_ny.timestamp() - state.get("last_search_ts", 0) >= search_every_min * 60
+        if due:
+            rows = _swing_scan(provider, settings, symbols, swing_strategy, market_bars, usd_sek, now_ny)
+            summary = swing_summary(rows)
+            summary["detail"] = "Förhandel: " + summary["detail"]
+            state["swing_summary"] = summary["detail"]
+            state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
+            state["pre_candidates"] = _records(pd.DataFrame([r for r in rows if r.get("signal") == "CANDIDATE"]),
+                                               CAND_COLS, n=50)
+            state["last_search_ts"] = now_ny.timestamp()
+            acts.append(summary)
+        cands = state.get("pre_candidates") or []
+    held = [sym for sym, p in broker.positions.items() if p.get("strategy") not in ("park", "day")]
+    syms = set(held) | {c["symbol"] for c in cands}
+    if not syms:
+        acts.append({"symbol": "", "action": "förhandel" if phase == "pre" else "efterhandel",
+                     "detail": ("Inga swing-köpkandidater i förhandeln just nu." if phase == "pre"
+                                else "Inga swingaffärer öppna – inget att kontrollera i efterhandeln.")})
+        return acts
+    try:
+        prices = {s_: p for s_, (p, _) in provider.latest_extended(sorted(syms)).items() if p}
+    except Exception:
+        prices = {}
+    acts += [a for a in run_paper_cycle(broker, cands, settings, prices, ny_now=now_ny, slippage_pct=slip,
+                                        park=False) if a.get("action") != "inget att göra"]
+    for a in acts:
+        if a.get("action") in ("KÖP", "SÄLJ") and "förhandel" not in a.get("detail", ""):
+            a["detail"] = f"{a['detail']} ({'förhandel' if phase == 'pre' else 'efterhandel'})"
+    if phase == "pre":  # köpta kandidater ska inte köpas igen
+        state["pre_candidates"] = [c for c in cands if c["symbol"] not in broker.positions]
+    return acts
+
+
 def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None, market_bars=None,
          usd_sek=10.0, top_n=10, max_move_pct=2.0, now_ny=None, force=False, swing_symbols=None,
          search_every_min=SEARCH_EVERY_MIN, progress=None):
@@ -194,27 +261,17 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
         day_pos = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
         if day_pos:
             add("day", close_all_day_positions(broker, latest_prices(provider, day_pos), reason="börsen stängd"))
+        phase = extended_phase(now_ny)
+        if phase and getattr(settings, "extended_hours_swing", False) and settings.swing_allocation_pct > 0:
+            add("swing", _extended_swing_round(provider, broker, settings, state, swing_symbols, swing_strategy,
+                                               market_bars, usd_sek, now_ny, phase, force, search_every_min))
         return events
 
     due = force or now_ny.timestamp() - state.get("last_search_ts", 0) >= search_every_min * 60
 
     # Swing först (få men större affärer), sedan daytrading.
     if settings.swing_allocation_pct > 0 and (due or not state.get("swing_top")):
-        # Hämta dagsdata för alla swing-aktier i ett svep (få anrop till Yahoo).
-        fast = PrefetchedProvider(provider)
-        try:
-            daily = provider.history_many(swing_symbols, "2y", "1d")
-            fast.add({k: project_today_volume(v, now_ny) for k, v in daily.items()}, "2y", "1d")
-        except Exception:
-            pass
-        want = getattr(swing_strategy, "DATA", None)
-        if want:  # t.ex. timgraf för kort swing – hämta alla i ett svep
-            try:
-                fast.add(provider.history_many(swing_symbols, *want), *want)
-            except Exception:
-                pass
-        rows = scan(swing_symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
-                    swing_strategy=swing_strategy, market_bars=market_bars)
+        rows = _swing_scan(provider, settings, swing_symbols, swing_strategy, market_bars, usd_sek, now_ny)
         summary = swing_summary(rows)
         state["swing_summary"] = summary["detail"]
         add("swing", [summary])

@@ -1,15 +1,16 @@
 name: Automatisk handel (låtsaspengar)
 
-# Roboten startar före börsöppning och kör en handelsrunda var 5:e minut hela
-# börsdagen, i en och samma körning (GitHub hoppar annars ofta över schemalagda
-# körningar). En körning får vara max 6 timmar, så en ny tar vid när den första
-# är klar. Flera starttider finns som reserv om GitHub hoppar över någon.
+# Roboten kör en handelsrunda var 5:e minut från Avanzas förhandel till efterhandelns
+# slut, i några få långa körningar (GitHub hoppar annars ofta över schemalagda körningar).
 on:
   schedule:
-    - cron: "20 13 * * 1-5"   # 14:20 svensk vintertid (före öppning sommartid)
-    - cron: "20 14 * * 1-5"   # reserv / före öppning vintertid
-    - cron: "20 17 * * 1-5"   # tar vid efter första körningen
-    - cron: "20 19 * * 1-5"   # reserv fram till stängning
+    # Roboten startar före Avanzas förhandel (11:00 svensk tid) och kör en runda var
+    # 5:e minut till efterhandelns slut (22:30). En körning får vara max ca 6 timmar,
+    # så nästa (köad) körning tar vid. Tider i UTC (svensk vintertid = UTC+1).
+    - cron: "50 9 * * 1-5"    # 10:50 – förhandel och början av börsdagen
+    - cron: "50 11 * * 1-5"   # reserv om GitHub hoppar över den första
+    - cron: "20 15 * * 1-5"   # tar vid efter första körningen (börsdagen)
+    - cron: "50 20 * * 1-5"   # tar vid till efterhandelns slut (22:30)
   workflow_dispatch: {}
 
 permissions:
@@ -52,7 +53,7 @@ jobs:
             if [ "$PHASE" = "after" ]; then
               python scripts/auto_trade.py || true   # stänger ev. kvarvarande dagpositioner
               SAVE=1
-            elif [ "$PHASE" = "open" ]; then
+            elif [ "$PHASE" = "open" ] || [ "$PHASE" = "pre" ] || [ "$PHASE" = "post" ]; then
               python scripts/auto_trade.py || echo "Rundan misslyckades – försöker igen om 5 minuter."
               SAVE=1
             else

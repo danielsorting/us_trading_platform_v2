@@ -112,3 +112,37 @@ def test_skip_reason_when_price_below_stop(tmp_path):
              "stop_reference": 95.0, "target_reference": 110.0}]
     acts = run_paper_cycle(b, rows, settings(), {"A": 94.0})
     assert "A" not in b.positions and any("under stop loss" in a["detail"] for a in acts)
+
+
+def test_premarket_and_afterhours_swing(tmp_path, provider):
+    """Avanza: förhandel 11:00–15:30 och efterhandel 22:00–22:30 svensk tid – bara swing."""
+    from trading_platform.daytop import extended_phase
+    assert extended_phase(datetime(2026, 11, 3, 6, 0, tzinfo=NY)) == "pre"      # 12:00 svensk tid
+    assert extended_phase(datetime(2026, 11, 3, 16, 15, tzinfo=NY)) == "post"   # 22:15 svensk tid
+    assert extended_phase(datetime(2026, 11, 3, 17, 0, tzinfo=NY)) is None
+    assert extended_phase(datetime(2026, 11, 7, 6, 0, tzinfo=NY)) is None       # lördag
+
+    class P(provider):
+        def latest_extended(self, symbols):
+            return {s: (100.0, None) for s in symbols}
+
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    pre = datetime(2026, 11, 3, 7, 0, tzinfo=NY)
+    state = {"last_search_ts": pre.timestamp(), "pre_candidates": [
+        {"symbol": "AAA", "strategy": "swing", "signal": "CANDIDATE", "price": 99.0, "stop_reference": 95.0,
+         "target_reference": 110.0, "atr": 2.0, "trail_atr": None}]}
+    s = settings()
+    from dataclasses import replace
+    s = replace(s, max_fee_share_of_profit_pct=1000)
+    ev = tick(P(), b, s, state, [], now_ny=pre)
+    assert "AAA" in b.positions and b.positions["AAA"]["strategy"] == "swing"
+    assert b.positions["AAA"]["avg_price"] > 100.0          # högre slippage i förhandel
+    assert any("förhandel" in e["detail"] for e in ev if e["action"] == "KÖP")
+    assert not any(p.get("strategy") in ("day", "park") for p in b.positions.values())
+    assert state["pre_candidates"] == []                     # köps inte igen
+
+    class Q(provider):
+        def latest_extended(self, symbols):
+            return {s: (90.0, None) for s in symbols}         # rasar i efterhandeln
+    ev = tick(Q(), b, s, state, [], now_ny=datetime(2026, 11, 3, 16, 10, tzinfo=NY))
+    assert "AAA" not in b.positions and any("stop loss" in e["detail"] for e in ev)

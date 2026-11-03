@@ -19,6 +19,8 @@ class Settings:
     risk_per_trade_pct: float = 0.5
     max_positions_per_strategy: int = 3
     max_position_pct_of_strategy_capital: float = 25
+    extended_hours_swing: bool = True       # swing handlar även i för- och efterhandel (Avanza)
+    extended_slippage_pct: float = 0.15     # större skillnad köp/sälj utanför ordinarie tid
     day_max_position_pct: float | None = None   # egen gräns för daytrades (None = samma som ovan)
     # Delaktier (t.ex. 0,35 aktie). Behövs ofta med litet kapital.
     allow_fractional_shares: bool = True

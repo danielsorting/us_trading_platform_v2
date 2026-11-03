@@ -29,6 +29,21 @@ def market_status(now=None):
     return True, "Börsen är öppen."
 
 
+def extended_phase(now=None):
+    """Avanzas handel utanför ordinarie tid i USA-aktier:
+    "pre"  = förhandel 11:00–15:30 svensk tid (05:00–09:30 New York)
+    "post" = efterhandel 22:00–22:30 svensk tid (16:00–16:30 New York)
+    None   = ingen sådan handel just nu."""
+    now = (now or datetime.now(NY)).astimezone(NY)
+    if now.weekday() >= 5:
+        return None
+    if time(5, 0) <= now.time() < time(9, 30):
+        return "pre"
+    if time(16, 0) <= now.time() < time(16, 30):
+        return "post"
+    return None
+
+
 def yahoo_symbol(sym):
     """Nasdaq-listans format (BRK.B) → Yahoos format (BRK-B)."""
     return sym.replace(".", "-")

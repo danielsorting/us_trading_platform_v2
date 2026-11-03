@@ -26,7 +26,7 @@ Skriven i Python med ett dashboard i Streamlit.
 
 | Vad | När | Var |
 |---|---|---|
-| **Automatisk handel** (låtsaspengar): daytrading på dagens bästa + swing på bevakningslistan | Var 5:e minut under USA-börsens öppettider, swing-köp 21:30 svensk tid, dagpositioner stängs före 22:00 | `.github/workflows/auto_trade.yml` → `scripts/auto_trade.py`. Konto och logg i `paper/`, visas i fliken 🤖 Automatisk handel |
+| **Automatisk handel** (låtsaspengar): daytrading på dagens bästa + swing på bevakningslistan | Var 5:e minut 11:00–22:30 svensk tid: förhandel (swing), börsdag (swing + daytrading), efterhandel (swing stop/mål). Dagpositioner stängs före 22:00 | `.github/workflows/auto_trade.yml` → `scripts/auto_trade.py`. Konto och logg i `paper/`, visas i fliken 🤖 Automatisk handel |
 | **Nattrapport** med riktiga kurser (swing 5 år, daytrading 60 dagar) | Vardagar 23:37 svensk tid | `.github/workflows/nightly.yml` → `scripts/nightly_report.py`. Rapport i `reports/latest.md` |
 | **Morgonförbättring**: Claude läser rapporten, gör en förbättring, testar och föreslår den som pull request | Vardagsmorgnar | Schemalagd uppgift i Claude. Du godkänner med ett klick på GitHub |
 
