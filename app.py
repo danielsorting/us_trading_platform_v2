@@ -173,8 +173,8 @@ st.title("US Trading Platform")
 st.caption("Scanner · Backtest · Simulerad handel — inga riktiga order skickas")
 
 c1, c2, c3 = st.columns(3)
-c1.metric("Daytrading-budget", f"{settings.day_capital:,.0f} SEK", f"≈ {sek_to_usd(settings.day_capital, usd_sek):,.0f} USD", delta_color="off")
-c2.metric("Swingtrading-budget", f"{settings.swing_capital:,.0f} SEK", f"≈ {sek_to_usd(settings.swing_capital, usd_sek):,.0f} USD", delta_color="off")
+c1.metric("Daytrading-budget", f"{settings.day_capital:,.0f} SEK", help=f"≈ {sek_to_usd(settings.day_capital, usd_sek):,.0f} USD")
+c2.metric("Swingtrading-budget", f"{settings.swing_capital:,.0f} SEK", help=f"≈ {sek_to_usd(settings.swing_capital, usd_sek):,.0f} USD")
 c3.metric("Max risk per affär (swing)", f"{settings.swing_capital * risk / 100:,.0f} SEK")
 
 tab_scan, tab_bt, tab_paper, tab_info = st.tabs(["🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
@@ -426,28 +426,25 @@ with tab_paper:
                          settings.slippage_pct, usd_sek)
     prices = st.session_state.get("paper_prices", {})
     acc = broker.get_account(prices)
-    m = st.columns(4)
-    m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK", f"{acc['equity']:,.2f} USD", delta_color="off")
-    m[1].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK")
-    m[2].metric("Resultat sedan start", f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %")
-    m[3].metric("Öppna positioner", len(broker.positions))
+    park_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in broker.positions.items()
+                   if p.get("strategy") == "park")
+    trades = {sym: p for sym, p in broker.positions.items() if p.get("strategy") != "park"}
+    stock_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in trades.items())
+    m = st.columns(5)
+    m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK",
+                help=f"Allt tillsammans: aktier + parkerat + kontanter ({acc['equity']:,.2f} USD).")
+    m[1].metric(f"I aktier ({len(trades)} st)", f"{usd_to_sek(stock_val, usd_sek):,.0f} SEK",
+                help="Robotens egna affärer (swing och daytrading).")
+    m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_val, usd_sek):,.0f} SEK",
+                help="Ledigt kapital som väntar i SPY. Säljs automatiskt när roboten köper aktier.")
+    m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK",
+                help="Liten buffert (ca 1 %) som inte är parkerad.")
+    m[4].metric("Resultat sedan start", f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
+                help="Inklusive courtage och slippage, även för att köpa och sälja SPY. "
+                     "Direkt efter start är det därför lite minus.")
 
     paper_syms = parse_symbols(st.text_area("Aktier som handelsrundan skannar", ",".join(settings.watchlist),
                                             height=70, key="paper_syms"))
-    b1, b2 = st.columns(2)
-    if b1.button("▶️ Kör handelsrunda", type="primary", disabled=not paper_syms):
-        with st.spinner("Skannar och handlar…"):
-            rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek,
-                        swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
-            prices = latest_prices(provider, set(paper_syms) | set(broker.positions)
-                                   | ({settings.park_symbol} if settings.park_idle_in_index else set()))
-            st.session_state["paper_prices"] = prices
-            st.session_state["paper_actions"] = run_paper_cycle(broker, rows, settings, prices)
-        st.rerun()
-    if b2.button("🔄 Uppdatera kurser", disabled=not broker.positions):
-        st.session_state["paper_prices"] = latest_prices(provider, list(broker.positions))
-        st.rerun()
-
     # ------------------------------------------------ dagens bästa daytrades
     st.divider()
     st.subheader("⚡ Dagens bästa daytrades")
@@ -532,8 +529,7 @@ with tab_paper:
         except Exception:
             saved = None
 
-    k1, k3 = st.columns(2)
-    if k1.button(btn_text, type="primary"):
+    if st.button(btn_text):
         try:
             if dt_universe.startswith("Hela"):
                 universe = liquid_symbols(300)
@@ -546,7 +542,23 @@ with tab_paper:
             st.error(f"Något gick fel vid hämtning av data: {e}")
         st.rerun()
     saved_n = len(saved["symbols"]) if saved else 0
-    if k3.button(f"▶️ Kör handelsrunda på dagens bästa ({dt_top} st)", disabled=not saved_n,
+    st.markdown("**Handelsrundor**")
+    r0, r1, r2, r3 = st.columns(4)
+    if r0.button("▶️ Kör handelsrunda (swing, din lista)", type="primary", disabled=not paper_syms,
+                 width="stretch",
+                 help="Skannar aktierna i rutan ovan med swing-strategin, köper kandidater och säljer det "
+                      "som nått stop loss/kursmål."):
+        with st.spinner("Skannar och handlar…"):
+            rows = scan(paper_syms, True, True, provider=provider, settings=settings, usd_sek=usd_sek,
+                        swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
+            prices = latest_prices(provider, set(paper_syms) | set(broker.positions)
+                                   | ({settings.park_symbol} if settings.park_idle_in_index else set()))
+            st.session_state["paper_prices"] = prices
+            st.session_state["paper_actions"] = run_paper_cycle(broker, rows, settings, prices)
+        st.rerun()
+    saved_n = len(saved["symbols"]) if saved else 0
+    if r1.button(f"▶️ Kör handelsrunda på dagens bästa ({dt_top} st)", type="primary", disabled=not saved_n,
+                 width="stretch",
                  help="Använder listan från senaste sökningen. Hämtar färska kurser bara för de aktierna, "
                       "kontrollerar villkor och förhandel igen och köper de bästa. Säljer dagpositioner som "
                       "nått stop loss, kursmål eller dagens slut."):
@@ -558,19 +570,21 @@ with tab_paper:
         except Exception as e:
             st.error(f"Något gick fel vid hämtning av data: {e}")
         st.rerun()
-    if saved_n:
-        k3.caption(f"Lista från sökningen {saved['time']} ({saved_n} aktier). Sök igen för en ny lista.")
-    else:
-        k3.caption("Gör först en sökning med knappen till vänster.")
-    k2 = st.container()
+    if r2.button("🔄 Uppdatera kurser", disabled=not broker.positions, width="stretch"):
+        st.session_state["paper_prices"] = latest_prices(provider, list(broker.positions))
+        st.rerun()
+
     day_open = [s for s, p in broker.positions.items() if p.get("strategy") == "day"]
-    if k2.button("⏹ Stäng alla dagpositioner", disabled=not day_open):
+    if r3.button("⏹ Stäng alla dagpositioner", disabled=not day_open, width="stretch"):
         prices = latest_prices(provider, set(day_open) | ({settings.park_symbol} if settings.park_idle_in_index else set()))
         acts = close_all_day_positions(broker, prices)
         acts += [a for a in run_paper_cycle(broker, [], settings, prices) if a["action"] != "inget att göra"]
         st.session_state["paper_actions"] = acts
         st.session_state["paper_prices"] = {**st.session_state.get("paper_prices", {}), **prices}
         st.rerun()
+    st.caption((f"Dagens bästa: lista från sökningen {saved['time']} ({saved_n} aktier). Sök igen för en ny lista."
+                if saved_n else "Dagens bästa: gör först en sökning med knappen ovan."))
+
     if "dt_ranked" in st.session_state and len(st.session_state["dt_ranked"]):
         with st.expander("Rangordning från senaste sökningen (topp 30)", expanded=not is_open):
             r = st.session_state["dt_ranked"].head(30).copy()
