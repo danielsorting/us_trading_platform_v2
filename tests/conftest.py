@@ -22,6 +22,13 @@ def make_intraday(days=10, seed=1, vol=0.003):
     return make_bars(len(idx), "5min", seed, 0, vol).set_index(idx)
 
 
+def make_hourly(days=120, seed=1, vol=0.006, drift=0.0004):
+    """Timstaplar 09:30–15:30 (7 per dag), som Yahoos 60m-data."""
+    idx = pd.DatetimeIndex([d + pd.Timedelta(hours=9, minutes=30) + pd.Timedelta(hours=k)
+                            for d in pd.bdate_range("2026-04-01", periods=days) for k in range(7)])
+    return make_bars(len(idx), "h", seed, drift, vol).set_index(idx)
+
+
 from trading_platform.data import MarketDataProvider
 
 
@@ -32,6 +39,8 @@ class FakeProvider(MarketDataProvider):
 
     def history(self, symbol, period, interval):
         if symbol not in self.bars:
+            if interval == "60m":
+                return make_hourly(120, seed=sum(map(ord, symbol)))
             return make_bars(600, seed=sum(map(ord, symbol))) if interval == "1d" else make_intraday(5, seed=len(symbol))
         return self.bars[symbol]
 
@@ -52,3 +61,8 @@ def intraday():
 @pytest.fixture
 def provider():
     return FakeProvider
+
+
+@pytest.fixture
+def hourly():
+    return make_hourly

@@ -203,6 +203,12 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
             fast.add({k: project_today_volume(v, now_ny) for k, v in daily.items()}, "2y", "1d")
         except Exception:
             pass
+        want = getattr(swing_strategy, "DATA", None)
+        if want:  # t.ex. timgraf för kort swing – hämta alla i ett svep
+            try:
+                fast.add(provider.history_many(swing_symbols, *want), *want)
+            except Exception:
+                pass
         rows = scan(swing_symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                     swing_strategy=swing_strategy, market_bars=market_bars)
         summary = swing_summary(rows)

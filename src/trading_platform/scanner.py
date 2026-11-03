@@ -65,7 +65,9 @@ def _scan_symbol(symbol, include_day, include_swing, provider, settings, swing_s
 
     if include_swing and not rows:
         try:
-            rows.append(swing_strategy.evaluate(symbol, add_market(daily, market_bars)))
+            want = getattr(swing_strategy, "DATA", None)
+            bars = provider.history(symbol, *want) if want else daily
+            rows.append(swing_strategy.evaluate(symbol, add_market(bars, market_bars)))
         except Exception as e:
             rows.append({"symbol": symbol, "strategy": "swing", "signal": "DATA_ERROR", "reason": str(e)[:160]})
     if include_day:

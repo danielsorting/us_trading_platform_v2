@@ -24,7 +24,7 @@ from trading_platform.daytop import liquid_universe  # noqa: E402
 from trading_platform.data import YahooResearchProvider  # noqa: E402
 from trading_platform.risk import sek_to_usd  # noqa: E402
 from trading_platform.strategies.day_variants import day_variants  # noqa: E402
-from trading_platform.strategies.variants import add_market, swing_variants  # noqa: E402
+from trading_platform.strategies.variants import add_market, daily_variants, data_for, hourly_variants  # noqa: E402
 
 REPORTS = ROOT / "reports"
 DAY_SHARE = 0.20          # daytrading testas som experiment med 20 % av kapitalet
@@ -78,7 +78,7 @@ def main():
     for list_name, syms in lists.items():
         try:
             bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
-            df = find_best(bars, swing_variants(), swing_cap, s, benchmark=spy5.Close,
+            df = find_best(bars, daily_variants(), swing_cap, s, benchmark=spy5.Close,
                            risk_levels=(s.risk_per_trade_pct,))
         except Exception as e:
             lines += [f"### {list_name}", "", f"> Fel: {type(e).__name__}: {e}", ""]
@@ -89,6 +89,31 @@ def main():
                                 "Godkänd", "Poäng"]), ""]
         for _, r in df.iterrows():
             history_rows.append([f"{started:%Y-%m-%d}", "swing", list_name, r["Strategi"], r["Per år %"],
+                                 r["Avkastning %"], r["S&P 500 %"], r["Största nedgång %"], r["Affärer"],
+                                 r["Godkänd"]])
+
+    # ---------------- kort swing (timgraf, ca 2 år)
+    lines += ["## Kort swing (timgraf, ca 2 år)", "",
+              "Samma regler som swing men på timstaplar: trend senaste månaden, rekyl senaste veckan, "
+              "RSI/MACD vänder upp på timgrafen.", ""]
+    spy_h = None
+    for list_name, syms in lists.items():
+        try:
+            per, iv = data_for(next(iter(hourly_variants().values())), backtest=True)
+            hb = {k: v for k, v in p.history_many(syms, per, iv).items() if v is not None}
+            if spy_h is None:
+                spy_h = p.history("SPY", per, iv)
+            df = find_best(hb, hourly_variants(), swing_cap, s,
+                           benchmark=None if spy_h is None else spy_h.Close, risk_levels=(s.risk_per_trade_pct,))
+        except Exception as e:
+            lines += [f"### {list_name}", "", f"> Fel: {type(e).__name__}: {e}", ""]
+            continue
+        lines += [f"### {list_name} ({len(hb)} aktier, testperiod {df.attrs.get('period', '')})", "",
+                  md_table(df, ["Strategi", "Per år %", "Avkastning %", "S&P 500 %", "Slår S&P 500?",
+                                "Största nedgång %", "Affärer", "Vinstandel %", "Testdel %", "Kontrolldel %",
+                                "Godkänd", "Poäng"]), ""]
+        for _, r in df.iterrows():
+            history_rows.append([f"{started:%Y-%m-%d}", "swing-kort", list_name, r["Strategi"], r["Per år %"],
                                  r["Avkastning %"], r["S&P 500 %"], r["Största nedgång %"], r["Affärer"],
                                  r["Godkänd"]])
 

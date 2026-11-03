@@ -29,7 +29,8 @@ from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
 from trading_platform.strategies import day, swing
 from trading_platform.strategies.day_variants import day_variants
-from trading_platform.strategies.variants import MARKET_SYMBOL, add_market, needs_market, swing_variants
+from trading_platform.strategies.variants import (MARKET_SYMBOL, add_market, daily_variants, data_for,
+                                                  hourly_variants, needs_market, swing_variants)
 from trading_platform.universe import get_symbols
 
 PAPER_FILE = PROJECT_ROOT / "paper_account.json"
@@ -286,6 +287,8 @@ with tab_scan:
         fast = PrefetchedProvider(provider)
         if "Swingtrading" in chosen:
             fast.add(get_history_many(tuple(symbols), "2y", "1d"), "2y", "1d")
+            if getattr(swing_strategy, "DATA", None):
+                fast.add(get_history_many(tuple(symbols), *swing_strategy.DATA), *swing_strategy.DATA)
         if "Daytrading" in chosen:
             fast.add(get_history_many(tuple(symbols), "5d", "5m"), "5d", "5m")
         res = scan(symbols, "Daytrading" in chosen, "Swingtrading" in chosen, provider=fast,
@@ -340,7 +343,11 @@ with tab_bt:
         choices = {**{k: v for k, v in VARIANTS.items()}, **day_variants()}
         strat_name = st.selectbox("Strategi", list(choices), key="bt_strat")
         module = choices[strat_name]
-    if getattr(module, "NAME", "") != "day":
+    hourly_mod = getattr(module, "DATA", None) is not None
+    if hourly_mod:
+        period, interval = data_for(module, backtest=True)
+        st.caption("Kort swing använder timgraf. Yahoo har timdata cirka 2 år bakåt, så testet gäller 2 år.")
+    elif getattr(module, "NAME", "") != "day":
         period = st.select_slider("Period", ["1y", "2y", "5y", "10y"], value="5y",
                                   format_func=lambda p: p.replace("y", " år"))
         interval = "1d"
@@ -378,16 +385,30 @@ with tab_bt:
             st.warning("För lite data för: " + ", ".join(missing))
         cap_usd = sek_to_usd(bt_cap_sek, usd_sek)
         mkt = None
-        if getattr(module, "NAME", "") != "day":
+        if getattr(module, "NAME", "") != "day" and not hourly_mod:
             mkt = market_bars_for(VARIANTS["Swing + marknadsfilter"], period)
             bars = {s: add_market(b, mkt) for s, b in bars.items()}
+        hbars = None
+        if strat_name in ("__best__", None):  # timgrafs-varianterna testas på timdata
+            with st.spinner("Hämtar timdata för kort swing…"):
+                hbars = get_history_many(tuple(bt_symbols), *data_for(next(iter(hourly_variants().values())), True))
         if strat_name == "__best__":
             bar = st.progress(0.0, text="Testar kombinationer…")
             pick_risk = st.session_state.get("bt_choose_risk", False)
-            st.session_state["bt_best"] = find_best(
-                bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close,
-                risk_levels=(0.5, 1.0, 2.0) if pick_risk else (settings.risk_per_trade_pct,),
-                progress=lambda i, n: bar.progress(i / n, text=f"Testat {i} av {n} kombinationer"))
+            risks = (0.5, 1.0, 2.0) if pick_risk else (settings.risk_per_trade_pct,)
+            parts = [find_best(bars, daily_variants(), cap_usd, settings,
+                               benchmark=None if mkt is None else mkt.Close, risk_levels=risks,
+                               progress=lambda i, n: bar.progress(i / n * 0.8, text=f"Testat {i} av {n} kombinationer"))]
+            if hbars:
+                parts.append(find_best(hbars, hourly_variants(), cap_usd, settings, risk_levels=risks))
+            for d in parts:
+                d["Testperiod"] = d.attrs.get("period", "")
+            best_all = pd.concat([d for d in parts if len(d)], ignore_index=True)
+            best_all["_ok"] = best_all["Godkänd"] == "ja"
+            best_all = best_all.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok")
+            best_all = best_all.reset_index(drop=True)
+            best_all.attrs["period"] = " / ".join(dict.fromkeys(d.attrs.get("period", "") for d in parts))
+            st.session_state["bt_best"] = best_all
             bar.empty()
             st.session_state.pop("bt", None)
             st.session_state.pop("bt_compare", None)
@@ -399,8 +420,12 @@ with tab_bt:
                 st.rerun()
         elif strat_name is None:
             with st.spinner("Jämför varianter… (kan ta en stund)"):
-                st.session_state["bt_compare"] = compare_strategies(
-                    bars, VARIANTS, cap_usd, settings, benchmark=None if mkt is None else mkt.Close)
+                cmp_parts = [compare_strategies(bars, daily_variants(), cap_usd, settings,
+                                                benchmark=None if mkt is None else mkt.Close)]
+                if hbars:
+                    cmp_parts.append(compare_strategies(hbars, hourly_variants(), cap_usd, settings))
+                st.session_state["bt_compare"] = pd.concat([c for c in cmp_parts if len(c)], ignore_index=True) \
+                    .sort_values("Avkastning %", ascending=False).reset_index(drop=True)
                 st.session_state["bt_bh"] = buy_and_hold_by_symbol(bars)
             st.session_state.pop("bt", None)
             st.session_state.pop("bt_best", None)
@@ -611,6 +636,8 @@ with tab_paper:
                           if settings.swing_universe == "liquid" else swing_syms)
             fast = PrefetchedProvider(provider)
             fast.add(get_history_many(tuple(swing_list), "2y", "1d"), "2y", "1d")
+            if getattr(swing_strategy, "DATA", None):
+                fast.add(get_history_many(tuple(swing_list), *swing_strategy.DATA), *swing_strategy.DATA)
             rows = scan(swing_list, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                         swing_strategy=swing_strategy, market_bars=market_bars_for(swing_strategy))
             tick_state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
