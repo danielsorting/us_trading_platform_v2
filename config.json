@@ -1,8 +1,8 @@
 {
   "account_currency": "SEK",
   "total_capital": 50000,
-  "day_allocation_pct": 0,
-  "swing_allocation_pct": 100,
+  "day_allocation_pct": 20,
+  "swing_allocation_pct": 80,
   "risk_per_trade_pct": 2.0,
   "max_positions_per_strategy": 8,
   "max_position_pct_of_strategy_capital": 70,

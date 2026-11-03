@@ -61,3 +61,27 @@ def test_extended_check_blocks_big_premarket_moves():
     out = add_extended_check(ranked, ext, 2.0)
     assert out.set_index("symbol").loc["AAPL", "ext_move_pct"] == -4.08
     assert out.move_ok.tolist() == [False, True, True]  # X saknar pris → inte blockerad
+
+
+def test_orb_buys_only_after_opening_range_and_above_its_high(intraday):
+    import pandas as pd
+    from trading_platform.backtest import run_backtest
+    from trading_platform.strategies import entry_signals
+    from trading_platform.strategies.day_variants import DayORB, day_variants
+    v = DayORB("orb", opening_bars=3)
+    total = 0
+    for seed in range(6):
+        bars = intraday(20, seed=seed, vol=0.004)
+        x, sig = entry_signals(v, bars)
+        date = pd.Series(x.index.normalize(), index=x.index)
+        bar_no = x.groupby(date).cumcount()
+        or_high = x.High.where(bar_no < 3).groupby(date).transform("max")
+        assert (bar_no[sig] >= 3).all() and (x.Close[sig] > or_high[sig]).all()
+        assert (x.RSI14[sig] > x.RSI14.shift(1)[sig]).all()
+        total += int(sig.sum())
+    assert total > 0
+    r = run_backtest({f"D{i}": intraday(20, seed=i, vol=0.004) for i in range(4)}, v, 1000, Settings())
+    t = r["trades"]
+    if len(t):
+        assert (t.entry_time.dt.date == t.exit_time.dt.date).all()
+    assert len(day_variants()) == 3

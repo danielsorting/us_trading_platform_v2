@@ -26,6 +26,7 @@ from trading_platform.paper_trader import close_all_day_positions, latest_prices
 from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
 from trading_platform.strategies import day, swing
+from trading_platform.strategies.day_variants import day_variants
 from trading_platform.strategies.variants import MARKET_SYMBOL, add_market, needs_market, swing_variants
 from trading_platform.universe import get_symbols
 
@@ -281,10 +282,10 @@ with tab_bt:
         st.caption("Alla varianter testas på samma aktier och period. Perioden delas: de första 70 % är "
                    "*testdel* och de sista 30 % är *kontrolldel*. En bra strategi ska gå plus i båda.")
     else:
-        choices = {**{k: v for k, v in VARIANTS.items()}, "Daytrading": day}
+        choices = {**{k: v for k, v in VARIANTS.items()}, **day_variants()}
         strat_name = st.selectbox("Strategi", list(choices), key="bt_strat")
         module = choices[strat_name]
-    if module is not day:
+    if getattr(module, "NAME", "") != "day":
         period = st.select_slider("Period", ["1y", "2y", "5y", "10y"], value="5y",
                                   format_func=lambda p: p.replace("y", " år"))
         interval = "1d"
@@ -309,7 +310,7 @@ with tab_bt:
                    "Med 300 aktier tar 🏆-knappen några minuter.")
     else:
         bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
-    default_cap = int(settings.day_capital if module is day else settings.swing_capital)
+    default_cap = int(settings.day_capital if getattr(module, "NAME", "") == "day" else settings.swing_capital)
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
@@ -322,7 +323,7 @@ with tab_bt:
             st.warning("För lite data för: " + ", ".join(missing))
         cap_usd = sek_to_usd(bt_cap_sek, usd_sek)
         mkt = None
-        if module is not day:
+        if getattr(module, "NAME", "") != "day":
             mkt = market_bars_for(VARIANTS["Swing + marknadsfilter"], period)
             bars = {s: add_market(b, mkt) for s, b in bars.items()}
         if strat_name == "__best__":
