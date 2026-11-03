@@ -110,3 +110,20 @@ def test_find_best_ranks_approved_first(bars):
     approved = df[df["Godkänd"] == "ja"]
     assert (approved["Testdel %"] > 0).all() and (approved["Kontrolldel %"] > 0).all()
     assert (approved["Affärer"] >= 20).all()
+
+
+def test_orb_high_volume_compares_with_same_time_on_earlier_days():
+    """Hög volym = dagens volym hittills är minst 1,5 × vad som är vanligt vid samma tid."""
+    import numpy as np
+    import pandas as pd
+    from trading_platform.indicators import enrich
+    from trading_platform.strategies.day_variants import DayORB
+    days = pd.bdate_range("2026-10-26", periods=5)
+    idx = pd.DatetimeIndex([d + pd.Timedelta(hours=9, minutes=30 + 5 * i) for d in days for i in range(78)])
+    vol = np.tile(np.r_[np.full(6, 50_000.0), np.full(72, 10_000.0)], 5)  # stor volym vid öppning varje dag
+    vol[-78:] *= 2  # i dag dubbel volym hela dagen
+    c = np.linspace(100, 110, len(idx))
+    x = enrich(pd.DataFrame({"Open": c, "High": c + .1, "Low": c - .1, "Close": c, "Volume": vol}, index=idx))
+    hv = DayORB("t", opening_bars=6).conditions(x)["hög volym"]
+    assert hv.iloc[-78:].iloc[30:].all()          # i dag: hög volym även mitt på dagen
+    assert not hv.iloc[-156:-78].iloc[30:].any()  # i går: vanlig volym

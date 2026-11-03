@@ -36,12 +36,18 @@ class DayORB:
         or_high = x.High.where(first).groupby(date).transform("max")
         typical = (x.High + x.Low + x.Close) / 3
         vwap = (typical * x.Volume).groupby(date).cumsum() / x.Volume.groupby(date).cumsum()
+        # "Ovanligt hög volym i dag": dagens volym hittills jämfört med samma tid
+        # tidigare dagar (relativ volym). Utan tidigare dagar: jämför med senaste staplarna.
+        cum = x.Volume.groupby(date).cumsum()
+        usual = cum.groupby(bar_no).transform(lambda v: v.shift(1).rolling(10, min_periods=1).mean())
+        high_volume = (cum >= self.volume_factor * usual).where(usual.notna(),
+                                                                x.Volume >= self.volume_factor * x.VOL20)
         return pd.DataFrame(
             {
                 "efter öppningsintervallet": (bar_no >= self.opening_bars) & (bar_no <= self.last_entry_bar),
                 "bryter öppningens högsta": x.Close > or_high,
                 "över VWAP": x.Close > vwap,
-                "hög volym": x.Volume >= self.volume_factor * x.VOL20,
+                "hög volym": high_volume.astype(bool),
                 "RSI stiger": (x.RSI14 > x.RSI14.shift(1)) & (x.RSI14 > 50) & (x.RSI14 < 80),
                 "MACD stiger": (x.MACD > x.MACD.shift(1)) & (x.MACD_HIST > x.MACD_HIST.shift(1)),
             },

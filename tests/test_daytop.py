@@ -68,7 +68,7 @@ def test_orb_buys_only_after_opening_range_and_above_its_high(intraday):
     from trading_platform.backtest import run_backtest
     from trading_platform.strategies import entry_signals
     from trading_platform.strategies.day_variants import DayORB, day_variants
-    v = DayORB("orb", opening_bars=3)
+    v = DayORB("orb", opening_bars=3, volume_factor=0.9)  # låtsasdata har ingen dag med extra volym
     total = 0
     for seed in range(6):
         bars = intraday(20, seed=seed, vol=0.004)
