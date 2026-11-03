@@ -10,7 +10,7 @@ En "tick" (körs t.ex. var 5:e minut):
 4. Ledigt kapital parkeras i SPY (om påslaget).
 """
 from dataclasses import replace
-from datetime import datetime, time
+from datetime import datetime, timedelta, time
 from zoneinfo import ZoneInfo
 
 from .daytop import add_extended_check, market_status, rank_day_candidates
@@ -205,13 +205,26 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
             pass
         rows = scan(swing_symbols, False, True, provider=fast, settings=settings, usd_sek=usd_sek,
                     swing_strategy=swing_strategy, market_bars=market_bars)
-        add("swing", [swing_summary(rows)])
+        summary = swing_summary(rows)
+        state["swing_summary"] = summary["detail"]
+        add("swing", [summary])
         prices = latest_prices(provider, set(swing_symbols) | set(broker.positions)
                                | ({settings.park_symbol} if settings.park_idle_in_index else set()))
         add("swing", run_paper_cycle(broker, rows, settings, prices, ny_now=now_ny))
         import pandas as pd
         state["swing_top"] = _records(pd.DataFrame(rows), SWING_COLS, n=len(rows))
         state["last_swing_date"] = now_ny.strftime("%Y-%m-%d")
+
+    elif settings.swing_allocation_pct > 0:
+        # Ingen ny swing-sökning den här rundan: berätta ändå vad som gäller för swing.
+        se = ZoneInfo("Europe/Stockholm")
+        last = datetime.fromtimestamp(state.get("last_search_ts", now_ny.timestamp()), se)
+        nxt = last + timedelta(minutes=search_every_min)
+        n_open = sum(1 for p in broker.positions.values() if p.get("strategy") == "swing")
+        add("swing", [{"symbol": "", "action": "swing-koll",
+                       "detail": f"{n_open} swingpositioner kontrollerade (stop loss och kursmål). "
+                                 f"Senaste swing-sökning {last:%H:%M}: {state.get('swing_summary', 'inga kandidater')} "
+                                 f"Nästa sökning ca {nxt:%H:%M} (dagskurser ändras långsamt)."}])
 
     if settings.day_allocation_pct > 0:
         # Daytrading granskar ALLA de mest omsatta (300) varje runda – lägen uppstår snabbt.

@@ -797,6 +797,18 @@ with tab_auto:
             pnl = [o["pnl"] for o in closed]
             st.caption(f"Avslutade affärer: {len(pnl)} · vinstandel {sum(x > 0 for x in pnl) / len(pnl) * 100:.0f} % "
                        f"· summa **{usd_to_sek(sum(pnl), usd_sek):+,.0f} kr** ({sum(pnl):+.2f} USD)")
+        try:
+            last_log = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(300)
+            st.subheader("Senaste runda")
+            for typ, name in (("day", "📅 Daytrading"), ("swing", "🔁 Swing")):
+                rows = last_log[last_log.typ == typ]
+                if len(rows):
+                    r = rows.iloc[-1]
+                    st.info(f"**{name}** ({r.tid}): {r.action} – {r.detail}")
+                else:
+                    st.info(f"**{name}**: ingen händelse än i dag.")
+        except Exception:
+            pass
         st.subheader("Logg (senaste 100 händelserna)")
         try:
             log_df = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(100).iloc[::-1]

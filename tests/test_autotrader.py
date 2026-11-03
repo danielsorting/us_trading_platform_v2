@@ -28,8 +28,10 @@ def test_tick_does_swing_and_day_and_saves_rankings(tmp_path, provider):
     assert state.get("day_list") and state.get("day_top") and "swing_top" in state
     assert state["last_swing_date"] == "2026-11-03"
     first = state["last_search_ts"]
-    tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 5, tzinfo=NY))
+    ev = tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 5, tzinfo=NY))
     assert state["last_search_ts"] == first  # ingen ny sökning efter 5 min
+    koll = [e for e in ev if e["action"] == "swing-koll"]  # men swing syns ändå i loggen
+    assert len(koll) == 1 and "Senaste swing-sökning 17:00" in koll[0]["detail"] and "17:30" in koll[0]["detail"]
     tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 11, 31, tzinfo=NY))
     assert state["last_search_ts"] > first  # ny sökning efter 30 min
     tick(provider(), b, settings(), state, universe, now_ny=datetime(2026, 11, 3, 15, 55, tzinfo=NY))
