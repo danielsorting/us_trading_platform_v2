@@ -1,5 +1,5 @@
 {
-  "cash": 1148.9257839218103,
+  "cash": 1105.456668616482,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -10,6 +10,17 @@
       "opened": "2026-11-03T16:26:33",
       "entry_fee": 1.5814,
       "strategy": "park"
+    },
+    "UPST": {
+      "quantity": 2.0,
+      "avg_price": 21.725857652664182,
+      "opened": "2026-11-03T17:05:38",
+      "entry_fee": 0.0174,
+      "stop": 21.49,
+      "target": 22.165000152587893,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.15
     }
   },
   "orders": [
@@ -23,6 +34,21 @@
       "fee": 1.5814,
       "pnl": null,
       "strategy": "park"
+    },
+    {
+      "id": "72620413c0",
+      "time": "2026-11-03T17:05:38",
+      "symbol": "UPST",
+      "side": "buy",
+      "quantity": 2.0,
+      "price": 21.7259,
+      "fee": 0.0174,
+      "pnl": null,
+      "stop": 21.49,
+      "target": 22.165000152587893,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.15
     }
   ],
   "reset_id": null
