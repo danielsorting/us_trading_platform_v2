@@ -487,11 +487,16 @@ with tab_paper:
     d1, d2, d3 = st.columns(3)
     dt_universe = d1.radio("Vilka aktier?", [LIQUID, "Min bevakningslista"],
                            key="dt_universe")
-    dt_top = d2.slider("Antal aktier att köpa", 1, 20, 10, key="dt_top")
-    dt_share = d3.slider("Andel av kontot till daytrading (%)", 10, 100,
-                         int(settings.day_allocation_pct) if settings.day_allocation_pct else 50, 5, key="dt_share",
-                         help="Pengarna delas lika på aktierna. Resten ligger kvar i swing/parkering.")
-    dt_maxmove = st.slider("Max prisrörelse sedan signalen, inkl. förhandel (%)", 0.5, 10.0, 2.0, 0.5, key="dt_maxmove",
+    dt_top = d2.slider("Antal aktier att köpa", 1, 20, int(settings.auto_day_top_n), key="dt_top",
+                       help=f"Bakgrundsroboten på GitHub använder {settings.auto_day_top_n} (från config.json).")
+    dt_share = settings.day_allocation_pct
+    d3.metric("Andel av kontot till daytrading", f"{dt_share:.0f} %",
+              help="Ställs in i sidopanelen ('Andel till daytrading'). Samma värde används av knapparna, "
+                   "autoläget och bakgrundsroboten.")
+    if dt_share <= 0:
+        st.warning("Andel till daytrading är 0 % i sidopanelen – då köper daytrading-knapparna ingenting.")
+    dt_maxmove = st.slider("Max prisrörelse sedan signalen, inkl. förhandel (%)", 0.5, 10.0,
+                           float(settings.auto_max_move_pct), 0.5, key="dt_maxmove",
                            help="Har aktien rört sig mer än så här sedan signalen (t.ex. stort fall i förhandeln) "
                                 "köps den inte.")
     st.caption("Roboten letar bland aktierna efter de som just nu uppfyller **alla** daytrading-villkor "
