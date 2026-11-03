@@ -50,3 +50,8 @@ tid,typ,symbol,action,detail
 2026-11-03 18:50,day,CVE,hoppar över,"Daytrading-budgeten är fullt använd (1,019 av 1,021 USD)."
 2026-11-03 18:50,day,KO,hoppar över,"Daytrading-budgeten är fullt använd (1,019 av 1,021 USD)."
 2026-11-03 18:50,day,ACN,hoppar över,"Daytrading-budgeten är fullt använd (1,019 av 1,021 USD)."
+2026-11-03 18:55,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 18:30: Granskade 291 aktier: 0 köpkandidater. Närmast: BETA (5/6), CNH (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6). Nästa sökning ca 19:00 (dagskurser ändras långsamt)."
+2026-11-03 18:55,day,ACB,KÖP,"1 st à 5.11 USD (day), stop 5.05"
+2026-11-03 18:55,day,SNOW,hoppar över,"För lite kapital: en aktie kostar 296.11 USD, men högst 255 USD får läggas per affär (hela aktier)."
+2026-11-03 18:55,day,ACN,hoppar över,"För lite kapital: en aktie kostar 255.49 USD, men högst 255 USD får läggas per affär (hela aktier)."
+2026-11-03 18:55,day,KO,hoppar över,"Daytrading-budgeten är fullt använd (1,020 av 1,020 USD)."

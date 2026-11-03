@@ -1,5 +1,5 @@
 {
-  "cash": 135.1439614402736,
+  "cash": 130.0344089211906,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -54,6 +54,17 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.069
+    },
+    "ACB": {
+      "quantity": 1.0,
+      "avg_price": 5.107552519083023,
+      "opened": "2026-11-03T17:55:55",
+      "entry_fee": 0.002,
+      "stop": 5.05,
+      "target": 5.215000019073487,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.036
     }
   },
   "orders": [
@@ -127,6 +138,21 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.069
+    },
+    {
+      "id": "d7b33b639c",
+      "time": "2026-11-03T17:55:55",
+      "symbol": "ACB",
+      "side": "buy",
+      "quantity": 1.0,
+      "price": 5.1076,
+      "fee": 0.002,
+      "pnl": null,
+      "stop": 5.05,
+      "target": 5.215000019073487,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.036
     }
   ],
   "reset_id": null
