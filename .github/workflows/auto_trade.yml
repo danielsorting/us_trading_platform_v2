@@ -21,6 +21,7 @@ concurrency:
 
 env:
   PYTHONUNBUFFERED: "1"
+  NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}   # hemligt kanalnamn för mobilnotiser (ntfy-appen)
 
 jobs:
   trade:

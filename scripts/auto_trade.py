@@ -81,6 +81,9 @@ def main():
     events = tick(provider, broker, s, state, liquid, swing_strategy=variant, market_bars=mkt, usd_sek=fx,
                   top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct)
     log(f"Runda klar: {len(events)} händelser.")
+    from trading_platform import notify
+    for title, msg in notify.messages_for(events, fx):
+        log(f"Notis: {title} – {'skickad' if notify.send(title, msg) else 'inte skickad (NTFY_TOPIC saknas?)'}")
     broker.save()
     state["last_run"] = datetime.now(timezone.utc).isoformat(timespec="seconds")
     STATE.write_text(json.dumps(state, indent=2, default=str, ensure_ascii=False))
