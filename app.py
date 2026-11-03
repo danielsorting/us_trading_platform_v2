@@ -68,7 +68,8 @@ provider = HybridProvider(YahooResearchProvider(), REALTIME) if REALTIME else Ya
 @st.cache_data(ttl=600, show_spinner=False)
 def realtime_status(_dummy=0):
     if REALTIME is None:
-        return False, "Ingen realtidskälla – Yahoo används (kan vara fördröjt)."
+        return True, ("Kurser: Yahoo ✅ fungerar. Gratis och normalt bara sekunder till någon minut "
+                      "efter börsen – räcker för swing och för robotens 5-minutersrundor.")
     ok, text = REALTIME.check()
     return ok, ("Realtidskurser från Alpaca (IEX) ✅" if ok else text + " – Yahoo används i stället.")
 

@@ -44,7 +44,7 @@
   "include_etfs": false,
   "minimum_average_daily_dollar_volume": 5000000,
   "mode": "scan_only",
-  "allow_fractional_shares": true,
+  "allow_fractional_shares": false,
   "usd_sek_fallback": 10.0,
   "commission_per_share_usd": 0.0,
   "min_commission_usd": 0.0,
