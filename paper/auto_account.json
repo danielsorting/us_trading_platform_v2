@@ -1,5 +1,5 @@
 {
-  "cash": 1056.2623939981424,
+  "cash": 135.1439614402736,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -32,6 +32,28 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.107
+    },
+    "AEHR": {
+      "quantity": 11.0,
+      "avg_price": 63.54675688934326,
+      "opened": "2026-11-03T17:10:53",
+      "entry_fee": 0.2796,
+      "stop": 62.25,
+      "target": 66.16499938964844,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.883
+    },
+    "NVTS": {
+      "quantity": 25.0,
+      "avg_price": 8.869432271003722,
+      "opened": "2026-11-03T17:10:53",
+      "entry_fee": 0.0887,
+      "stop": 8.77,
+      "target": 9.064999771118163,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.069
     }
   },
   "orders": [
@@ -75,6 +97,36 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.107
+    },
+    {
+      "id": "803fbcb47e",
+      "time": "2026-11-03T17:10:53",
+      "symbol": "AEHR",
+      "side": "buy",
+      "quantity": 11.0,
+      "price": 63.5468,
+      "fee": 0.2796,
+      "pnl": null,
+      "stop": 62.25,
+      "target": 66.16499938964844,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.883
+    },
+    {
+      "id": "48983d5505",
+      "time": "2026-11-03T17:10:53",
+      "symbol": "NVTS",
+      "side": "buy",
+      "quantity": 25.0,
+      "price": 8.8694,
+      "fee": 0.0887,
+      "pnl": null,
+      "stop": 8.77,
+      "target": 9.064999771118163,
+      "strategy": "day",
+      "trail_atr": NaN,
+      "atr": 0.069
     }
   ],
   "reset_id": null

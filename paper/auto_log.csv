@@ -21,3 +21,11 @@ tid,typ,symbol,action,detail
 2026-11-03 18:07,day,SNOW,hoppar över,För lite kapital för positionen.
 2026-11-03 18:07,day,SPCX,hoppar över,För lite kapital för positionen.
 2026-11-03 18:07,day,CRM,hoppar över,För lite kapital för positionen.
+2026-11-03 18:10,swing,,swing-koll,"0 swingpositioner kontrollerade (stop loss och kursmål). Senaste swing-sökning 17:55: Granskade 291 aktier: 0 köpkandidater. Närmast: AMZN (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), HDB (5/6). Nästa sökning ca 18:25 (dagskurser ändras långsamt)."
+2026-11-03 18:10,day,AEHR,KÖP,"11 st à 63.51 USD (day), stop 62.25"
+2026-11-03 18:10,day,NVTS,KÖP,"25 st à 8.86 USD (day), stop 8.77"
+2026-11-03 18:10,day,PLTR,hoppar över,"Daytrading-budgeten är fullt använd (1,013 av 1,020 USD)."
+2026-11-03 18:10,day,SNOW,hoppar över,"Daytrading-budgeten är fullt använd (1,013 av 1,020 USD)."
+2026-11-03 18:10,day,ORCL,hoppar över,"Daytrading-budgeten är fullt använd (1,013 av 1,020 USD)."
+2026-11-03 18:10,day,SPCX,hoppar över,"Daytrading-budgeten är fullt använd (1,013 av 1,020 USD)."
+2026-11-03 18:10,day,ON,hoppar över,"Daytrading-budgeten är fullt använd (1,013 av 1,020 USD)."
