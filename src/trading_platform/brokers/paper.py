@@ -73,7 +73,7 @@ class PaperBroker(BrokerAdapter):
         return {s: dict(p) for s, p in self.positions.items()}
 
     # ---- order ----------------------------------------------------------
-    def submit_order(self, symbol, side, quantity, order_type="market", price=None, **info):
+    def submit_order(self, symbol, side, quantity, order_type="market", price=None, slippage_pct=None, **info):
         """Fyller ordern direkt till angivet pris (+/- slippage) med courtage.
 
         info: extra uppgifter som sparas med positionen, t.ex. stop, target, strategy.
@@ -87,9 +87,10 @@ class PaperBroker(BrokerAdapter):
         if quantity <= 0:
             raise ValueError("Quantity must be positive.")
         now = datetime.now().isoformat(timespec="seconds")
+        slip = self.slippage if slippage_pct is None else slippage_pct / 100
 
         if side == "buy":
-            fill = price * (1 + self.slippage)
+            fill = price * (1 + slip)
             fee = commission(quantity, self.commission_per_share, self.min_commission, fill,
                              self.commission_pct, self.fx_fee_pct)
             cost = quantity * fill + fee
@@ -105,7 +106,7 @@ class PaperBroker(BrokerAdapter):
             pos = self.positions.get(symbol)
             if not pos or quantity > pos["quantity"] + 1e-9:
                 raise ValueError(f"Not enough {symbol} to sell.")
-            fill = price * (1 - self.slippage)
+            fill = price * (1 - slip)
             fee = commission(quantity, self.commission_per_share, self.min_commission, fill,
                              self.commission_pct, self.fx_fee_pct)
             self.cash += quantity * fill - fee

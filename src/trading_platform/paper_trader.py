@@ -17,6 +17,7 @@ from .risk import fee_kwargs, fees_too_high, position_size
 SWING_MAX_CALENDAR_DAYS = 28  # ungefär 20 handelsdagar
 PARK = "park"                 # strategi-märkning för parkerat kapital
 PARK_BUFFER_PCT = 1.0         # så mycket kontanter (%) som alltid lämnas kvar
+PARK_SLIPPAGE_PCT = 0.005     # SPY är världens mest handlade aktie: skillnaden köp/sälj är ca 1 cent
 
 
 def _free_cash_from_park(broker, settings, prices, needed, actions):
@@ -28,7 +29,8 @@ def _free_cash_from_park(broker, settings, prices, needed, actions):
         return
     qty = min(pos["quantity"], round((needed - broker.cash) * 1.02 / price + 0.00005, 4))
     if qty > 0:
-        broker.submit_order(sym, "sell", qty, price=price, strategy=PARK, reason="pengar till aktieköp")
+        broker.submit_order(sym, "sell", qty, price=price, strategy=PARK, reason="pengar till aktieköp",
+                            slippage_pct=PARK_SLIPPAGE_PCT)
         actions.append({"symbol": sym, "action": "SÄLJ (parkering)", "detail": f"{qty} st för att betala köp"})
 
 
@@ -56,7 +58,7 @@ def _park_idle_cash(broker, settings, prices, actions):
         return
     if held:  # öka befintlig parkering: sälj inte, köp till som ny post
         old = broker.positions.pop(sym)
-        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK)
+        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK, slippage_pct=PARK_SLIPPAGE_PCT)
         new = broker.positions[sym]
         total = old["quantity"] + new["quantity"]
         new["avg_price"] = (old["quantity"] * old["avg_price"] + new["quantity"] * new["avg_price"]) / total
@@ -65,7 +67,7 @@ def _park_idle_cash(broker, settings, prices, actions):
         new["opened"] = old["opened"]
         broker.save()
     else:
-        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK)
+        broker.submit_order(sym, "buy", qty, price=price, strategy=PARK, slippage_pct=PARK_SLIPPAGE_PCT)
     actions.append({"symbol": sym, "action": "KÖP (parkering)", "detail": f"{qty} st ledig kassa i S&P 500"})
 
 
