@@ -118,3 +118,18 @@ def test_reset_id_survives_save_and_load(tmp_path):
     b.reset(5000, 10.0, reset_id="x1")
     again = PaperBroker(state_file=tmp_path / "acct.json")
     assert again.reset_id == "x1" and again.positions == {} and again.cash == 5000
+
+
+def test_strategy_budget_is_never_exceeded(tmp_path):
+    """Daytrading får tillsammans högst använda daytrading-andelen – aldrig swingens pengar."""
+    from dataclasses import replace
+    b = broker(tmp_path, cash=10_000)
+    s = replace(Settings(), day_allocation_pct=20, swing_allocation_pct=80, risk_per_trade_pct=2,
+                max_position_pct_of_strategy_capital=70, allow_fractional_shares=False,
+                max_fee_share_of_profit_pct=1000, max_positions_per_strategy=8)
+    rows = [{"symbol": x, "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.0, "target_reference": 102.0} for x in "ABCD"]
+    acts = run_paper_cycle(b, rows, s, {x: 100.0 for x in "ABCD"})
+    used = sum(p["quantity"] * 100 for p in b.positions.values())
+    assert used <= 2_000 and b.positions["A"]["quantity"] == 14  # 70 % av 2 000 USD
+    assert any("budgeten är fullt använd" in a["detail"] for a in acts)

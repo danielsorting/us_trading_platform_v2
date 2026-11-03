@@ -55,10 +55,12 @@ def day_round(provider, broker, settings, universe, top_n=10, day_share=20.0, ma
                          "detail": f"Har rört sig {r.ext_move_pct:+.1f} % sedan signalen (gräns {max_move_pct} %)."})
         top = top[top.move_ok]
     cands = top.to_dict("records") if len(top) else []
-    s_day = replace(settings, day_allocation_pct=float(day_share), swing_allocation_pct=float(100 - day_share),
-                    max_position_pct_of_strategy_capital=min(settings.max_position_pct_of_strategy_capital,
-                                                             100.0 / max(top_n, 1)))
-    acts += run_paper_cycle(broker, cands, s_day, prices, limits={"day": top_n}, ny_now=ny_now)
+    # Storlek per affär följer DINA inställningar (risk per affär och max % per position).
+    # top_n = hur många av dagens bästa som prövas; antal samtidiga = max positioner per strategi.
+    # Räcker inte pengarna hoppar roboten över resten.
+    s_day = replace(settings, day_allocation_pct=float(day_share), swing_allocation_pct=float(100 - day_share))
+    acts += run_paper_cycle(broker, cands, s_day, prices,
+                            limits={"day": min(top_n, settings.max_positions_per_strategy)}, ny_now=ny_now)
     if not cands:
         acts.insert(0, day_summary(ranked, settings, ny_now))
     return ranked, acts, prices

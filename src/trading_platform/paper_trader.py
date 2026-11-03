@@ -181,8 +181,23 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
         qty = position_size(cap, price, stop, settings.risk_per_trade_pct,
                             settings.max_position_pct_of_strategy_capital,
                             settings.allow_fractional_shares)
+        # Strategins budget: alla öppna positioner i strategin får tillsammans högst vara strategins kapital.
+        used = sum(p["quantity"] * prices.get(s2, p["avg_price"]) for s2, p in held.items()
+                   if p.get("strategy") == strat)
+        room = cap - used
+        if qty > 0 and qty * price > room:
+            qty = (int(room // price) if not settings.allow_fractional_shares
+                   else max(0.0, int(room / price * 10_000) / 10_000))
+            if qty <= 0:
+                actions.append({"symbol": sym, "action": "hoppar över",
+                                "detail": f"{STRATEGY_NAMES.get(strat, strat)}-budgeten är fullt använd "
+                                          f"({used:,.0f} av {cap:,.0f} USD)."})
+                continue
         if qty <= 0:
-            actions.append({"symbol": sym, "action": "hoppar över", "detail": "För lite kapital för positionen."})
+            actions.append({"symbol": sym, "action": "hoppar över",
+                            "detail": f"För lite kapital: en aktie kostar {price:,.2f} USD, men högst "
+                                      f"{cap * settings.max_position_pct_of_strategy_capital / 100:,.0f} USD får "
+                                      "läggas per affär (hela aktier)."})
             continue
         target = price + (row["target_reference"] - row["price"]) if row.get("target_reference") else None
         fk = fee_kwargs(settings)
