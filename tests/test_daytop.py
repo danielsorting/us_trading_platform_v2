@@ -38,7 +38,7 @@ def test_day_top_buys_limit_and_closes_before_market_close(tmp_path):
     rows = [{"symbol": f"S{i}", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
              "stop_reference": 99.0, "target_reference": 102.0} for i in range(12)]
     midday = datetime(2026, 11, 3, 11, 0, tzinfo=NY)
-    run_paper_cycle(b, rows, Settings(max_position_pct_of_strategy_capital=10), {}, limits={"day": 10}, ny_now=midday)
+    run_paper_cycle(b, rows, Settings(max_position_pct_of_strategy_capital=10, max_fee_share_of_profit_pct=1000), {}, limits={"day": 10}, ny_now=midday)
     assert sum(1 for p in b.positions.values() if p["strategy"] == "day") == 10
     late = datetime(2026, 11, 3, 15, 55, tzinfo=NY)
     acts = run_paper_cycle(b, rows, Settings(), {f"S{i}": 100.5 for i in range(12)}, ny_now=late)

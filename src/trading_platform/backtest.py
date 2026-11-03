@@ -23,7 +23,7 @@ Alla belopp är i USD.
 import pandas as pd
 
 from .config import Settings
-from .risk import commission, position_size
+from .risk import commission, fees_too_high, position_size
 from .indicators import enrich
 from .strategies import entry_signals
 
@@ -195,6 +195,10 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             c = fee(qty, entry)
             if qty <= 0 or qty * entry + c + (qty * entry + c) * 0.01 > cash:
                 continue
+            if fees_too_high(qty, entry, stop, None if target == float("inf") else target,
+                             settings.commission_per_share_usd, settings.min_commission_usd,
+                             settings.slippage_pct, settings.max_fee_share_of_profit_pct):
+                continue  # samma kostnadsfilter som i den simulerade handeln
             cash -= qty * entry + c
             cash -= park_cost(qty * entry + c)  # sälj SPY för att betala köpet
             p = {"entry": entry, "qty": qty, "stop": stop, "init_stop": stop,

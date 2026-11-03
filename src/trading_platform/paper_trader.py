@@ -12,7 +12,7 @@ fördröjd). Inga riktiga order skickas.
 from datetime import datetime, time
 from zoneinfo import ZoneInfo
 
-from .risk import position_size
+from .risk import fees_too_high, position_size
 
 SWING_MAX_CALENDAR_DAYS = 28  # ungefär 20 handelsdagar
 PARK = "park"                 # strategi-märkning för parkerat kapital
@@ -180,6 +180,12 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
             actions.append({"symbol": sym, "action": "hoppar över", "detail": "För lite kapital för positionen."})
             continue
         target = price + (row["target_reference"] - row["price"]) if row.get("target_reference") else None
+        if fees_too_high(qty, price, stop, target, settings.commission_per_share_usd, settings.min_commission_usd,
+                         settings.slippage_pct, settings.max_fee_share_of_profit_pct):
+            actions.append({"symbol": sym, "action": "hoppar över",
+                            "detail": f"Avgifterna skulle äta mer än {settings.max_fee_share_of_profit_pct:.0f} % "
+                                      "av förväntad vinst (för liten affär)."})
+            continue
         try:
             if settings.park_idle_in_index:
                 _free_cash_from_park(broker, settings, prices, qty * price * 1.01 + 2, actions)

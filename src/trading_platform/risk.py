@@ -34,6 +34,20 @@ def commission(quantity, per_share=0.005, minimum=1.0, price=None):
     return round(fee, 2)
 
 
+def fees_too_high(qty, price, stop, target, per_share=0.005, minimum=1.0, slippage_pct=0.05, max_share_pct=20.0):
+    """Kostnadsfilter: True om courtage + slippage tur och retur är större än
+    max_share_pct % av den förväntade vinsten.
+
+    Förväntad vinst = (kursmål − pris) × antal. Saknas kursmål (följande stop)
+    används 2 × risken som uppskattning."""
+    if qty <= 0 or price <= 0:
+        return True
+    gain_per_share = (target - price) if target and target > price else 2 * max(price - stop, 0)
+    expected = qty * gain_per_share
+    costs = 2 * commission(qty, per_share, minimum, price) + 2 * qty * price * slippage_pct / 100
+    return expected <= 0 or costs > expected * max_share_pct / 100
+
+
 def sek_to_usd(amount_sek, usd_sek_rate):
     return amount_sek / usd_sek_rate
 

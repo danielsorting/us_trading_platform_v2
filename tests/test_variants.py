@@ -22,7 +22,7 @@ def test_market_filter_without_market_data_never_buys(bars):
 
 def test_fixed_percent_stop_and_target(bars):
     v = SwingVariant("2/2", stop_pct=2.0, target_pct=2.0)
-    r = run_backtest({"A": bars(800, seed=4)}, v, 1000, Settings(slippage_pct=0))
+    r = run_backtest({"A": bars(800, seed=4)}, v, 1000, Settings(slippage_pct=0, max_fee_share_of_profit_pct=1000))
     t = r["trades"]
     assert len(t)
     planned = t[t.exit_reason.isin(["stop", "mål"])]

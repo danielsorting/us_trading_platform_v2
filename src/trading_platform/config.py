@@ -32,6 +32,8 @@ class Settings:
     commission_per_share_usd: float = 0.005
     min_commission_usd: float = 1.0
     slippage_pct: float = 0.05
+    # Kostnadsfilter: hoppa över affärer där avgifterna äter mer än så här (%) av förväntad vinst.
+    max_fee_share_of_profit_pct: float = 20.0
     # Parkera ledigt kapital i en indexfond (SPY) när roboten inte har affärer.
     park_idle_in_index: bool = False
     park_symbol: str = "SPY"

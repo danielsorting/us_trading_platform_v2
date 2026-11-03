@@ -32,7 +32,8 @@ def test_never_more_positions_than_allowed(bars):
 
 
 def test_day_trades_never_held_overnight(intraday):
-    r = run_backtest({f"D{i}": intraday(15, seed=i) for i in range(4)}, day, 1000, Settings())
+    r = run_backtest({f"D{i}": intraday(15, seed=i) for i in range(4)}, day, 1000,
+                     Settings(max_fee_share_of_profit_pct=1000))
     tr = r["trades"]
     assert len(tr) > 0
     assert (tr.entry_time.dt.date == tr.exit_time.dt.date).all()

@@ -34,7 +34,7 @@ def test_cycle_buys_candidates_and_respects_limits(tmp_path):
     rows = [{"symbol": s, "strategy": "swing", "signal": "CANDIDATE", "price": 100.0,
              "stop_reference": 95.0, "target_reference": 110.0} for s in ["A", "B", "C", "D"]]
     rows.append({"symbol": "E", "strategy": "swing", "signal": "WATCH", "price": 100.0, "stop_reference": 95.0})
-    acts = run_paper_cycle(b, rows, Settings(max_positions_per_strategy=3), {})
+    acts = run_paper_cycle(b, rows, Settings(max_positions_per_strategy=3, max_fee_share_of_profit_pct=1000), {})
     assert sorted(b.positions) == ["A", "B", "C"]
     assert any(a["action"] == "hoppar över" for a in acts)
 
@@ -54,7 +54,8 @@ def test_cycle_sells_on_stop_target_and_old_day_positions(tmp_path):
 def test_parking_buys_spy_and_sells_it_to_fund_trades(tmp_path):
     from dataclasses import replace
     b = broker(tmp_path, cash=1000)
-    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=0, swing_allocation_pct=100)
+    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=0, swing_allocation_pct=100,
+                max_fee_share_of_profit_pct=1000)
     run_paper_cycle(b, [], s, {"SPY": 500})
     assert b.positions["SPY"]["strategy"] == "park"
     assert b.cash < 50  # nästan allt parkerat
@@ -72,7 +73,8 @@ def test_parking_keeps_day_trading_share_as_cash(tmp_path):
     """Daytrading-andelen ska ligga kvar som kontanter (ingen SPY-handel vid varje daytrade)."""
     from dataclasses import replace
     b = broker(tmp_path, cash=10_000)
-    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=20, swing_allocation_pct=80)
+    s = replace(Settings(), park_idle_in_index=True, day_allocation_pct=20, swing_allocation_pct=80,
+                max_fee_share_of_profit_pct=1000)
     run_paper_cycle(b, [], s, {"SPY": 500})
     assert 2_000 <= b.cash <= 2_300  # ca 20 % + 1 % buffert kvar
     rows = [{"symbol": "A", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
@@ -80,3 +82,15 @@ def test_parking_keeps_day_trading_share_as_cash(tmp_path):
     acts = run_paper_cycle(b, rows, replace(s, max_position_pct_of_strategy_capital=10), {"SPY": 500, "A": 100})
     assert "A" in b.positions
     assert not any("parkering" in a["action"] for a in acts)  # ingen SPY-försäljning behövdes
+
+
+def test_fee_filter_skips_tiny_trades(tmp_path):
+    """Användarens fall: ca 500 kr per daytrade → avgifterna äter vinsten → hoppa över."""
+    from trading_platform.risk import fees_too_high
+    assert fees_too_high(0.5, 100, 99.5, 101)            # 50 USD-affär, mål +1 %: avgifter > vinst
+    assert not fees_too_high(20, 100, 97, 106)           # 2 000 USD-affär, mål +6 %: ok
+    b = broker(tmp_path, cash=1000)
+    rows = [{"symbol": "A", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.5, "target_reference": 101.0}]
+    acts = run_paper_cycle(b, rows, Settings(max_position_pct_of_strategy_capital=5), {"A": 100})
+    assert "A" not in b.positions and any("Avgifterna" in a["detail"] for a in acts)
