@@ -202,3 +202,30 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
     if not actions:
         actions.append({"symbol": "", "action": "inget att göra", "detail": "Inga säljsignaler och inga nya köpkandidater."})
     return actions
+
+
+STRATEGY_NAMES = {"swing": "Swing", "day": "Daytrading", PARK: "Parkering i S&P 500"}
+
+
+def pnl_breakdown(broker, prices=None):
+    """Resultat per strategi (USD): realiserat (avslutade affärer, efter courtage),
+    orealiserat (öppna positioner) och totalt. Returnerar {strategi: dict}."""
+    prices = prices or {}
+    out = {k: {"realized": 0.0, "unrealized": 0.0, "closed": 0, "wins": 0, "open": 0} for k in STRATEGY_NAMES}
+    for o in broker.orders:
+        strat = o.get("strategy")
+        if o.get("pnl") is None or strat not in out:
+            continue
+        out[strat]["realized"] += o["pnl"]
+        out[strat]["closed"] += 1
+        out[strat]["wins"] += o["pnl"] > 0
+    for sym, p in broker.positions.items():
+        strat = p.get("strategy")
+        if strat not in out:
+            continue
+        price = prices.get(sym, p["avg_price"])
+        out[strat]["unrealized"] += p["quantity"] * (price - p["avg_price"]) - p.get("entry_fee", 0)
+        out[strat]["open"] += 1
+    for v in out.values():
+        v["total"] = v["realized"] + v["unrealized"]
+    return out

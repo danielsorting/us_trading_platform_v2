@@ -23,7 +23,8 @@ from trading_platform.data import AlpacaRealtime, HybridProvider, PrefetchedProv
 from trading_platform.daytop import (add_extended_check, liquid_universe, market_status, most_liquid,
                                     rank_day_candidates, yahoo_symbol)
 from trading_platform.autotrader import day_round, tick
-from trading_platform.paper_trader import close_all_day_positions, latest_prices, run_paper_cycle
+from trading_platform.paper_trader import (STRATEGY_NAMES, close_all_day_positions, latest_prices,
+                                          pnl_breakdown, run_paper_cycle)
 from trading_platform.risk import sek_to_usd, usd_to_sek
 from trading_platform.scanner import scan
 from trading_platform.strategies import day, swing
@@ -140,6 +141,22 @@ def sv_time(iso):
         return datetime.fromisoformat(iso).astimezone(ZoneInfo("Europe/Stockholm")).strftime("%Y-%m-%d %H:%M")
     except Exception:
         return iso
+
+
+def show_pnl_by_strategy(acct_broker, acct_prices):
+    """Visar resultat i kronor uppdelat på swing, daytrading och parkering."""
+    br = pnl_breakdown(acct_broker, acct_prices)
+    st.markdown("**Resultat per strategi**")
+    cols = st.columns(3)
+    for col, key in zip(cols, ["swing", "day", "park"]):
+        v = br[key]
+        win = f" · vinstandel {v['wins'] / v['closed'] * 100:.0f} %" if v["closed"] else ""
+        col.metric(STRATEGY_NAMES[key], f"{usd_to_sek(v['total'], usd_sek):+,.0f} kr",
+                   help=f"Avslutade affärer: {usd_to_sek(v['realized'], usd_sek):+,.0f} kr ({v['closed']} st). "
+                        f"Öppna positioner just nu: {usd_to_sek(v['unrealized'], usd_sek):+,.0f} kr ({v['open']} st). "
+                        "Efter courtage. Klicka 'Uppdatera kurser' för aktuella värden.")
+        col.caption(f"Avslutat {usd_to_sek(v['realized'], usd_sek):+,.0f} kr ({v['closed']} st{win}) · "
+                    f"öppet {usd_to_sek(v['unrealized'], usd_sek):+,.0f} kr ({v['open']} st)")
 
 
 def parse_symbols(text):
@@ -474,6 +491,7 @@ with tab_paper:
                 f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
                 help="Inklusive courtage och slippage, även för att köpa och sälja SPY. "
                      "Klicka 'Uppdatera kurser' för aktuellt värde.")
+    show_pnl_by_strategy(broker, prices)
 
     # ------------------------------------------------ dagens bästa trades (swing + daytrading)
     st.divider()
@@ -706,6 +724,7 @@ with tab_auto:
         m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK")
         m[4].metric("Resultat sedan start", f"{usd_to_sek(acc['equity'] - acc['starting_cash'], usd_sek):+,.0f} kr",
                     f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %")
+        show_pnl_by_strategy(auto_broker, auto_prices)
         if auto_state.get("last_run"):
             st.caption(f"Senaste körning: {sv_time(auto_state['last_run'])} (svensk tid).")
         if st.button("🔄 Uppdatera kurser", key="auto_refresh", disabled=not auto_broker.positions):

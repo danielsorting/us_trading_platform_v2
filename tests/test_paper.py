@@ -94,3 +94,19 @@ def test_fee_filter_skips_tiny_trades(tmp_path):
              "stop_reference": 99.5, "target_reference": 101.0}]
     acts = run_paper_cycle(b, rows, Settings(max_position_pct_of_strategy_capital=5), {"A": 100})
     assert "A" not in b.positions and any("Avgifterna" in a["detail"] for a in acts)
+
+
+def test_pnl_breakdown_separates_swing_day_and_park(tmp_path):
+    from trading_platform.paper_trader import pnl_breakdown
+    b = broker(tmp_path, cash=10_000)
+    b.commission_per_share = 0
+    b.min_commission = 0
+    b.submit_order("S", "buy", 10, price=100, strategy="swing")
+    b.submit_order("S", "sell", 10, price=110, strategy="swing")      # swing +100
+    b.submit_order("D", "buy", 10, price=50, strategy="day")
+    b.submit_order("D", "sell", 10, price=48, strategy="day")         # day −20
+    b.submit_order("SPY", "buy", 2, price=500, strategy="park")
+    r = pnl_breakdown(b, {"SPY": 505})                                # park +10 orealiserat
+    assert round(r["swing"]["total"], 2) == 100 and r["swing"]["wins"] == 1
+    assert round(r["day"]["total"], 2) == -20
+    assert round(r["park"]["unrealized"], 2) == 10 and r["park"]["open"] == 1
