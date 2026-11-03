@@ -899,7 +899,7 @@ with tab_auto:
                        "risken per ny affär. Det går inte att backtesta nyheter bakåt, så se det som ett extra skydd.")
             if mn:
                 (st.error if mn.get("risk_off") else st.success if mn.get("mood") == "positivt" else st.info)(
-                    f"Marknadshumör **{mn.get('mood')}** (nyhetspoäng {mn.get('score')}, {mn.get('count')} nyheter, "
+                    f"Marknadshumör **{mn.get('mood')}** (snittpoäng {mn.get('score')} per nyhet, {mn.get('count')} nyheter, "
                     f"läst {sv_time(mn['ts'])})" + (" – **risken per ny affär är halverad**." if mn.get("risk_off") else "."))
                 for h in mn.get("headlines", []):
                     icon = "🔴" if h["score"] < 0 else "🟢" if h["score"] > 0 else "⚪"

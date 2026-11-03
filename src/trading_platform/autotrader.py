@@ -53,8 +53,8 @@ def news_mood(settings, state, add):
     if m.get("ts") != before:  # nyss uppdaterat → skriv i loggen
         worst = next((h["title"] for h in m.get("headlines", []) if h["score"] < 0), None)
         add("nyheter", [{"symbol": "", "action": "världsläget",
-                         "detail": f"Marknadshumör {m['mood']} (nyhetspoäng {m['score']}, {m['count']} nyheter om "
-                                   "börsen, olja, Trump/tullar och räntor)."
+                         "detail": f"Marknadshumör {m['mood']} (snittpoäng {m['score']} per nyhet, {m['count']} nyheter "
+                                   "senaste 12 h om börsen, olja, Trump/tullar och räntor)."
                                    + (f" Mest negativ: \"{worst}\"." if worst else "")
                                    + (" Risken per ny affär halveras tills läget lugnar sig." if m["risk_off"] else "")}])
     if m.get("risk_off"):

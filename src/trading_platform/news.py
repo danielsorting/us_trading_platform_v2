@@ -45,7 +45,10 @@ POSITIVE = {
 MARKET_QUERIES = ("stock market today", "oil prices", "Trump tariffs", "Federal Reserve interest rates",
                   "Wall Street stocks")
 BLOCK_SCORE = -3        # så här dåligt (summa) räcker för att inte köpa
-MARKET_RISK_OFF = -4    # marknadshumör under detta → halverad risk per ny affär
+MARKET_RISK_OFF = -1.0  # snittpoäng per världsnyhet under detta → halverad risk per ny affär
+MARKET_POSITIVE = 1.0
+MARKET_MIN_NEWS = 5     # minst så många färska världsnyheter för att dra slutsatser
+MARKET_MAX_AGE_HOURS = 12
 MAX_AGE_HOURS = 48
 
 
@@ -108,9 +111,9 @@ def recent(items, now=None, max_age_hours=MAX_AGE_HOURS):
     return out
 
 
-def judge(items, now=None):
+def judge(items, now=None, max_age_hours=MAX_AGE_HOURS):
     """Samlad bedömning av nyheter: dict med poäng, om köp ska stoppas och värsta/bästa rubrik."""
-    news = recent(items, now)
+    news = recent(items, now, max_age_hours)
     total, severe_hit, worst, best = 0, False, None, None
     for n in news:
         s, sev = score_text(n["title"] + " " + (n.get("summary") or "")[:200])
@@ -132,17 +135,27 @@ def judge(items, now=None):
 
 # ---------------------------------------------------------------- hämtning (Yahoo)
 def fetch_symbol_news(symbol, count=10):
-    """Senaste nyheterna om ett bolag från Yahoo Finance. Tom lista vid fel."""
+    """Senaste nyheterna om ett bolag från Yahoo Finance. Tom lista vid fel.
+    Yahoos sökfunktion används (Ticker.news är ofta tom); bara nyheter som Yahoo
+    kopplar till just den aktien tas med."""
+    items = []
     try:
         import yfinance as yf
-        t = yf.Ticker(symbol)
         try:
-            items = t.get_news(count=count)
+            found = list(yf.Search(symbol, news_count=count).news or [])
+            items = [it for it in found
+                     if not isinstance(it, dict) or not it.get("relatedTickers")
+                     or symbol.upper() in [str(t).upper() for t in it["relatedTickers"]]]
         except Exception:
-            items = t.news
-        return list(items or [])[:count]
+            items = []
+        if not items:
+            try:
+                items = list(yf.Ticker(symbol).news or [])
+            except Exception:
+                items = []
     except Exception:
         return []
+    return items[:count]
 
 
 def fetch_market_news(queries=MARKET_QUERIES, per_query=8):
@@ -174,10 +187,13 @@ def market_mood(state, now=None, fetch=None, refresh_min=30):
     ts = cached.get("ts")
     if ts and (now - datetime.fromisoformat(ts)).total_seconds() < refresh_min * 60:
         return cached
-    j = judge((fetch or fetch_market_news)(), now)
-    mood = "negativt" if j["score"] <= MARKET_RISK_OFF else "positivt" if j["score"] >= 4 else "neutralt"
-    out = {"ts": now.isoformat(timespec="seconds"), "score": j["score"], "mood": mood, "count": j["count"],
-           "risk_off": j["score"] <= MARKET_RISK_OFF, "headlines": j["headlines"]}
+    j = judge((fetch or fetch_market_news)(), now, MARKET_MAX_AGE_HOURS)
+    avg = j["score"] / j["count"] if j["count"] else 0.0
+    enough = j["count"] >= MARKET_MIN_NEWS
+    risk_off = enough and avg <= MARKET_RISK_OFF
+    mood = "negativt" if risk_off else "positivt" if enough and avg >= MARKET_POSITIVE else "neutralt"
+    out = {"ts": now.isoformat(timespec="seconds"), "score": round(avg, 2), "mood": mood, "count": j["count"],
+           "risk_off": risk_off, "headlines": j["headlines"]}
     state["market_news"] = out
     return out
 

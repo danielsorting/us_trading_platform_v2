@@ -46,7 +46,7 @@ def test_market_mood_halves_risk_when_world_news_is_bad():
     from trading_platform.config import Settings
     bad = [news._parse_item(item_new(t)) for t in (
         "Stocks plunge as Trump tariffs spark recession fears", "Oil prices crash amid war escalation",
-        "Wall Street sell-off deepens")]
+        "Wall Street sell-off deepens", "Tech stocks tumble on downgrade", "Recession fears hit banks")]
     m = news.market_mood({}, now=NOW, fetch=lambda: bad)
     assert m["risk_off"] and m["mood"] == "negativt"
     state, events = {}, []
@@ -58,3 +58,11 @@ def test_market_mood_halves_risk_when_world_news_is_bad():
     calm = news_mood(Settings(risk_per_trade_pct=2.0), {"market_news": {**state["market_news"], "risk_off": False}},
                      lambda kind, acts: None)
     assert calm.risk_per_trade_pct == 2.0
+
+
+def test_mixed_world_news_is_not_risk_off():
+    mixed = [news._parse_item(item_new(t)) for t in (
+        "S&P 500, Nasdaq open higher as oil prices extend declines", "Stocks wobble ahead of election",
+        "Oil Prices Plunge as talks take new turn", "Chip stocks rally", "Dow dips slightly")]
+    m = news.market_mood({}, now=NOW, fetch=lambda: mixed)
+    assert not m["risk_off"]
