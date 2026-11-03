@@ -17,10 +17,13 @@ class PaperBroker(BrokerAdapter):
     """Local mock adapter. Does not connect to any broker or send orders."""
 
     def __init__(self, starting_cash=10_000, state_file=None, commission_per_share=0.005,
-                 min_commission=1.0, slippage_pct=0.05, usd_sek_at_start=None):
+                 min_commission=1.0, slippage_pct=0.05, usd_sek_at_start=None, commission_pct=0.0,
+                 fx_fee_pct=0.0):
         self.state_file = Path(state_file) if state_file else None
         self.commission_per_share = commission_per_share
         self.min_commission = min_commission
+        self.commission_pct = commission_pct
+        self.fx_fee_pct = fx_fee_pct
         self.slippage = slippage_pct / 100
         if self.state_file and self.state_file.exists():
             self.load()
@@ -85,7 +88,8 @@ class PaperBroker(BrokerAdapter):
 
         if side == "buy":
             fill = price * (1 + self.slippage)
-            fee = commission(quantity, self.commission_per_share, self.min_commission, fill)
+            fee = commission(quantity, self.commission_per_share, self.min_commission, fill,
+                             self.commission_pct, self.fx_fee_pct)
             cost = quantity * fill + fee
             if cost > self.cash + 1e-9:
                 raise ValueError(f"Insufficient cash: need {cost:.2f}, have {self.cash:.2f} USD.")
@@ -100,7 +104,8 @@ class PaperBroker(BrokerAdapter):
             if not pos or quantity > pos["quantity"] + 1e-9:
                 raise ValueError(f"Not enough {symbol} to sell.")
             fill = price * (1 - self.slippage)
-            fee = commission(quantity, self.commission_per_share, self.min_commission, fill)
+            fee = commission(quantity, self.commission_per_share, self.min_commission, fill,
+                             self.commission_pct, self.fx_fee_pct)
             self.cash += quantity * fill - fee
             share = quantity / pos["quantity"]
             pnl = quantity * (fill - pos["avg_price"]) - fee - pos.get("entry_fee", 0) * share

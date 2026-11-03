@@ -23,18 +23,32 @@ def position_size(strategy_capital, price, stop_price, risk_pct=0.5, max_positio
     return max(0, min(by_risk, by_notional))
 
 
-def commission(quantity, per_share=0.005, minimum=1.0, price=None):
-    """Courtage i USD (modell liknande IBKR Fixed: per aktie, med minimum,
-    och högst 1 % av affärsvärdet)."""
+def commission(quantity, per_share=0.005, minimum=1.0, price=None, pct=0.0, fx_pct=0.0):
+    """Courtage i USD för en order.
+
+    Två modeller som kan kombineras:
+    - Per aktie med minimum (IBKR Fixed: 0,005 USD/aktie, minst 1 USD, högst 1 % av beloppet).
+    - Procent av beloppet (t.ex. Avanza: pct=0,04 betyder 0,04 %).
+    fx_pct = valutaväxlingsavgift i % av beloppet (0 om du har dollarkonto).
+    """
     if quantity <= 0:
         return 0.0
-    fee = max(minimum, quantity * per_share)
-    if price:
-        fee = min(fee, 0.01 * quantity * price)
-    return round(fee, 2)
+    value = quantity * price if price else 0.0
+    fee = quantity * per_share + value * (pct + fx_pct) / 100
+    fee = max(minimum, fee)
+    if price and per_share > 0 and pct == 0:
+        fee = min(fee, 0.01 * value)
+    return round(fee, 4)
 
 
-def fees_too_high(qty, price, stop, target, per_share=0.005, minimum=1.0, slippage_pct=0.05, max_share_pct=20.0):
+def fee_kwargs(settings):
+    """Courtage-inställningarna från Settings som argument till commission()."""
+    return {"per_share": settings.commission_per_share_usd, "minimum": settings.min_commission_usd,
+            "pct": getattr(settings, "commission_pct", 0.0), "fx_pct": getattr(settings, "fx_fee_pct", 0.0)}
+
+
+def fees_too_high(qty, price, stop, target, per_share=0.005, minimum=1.0, slippage_pct=0.05, max_share_pct=20.0,
+                  pct=0.0, fx_pct=0.0):
     """Kostnadsfilter: True om courtage + slippage tur och retur är större än
     max_share_pct % av den förväntade vinsten.
 
@@ -44,7 +58,7 @@ def fees_too_high(qty, price, stop, target, per_share=0.005, minimum=1.0, slippa
         return True
     gain_per_share = (target - price) if target and target > price else 2 * max(price - stop, 0)
     expected = qty * gain_per_share
-    costs = 2 * commission(qty, per_share, minimum, price) + 2 * qty * price * slippage_pct / 100
+    costs = 2 * commission(qty, per_share, minimum, price, pct, fx_pct) + 2 * qty * price * slippage_pct / 100
     return expected <= 0 or costs > expected * max_share_pct / 100
 
 

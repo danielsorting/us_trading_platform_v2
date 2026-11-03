@@ -31,6 +31,9 @@ class Settings:
     # Handelskostnader (ungefär som Interactive Brokers "Fixed" för USA-aktier).
     commission_per_share_usd: float = 0.005
     min_commission_usd: float = 1.0
+    # Courtage i procent av beloppet (t.ex. Avanza 0,04 %) och valutaväxlingsavgift i %.
+    commission_pct: float = 0.0
+    fx_fee_pct: float = 0.0
     slippage_pct: float = 0.05
     # Kostnadsfilter: hoppa över affärer där avgifterna äter mer än så här (%) av förväntad vinst.
     max_fee_share_of_profit_pct: float = 20.0

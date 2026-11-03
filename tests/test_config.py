@@ -35,3 +35,15 @@ def test_commission_minimum_and_cap():
     assert commission(0.5, price=100) == 0.5  # högst 1 % av affärsvärdet
     assert commission(0, price=100) == 0.0
     assert Settings().min_commission_usd == 1.0
+
+
+def test_percent_commission_like_avanza_pro():
+    # 0,04 % utan minimum: 100 000 kr ≈ 10 000 USD → 4 USD (≈ 40 kr)
+    assert commission(100, price=100, per_share=0, minimum=0, pct=0.04) == 4.0
+    assert commission(1, price=50, per_share=0, minimum=0, pct=0.04) == 0.02
+    assert commission(1, price=50, per_share=0, minimum=0, pct=0.04, fx_pct=0.25) == 0.145
+
+
+def test_project_config_uses_users_broker_fees():
+    s = load_settings()
+    assert s.commission_pct == 0.04 and s.min_commission_usd == 0

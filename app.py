@@ -454,7 +454,7 @@ with tab_paper:
              "köper och säljer roboten själv medan sidan är öppen.")
     broker = PaperBroker(sek_to_usd(settings.total_capital, usd_sek), PAPER_FILE,
                          settings.commission_per_share_usd, settings.min_commission_usd,
-                         settings.slippage_pct, usd_sek)
+                         settings.slippage_pct, usd_sek, settings.commission_pct, settings.fx_fee_pct)
     prices = st.session_state.get("paper_prices", {})
     acc = broker.get_account(prices)
     park_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in broker.positions.items()

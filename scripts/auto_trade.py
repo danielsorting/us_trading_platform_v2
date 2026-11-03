@@ -65,7 +65,7 @@ def main():
     provider = YahooResearchProvider()
     fx = provider.usd_sek() or s.usd_sek_fallback
     broker = PaperBroker(sek_to_usd(s.total_capital, fx), ACCOUNT, s.commission_per_share_usd,
-                         s.min_commission_usd, s.slippage_pct, fx)
+                         s.min_commission_usd, s.slippage_pct, fx, s.commission_pct, s.fx_fee_pct)
     has_day_pos = any(p.get("strategy") == "day" for p in broker.positions.values())
     if not is_open and not has_day_pos:
         print(text, "Inget att göra.")

@@ -23,7 +23,7 @@ Alla belopp är i USD.
 import pandas as pd
 
 from .config import Settings
-from .risk import commission, fees_too_high, position_size
+from .risk import commission, fee_kwargs, fees_too_high, position_size
 from .indicators import enrich
 from .strategies import entry_signals
 
@@ -82,7 +82,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         return {"trades": pd.DataFrame(), "equity": pd.Series(dtype=float), "stats": _empty_stats(capital_usd)}
 
     def fee(qty, price):
-        return commission(qty, settings.commission_per_share_usd, settings.min_commission_usd, price)
+        return commission(qty, price=price, **fee_kwargs(settings))
 
     timeline = sorted(set().union(*[x.index for x in data.values()]))
     if start is not None:
@@ -107,8 +107,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         price = park_state["price"]
         if park is None or not price or amount <= 0:
             return 0.0
-        c = amount * slip + commission(amount / price, settings.commission_per_share_usd,
-                                       settings.min_commission_usd, price)
+        c = amount * slip + commission(amount / price, price=price, **fee_kwargs(settings))
         park_state["fees"] += c
         return c
     # Snabb åtkomst till staplarna (mycket snabbare än .iloc i loopen).
@@ -195,9 +194,10 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             c = fee(qty, entry)
             if qty <= 0 or qty * entry + c + (qty * entry + c) * 0.01 > cash:
                 continue
+            fk = fee_kwargs(settings)
             if fees_too_high(qty, entry, stop, None if target == float("inf") else target,
-                             settings.commission_per_share_usd, settings.min_commission_usd,
-                             settings.slippage_pct, settings.max_fee_share_of_profit_pct):
+                             fk["per_share"], fk["minimum"], settings.slippage_pct,
+                             settings.max_fee_share_of_profit_pct, fk["pct"], fk["fx_pct"]):
                 continue  # samma kostnadsfilter som i den simulerade handeln
             cash -= qty * entry + c
             cash -= park_cost(qty * entry + c)  # sälj SPY för att betala köpet
