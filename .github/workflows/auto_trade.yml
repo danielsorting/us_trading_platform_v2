@@ -1,10 +1,15 @@
 name: Automatisk handel (låtsaspengar)
 
+# Roboten startar före börsöppning och kör en handelsrunda var 5:e minut hela
+# börsdagen, i en och samma körning (GitHub hoppar annars ofta över schemalagda
+# körningar). En körning får vara max 6 timmar, så en ny tar vid när den första
+# är klar. Flera starttider finns som reserv om GitHub hoppar över någon.
 on:
   schedule:
-    # Var 15:e minut vardagar 13:00–21:59 UTC. Täcker USA-börsens öppettider både
-    # sommar- och vintertid; skriptet avslutar direkt om börsen är stängd.
-    - cron: "4,19,34,49 13-21 * * 1-5"
+    - cron: "20 13 * * 1-5"   # 14:20 svensk vintertid (före öppning sommartid)
+    - cron: "20 14 * * 1-5"   # reserv / före öppning vintertid
+    - cron: "20 17 * * 1-5"   # tar vid efter första körningen
+    - cron: "20 19 * * 1-5"   # reserv fram till stängning
   workflow_dispatch: {}
 
 permissions:
@@ -20,7 +25,7 @@ env:
 jobs:
   trade:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 355
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,13 +35,30 @@ jobs:
           cache-dependency-path: requirements-bot.txt
       - name: Installera paket
         run: pip install -r requirements-bot.txt
-      - name: Handla
-        run: python scripts/auto_trade.py
-      - name: Spara konto och logg
-        if: always()
+      - name: Handla var 5:e minut under börsdagen
         run: |
           git config user.name "autohandel-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add paper/ || true
-          git commit -m "Automatisk handel $(date -u +%H:%M) UTC" || { echo "Inget nytt att spara"; exit 0; }
-          for i in 1 2 3; do git pull --rebase origin main && git push origin HEAD:main && break; sleep 5; done
+          LIMIT=$((340 * 60))   # sluta efter ca 5 h 40 min så nästa körning kan ta vid
+          while [ $SECONDS -lt $LIMIT ]; do
+            PHASE=$(python scripts/market_phase.py)
+            if [ "$PHASE" = "weekend" ]; then echo "Helg – inget att göra."; break; fi
+            if [ "$PHASE" = "after" ]; then
+              python scripts/auto_trade.py || true   # stänger ev. kvarvarande dagpositioner
+              SAVE=1
+            elif [ "$PHASE" = "open" ]; then
+              python scripts/auto_trade.py || echo "Rundan misslyckades – försöker igen om 5 minuter."
+              SAVE=1
+            else
+              echo "$(date -u +%H:%M) UTC – väntar på att börsen öppnar."
+              SAVE=0
+            fi
+            if [ "$SAVE" = "1" ]; then
+              git add paper/ || true
+              if git commit -q -m "Automatisk handel $(date -u +%H:%M) UTC"; then
+                for i in 1 2 3; do git pull -q --rebase origin main && git push -q origin HEAD:main && break; sleep 5; done
+              fi
+            fi
+            if [ "$PHASE" = "after" ]; then echo "Börsen har stängt – klart för i dag."; break; fi
+            sleep $(( 300 - $(date +%s) % 300 + 20 ))   # nästa jämna 5-minuterstid (+20 s)
+          done
