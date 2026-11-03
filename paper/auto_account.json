@@ -1,5 +1,5 @@
 {
-  "cash": 130.0344089211906,
+  "cash": 198.91758220724714,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -10,17 +10,6 @@
       "opened": "2026-11-03T16:26:33",
       "entry_fee": 1.5814,
       "strategy": "park"
-    },
-    "UPST": {
-      "quantity": 2.0,
-      "avg_price": 21.725857652664182,
-      "opened": "2026-11-03T17:05:38",
-      "entry_fee": 0.0174,
-      "stop": 21.49,
-      "target": 22.165000152587893,
-      "strategy": "day",
-      "trail_atr": NaN,
-      "atr": 0.15
     },
     "VITL": {
       "quantity": 5.0,
@@ -44,17 +33,6 @@
       "trail_atr": NaN,
       "atr": 0.883
     },
-    "NVTS": {
-      "quantity": 25.0,
-      "avg_price": 8.869432271003722,
-      "opened": "2026-11-03T17:10:53",
-      "entry_fee": 0.0887,
-      "stop": 8.77,
-      "target": 9.064999771118163,
-      "strategy": "day",
-      "trail_atr": NaN,
-      "atr": 0.069
-    },
     "ACB": {
       "quantity": 1.0,
       "avg_price": 5.107552519083023,
@@ -65,6 +43,17 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.036
+    },
+    "HUT": {
+      "quantity": 3.0,
+      "avg_price": 64.29213213729858,
+      "opened": "2026-11-03T18:50:54",
+      "entry_fee": 0.0772,
+      "stop": 63.88,
+      "target": 65.42000213623048,
+      "strategy": "day",
+      "trail_atr": null,
+      "atr": 0.388
     }
   },
   "orders": [
@@ -153,6 +142,45 @@
       "strategy": "day",
       "trail_atr": NaN,
       "atr": 0.036
+    },
+    {
+      "id": "24016fa203",
+      "time": "2026-11-03T18:50:54",
+      "symbol": "UPST",
+      "side": "sell",
+      "quantity": 2.0,
+      "price": 21.4293,
+      "fee": 0.0171,
+      "pnl": -0.63,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "cf30f0f236",
+      "time": "2026-11-03T18:50:54",
+      "symbol": "NVTS",
+      "side": "sell",
+      "quantity": 25.0,
+      "price": 8.7633,
+      "fee": 0.0876,
+      "pnl": -2.83,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "cf36e72df6",
+      "time": "2026-11-03T18:50:54",
+      "symbol": "HUT",
+      "side": "buy",
+      "quantity": 3.0,
+      "price": 64.2921,
+      "fee": 0.0772,
+      "pnl": null,
+      "stop": 63.88,
+      "target": 65.42000213623048,
+      "strategy": "day",
+      "trail_atr": null,
+      "atr": 0.388
     }
   ],
   "reset_id": null
