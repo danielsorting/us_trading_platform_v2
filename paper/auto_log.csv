@@ -93,3 +93,8 @@ tid,typ,symbol,action,detail
 2026-11-03 19:35,day,FISV,hoppar över,"Daytrading-budgeten är fullt använd (1,037 av 1,025 USD)."
 2026-11-03 19:35,day,ONON,hoppar över,"Daytrading-budgeten är fullt använd (1,037 av 1,025 USD)."
 2026-11-03 19:35,day,CRM,hoppar över,"Daytrading-budgeten är fullt använd (1,037 av 1,025 USD)."
+2026-11-03 19:40,nyheter,,världsläget,"Marknadshumör negativt (nyhetspoäng -10, 16 nyheter om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock Market Today: Dow Futures Plunge 323 Points, Apple Sinks, and Iran Strikes Send Oil Soaring"". Risken per ny affär halveras tills läget lugnar sig."
+2026-11-03 19:40,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 19:30: Granskade 291 aktier: 0 köpkandidater. Närmast: BETA (5/6), CNH (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6). Nästa sökning ca 20:00 (dagskurser ändras långsamt)."
+2026-11-03 19:40,day,GPK,hoppar över,"Daytrading-budgeten är fullt använd (1,035 av 1,024 USD)."
+2026-11-03 19:40,day,INGM,hoppar över,"Daytrading-budgeten är fullt använd (1,035 av 1,024 USD)."
+2026-11-03 19:40,day,ACN,hoppar över,"För lite kapital: en aktie kostar 256.35 USD, men högst 256 USD får läggas per affär (hela aktier)."
