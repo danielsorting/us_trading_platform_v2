@@ -196,3 +196,8 @@ tid,typ,symbol,action,detail
 2026-11-03 21:40,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: RIOT (5/6), GPK (5/6), INGM (5/6), CVE (5/6), PATH (5/6). Day – ORB 30 min, hela dagen köper bara de första 6 timmarna efter öppning (15:30–21:30 svensk tid) – i dag är fönstret stängt, nya köp i morgon."
 2026-11-03 21:45,swing,,swing-koll,"Inga swingaffärer öppna just nu (inget att kontrollera). Senaste swing-sökning 21:15: Granskade 291 aktier: 0 köpkandidater. Närmast: BETA (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6). Nästa sökning ca 21:45 (dagskurser ändras långsamt)."
 2026-11-03 21:45,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: GPK (5/6), TVTX (5/6), PLTR (5/6), BMNR (5/6), RAMP (4/6). Day – ORB 30 min, hela dagen köper bara de första 6 timmarna efter öppning (15:30–21:30 svensk tid) – i dag är fönstret stängt, nya köp i morgon."
+2026-11-03 21:50,swing,,swing-sökning,"Granskade 290 aktier: 0 köpkandidater. Närmast: BETA (5/6), CRBG (5/6), ENPH (5/6), EQH (5/6), JD (5/6)."
+2026-11-03 21:50,swing,AEHR,SÄLJ,"dagens slut (börsen stänger snart), resultat +0.34 USD"
+2026-11-03 21:50,swing,ACB,SÄLJ,"dagens slut (börsen stänger snart), resultat +0.04 USD"
+2026-11-03 21:50,swing,RSI,SÄLJ,"dagens slut (börsen stänger snart), resultat +1.55 USD"
+2026-11-03 21:50,day,,inga daytrades,"Granskade 295 aktier: ingen uppfyller alla villkor just nu. Närmast: INGM (5/6), TVTX (5/6), RAMP (4/6), FRVO (4/6), HUT (4/6). Day – ORB 30 min, hela dagen köper bara de första 6 timmarna efter öppning (15:30–21:30 svensk tid) – i dag är fönstret stängt, nya köp i morgon."

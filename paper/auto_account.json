@@ -1,5 +1,5 @@
 {
-  "cash": 191.37810855765,
+  "cash": 1146.129405673119,
   "starting_cash": 5103.884385367959,
   "usd_sek_at_start": 9.796460151672363,
   "created": "2026-11-03T16:25:15",
@@ -10,39 +10,6 @@
       "opened": "2026-11-03T16:26:33",
       "entry_fee": 1.5814,
       "strategy": "park"
-    },
-    "AEHR": {
-      "quantity": 11.0,
-      "avg_price": 63.54675688934326,
-      "opened": "2026-11-03T17:10:53",
-      "entry_fee": 0.2796,
-      "stop": 62.25,
-      "target": 66.16499938964844,
-      "strategy": "day",
-      "trail_atr": NaN,
-      "atr": 0.883
-    },
-    "ACB": {
-      "quantity": 1.0,
-      "avg_price": 5.107552519083023,
-      "opened": "2026-11-03T17:55:55",
-      "entry_fee": 0.002,
-      "stop": 5.05,
-      "target": 5.215000019073487,
-      "strategy": "day",
-      "trail_atr": NaN,
-      "atr": 0.036
-    },
-    "RSI": {
-      "quantity": 20.0,
-      "avg_price": 12.416204847335814,
-      "opened": "2026-11-03T19:50:55",
-      "entry_fee": 0.0993,
-      "stop": 12.31,
-      "target": 12.599999847412109,
-      "strategy": "day",
-      "trail_atr": null,
-      "atr": 0.064
     }
   },
   "orders": [
@@ -236,6 +203,42 @@
       "strategy": "day",
       "trail_atr": null,
       "atr": 0.064
+    },
+    {
+      "id": "c872632e3f",
+      "time": "2026-11-03T20:51:15",
+      "symbol": "AEHR",
+      "side": "sell",
+      "quantity": 11.0,
+      "price": 63.6282,
+      "fee": 0.28,
+      "pnl": 0.34,
+      "reason": "dagens slut (börsen stänger snart)",
+      "strategy": "day"
+    },
+    {
+      "id": "7d09b65b7b",
+      "time": "2026-11-03T20:51:15",
+      "symbol": "ACB",
+      "side": "sell",
+      "quantity": 1.0,
+      "price": 5.1486,
+      "fee": 0.0021,
+      "pnl": 0.04,
+      "reason": "dagens slut (börsen stänger snart)",
+      "strategy": "day"
+    },
+    {
+      "id": "a96ca0533d",
+      "time": "2026-11-03T20:51:15",
+      "symbol": "RSI",
+      "side": "sell",
+      "quantity": 20.0,
+      "price": 12.5037,
+      "fee": 0.1,
+      "pnl": 1.55,
+      "reason": "dagens slut (börsen stänger snart)",
+      "strategy": "day"
     }
   ],
   "reset_id": null
