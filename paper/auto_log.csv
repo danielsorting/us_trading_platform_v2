@@ -126,3 +126,5 @@ tid,typ,symbol,action,detail
 2026-11-04 17:20,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-04 17:25,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 17:10: Granskade 291 aktier: 12 köpkandidater (AAPL, CNC, DIS, EW, KHC, MSFT, OSCR, PG). Närmast: ABT (5/6), ACN (5/6), AFRM (5/6), ARRY (5/6), BRK-B (5/6). Nästa sökning ca 17:40 (dagskurser ändras långsamt)."
 2026-11-04 17:25,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: APP (5/6), BMNR (5/6), BKNG (5/6), UBER (5/6), BRK-B (5/6)."
+2026-11-04 17:30,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 17:10: Granskade 291 aktier: 12 köpkandidater (AAPL, CNC, DIS, EW, KHC, MSFT, OSCR, PG). Närmast: ABT (5/6), ACN (5/6), AFRM (5/6), ARRY (5/6), BRK-B (5/6). Nästa sökning ca 17:40 (dagskurser ändras långsamt)."
+2026-11-04 17:30,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: TOST (5/6), W (5/6), BMNR (5/6), BKNG (5/6), ZBH (5/6)."
