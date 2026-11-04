@@ -34,4 +34,6 @@ def apply(settings, variants, path=CHOICE_FILE, today=None):
         return settings, None
     risk = min(float(c.get("risk_per_trade_pct", settings.risk_per_trade_pct)), MAX_RISK_PCT)
     n = int(c.get("swing_liquid_n", settings.swing_liquid_n))
-    return replace(settings, swing_variant=c["swing_variant"], risk_per_trade_pct=risk, swing_liquid_n=n), c
+    mx = float(c.get("max_position_pct_of_strategy_capital", settings.max_position_pct_of_strategy_capital))
+    return replace(settings, swing_variant=c["swing_variant"], risk_per_trade_pct=risk, swing_liquid_n=n,
+                   max_position_pct_of_strategy_capital=mx), c

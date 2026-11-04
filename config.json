@@ -5,7 +5,7 @@
   "swing_allocation_pct": 80,
   "risk_per_trade_pct": 2.0,
   "max_positions_per_strategy": 8,
-  "max_position_pct_of_strategy_capital": 70,
+  "max_position_pct_of_strategy_capital": 35,
   "day_max_position_pct": 25,
   "auto_pick_best": true,
   "swing_liquid_n": 300,
