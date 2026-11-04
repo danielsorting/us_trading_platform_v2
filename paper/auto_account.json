@@ -1,5 +1,5 @@
 {
-  "cash": 2050.801547917124,
+  "cash": 671.911421390482,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -69,6 +69,39 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 1.392
+    },
+    "TOST": {
+      "quantity": 14.0,
+      "avg_price": 35.27762832069397,
+      "opened": "2026-11-04T15:15:52",
+      "entry_fee": 0.1976,
+      "stop": 34.68,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.396
+    },
+    "SPCX": {
+      "quantity": 3.0,
+      "avg_price": 140.02998671722412,
+      "opened": "2026-11-04T15:15:52",
+      "entry_fee": 0.168,
+      "stop": 138.38,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.232
+    },
+    "LRCX": {
+      "quantity": 2.0,
+      "avg_price": 232.18103494262695,
+      "opened": "2026-11-04T15:15:52",
+      "entry_fee": 0.1857,
+      "stop": 230.2,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.525
     }
   },
   "orders": [
@@ -161,6 +194,51 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 1.392
+    },
+    {
+      "id": "6ccc71aee0",
+      "time": "2026-11-04T15:15:52",
+      "symbol": "TOST",
+      "side": "buy",
+      "quantity": 14.0,
+      "price": 35.2776,
+      "fee": 0.1976,
+      "pnl": null,
+      "stop": 34.68,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.396
+    },
+    {
+      "id": "4e9bb69d91",
+      "time": "2026-11-04T15:15:52",
+      "symbol": "SPCX",
+      "side": "buy",
+      "quantity": 3.0,
+      "price": 140.03,
+      "fee": 0.168,
+      "pnl": null,
+      "stop": 138.38,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.232
+    },
+    {
+      "id": "71ebf65b9f",
+      "time": "2026-11-04T15:15:52",
+      "symbol": "LRCX",
+      "side": "buy",
+      "quantity": 2.0,
+      "price": 232.181,
+      "fee": 0.1857,
+      "pnl": null,
+      "stop": 230.2,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.525
     }
   ],
   "reset_id": null
