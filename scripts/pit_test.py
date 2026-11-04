@@ -102,3 +102,22 @@ ys = pd.DataFrame({"Utan facit %": yearly(pit["equity"]), "Med facit %": yearly(
 print("\nÅr för år:")
 print(ys.to_string())
 print("\nObs: avnoterade bolag saknas hos Yahoo, så även testet utan facit är något för bra.")
+
+if "--alla" in sys.argv:
+    from trading_platform.strategies.variants import daily_variants
+    print("\nALLA strategier, UTAN facit (lista vald varje kvartal):")
+    allowed = make_allowed(members)
+    out = []
+    for name, mod in daily_variants().items():
+        for risk in (1.0, 2.0):
+            for park in (False, True):
+                ss = replace(s, risk_per_trade_pct=risk, park_idle_in_index=park)
+                st = run_backtest(bars, mod, cap, ss, start=start, allowed=allowed)["stats"]
+                out.append({"Strategi": name, "Risk %": risk, "Ledig kassa i S&P": "ja" if park else "nej",
+                            "Per år %": round(per_year(st), 1), "Största nedgång %": st["max_drawdown_pct"],
+                            "Affärer": st["trades"]})
+                log(f"{name} risk {risk} park {park}: {out[-1]['Per år %']} %/år")
+    res = pd.DataFrame(out).sort_values("Per år %", ascending=False)
+    print(res.to_string(index=False))
+    spy_py = ((1 + spy_tot / 100) ** (1 / years) - 1) * 100
+    print(f"\nS&P 500: {spy_py:.1f} %/år. Strategier som slår S&P 500: {int((res['Per år %'] > spy_py).sum())} av {len(res)}")

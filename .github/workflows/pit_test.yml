@@ -15,4 +15,4 @@ jobs:
           cache: pip
           cache-dependency-path: requirements-bot.txt
       - run: pip install -r requirements-bot.txt
-      - run: python scripts/pit_test.py
+      - run: python scripts/pit_test.py --alla
