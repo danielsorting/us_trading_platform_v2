@@ -62,6 +62,18 @@ class Settings:
     day_variant: str = "Day – momentum (nuvarande)"
     # Max antal aktier per skanning när hela marknaden väljs.
     max_symbols_per_scan: int = 300
+    # ---- Interactive Brokers (IBKR) – AVSTÄNGT tills du slår på det -----------
+    # Koden vägrar riktiga pengar: den handlar bara på IBKR:s låtsaskonto
+    # (kontonummer som börjar med "DU"). Se IBKR_GUIDE.md.
+    ibkr_enabled: bool = False
+    ibkr_host: str = "127.0.0.1"
+    ibkr_port: int = 4002            # 4002 = IB Gateway, låtsaskonto
+    ibkr_client_id: int = 7
+    ibkr_max_order_usd: float = 2500.0      # största tillåtna köp per affär
+    ibkr_max_orders_per_day: int = 20       # max antal köp per dag
+    ibkr_max_daily_loss_usd: float = 250.0  # förlorar roboten mer i dag: inga fler köp
+    ibkr_limit_buffer_pct: float = 0.3      # limitpris = kurs ± 0,3 % (skyddar mot dåliga priser)
+    ibkr_order_timeout_s: int = 30          # så länge vi väntar på fyllning innan ordern makuleras
 
     @property
     def day_capital(self):

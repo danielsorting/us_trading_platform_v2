@@ -180,8 +180,12 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
               and (now - opened).days >= SWING_MAX_CALENDAR_DAYS):
             reason = "tidsgräns"
         if reason:
-            order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason,
-                                        strategy=pos.get("strategy"), slippage_pct=slippage_pct)
+            try:
+                order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason,
+                                            strategy=pos.get("strategy"), slippage_pct=slippage_pct)
+            except ValueError as e:  # t.ex. ingen fyllning hos riktig mäklare – försöker igen nästa runda
+                actions.append({"symbol": sym, "action": "sälj misslyckades", "detail": f"{reason}: {e}"})
+                continue
             actions.append({"symbol": sym, "action": "SÄLJ", "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
 
     # 2) Köp.
