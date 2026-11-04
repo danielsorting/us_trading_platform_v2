@@ -345,7 +345,7 @@ def use_best(variant, risk=None):
         st.session_state["best_applied"] = f"{variant} (din risk per affär behålls)"
 
 
-# Resultat från 🏆-knappen ställs in innan sidopanelen ritas (Streamlit kräver det).
+# Resultat från 🏆-knappen ställs in innan reglagen ritas (Streamlit kräver det).
 if "pending_best" in st.session_state:
     use_best(*st.session_state.pop("pending_best"))
 
@@ -360,11 +360,12 @@ tab_auto, tab_scan, tab_bt, tab_paper, tab_info = st.tabs(
     ["🤖 Automatisk handel", "🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
 
 
-def settings_panel(base, prefix, disabled):
-    """Reglagen för kapital och risk. Används två gånger:
-    - under 🤖 Automatisk handel: robotens inställningar, låsta (bara för att visa)
-    - under 🧪 Simulerad handel: webbsidans inställningar, går att ändra"""
-    k = (lambda name: f"{prefix}_{name}") if prefix else (lambda name: None)
+def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None):
+    """Reglagen för kapital och risk. Varje flik har sina egna:
+    - 🤖 Automatisk handel: robotens inställningar, låsta (bara för att visa)
+    - 🔎 Scanner, 📈 Backtest, 🧪 Simulerad handel: egna reglage som går att ändra.
+      Alla börjar med robotens inställningar."""
+    k = lambda name: f"{prefix}_{name}"
     a, b, c = st.columns(3)
     capital = a.number_input("Totalt kapital (SEK)", min_value=1000, value=int(base.total_capital), step=1000,
                              disabled=disabled, key=k("cap"))
@@ -374,8 +375,11 @@ def settings_panel(base, prefix, disabled):
     if disabled:
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
                                value=float(base.risk_per_trade_pct), disabled=True, key=k("risk"))
+    elif risk_key:
+        risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key=risk_key)
     else:
-        risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS, key="sb_risk")
+        risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
+                               value=float(base.risk_per_trade_pct), key=k("risk"))
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
     max_pos_pct = b.slider("Max storlek per swingaffär (% av swingkapitalet)", 5, 100,
@@ -393,9 +397,14 @@ def settings_panel(base, prefix, disabled):
         c.selectbox("Swing-strategi", [base.swing_variant], disabled=True, key=k("var"))
         c.selectbox("Daytrading-strategi", [base.day_variant], disabled=True, key=k("dvar"))
         variant = base.swing_variant
+    elif variant_key:
+        variant = c.selectbox("Swing-strategi (ställs in automatiskt av 🏆-knappen)", list(VARIANTS),
+                              key=variant_key)
+        c.caption(f"Daytrading-strategi: **{base.day_variant}**")
     else:
-        variant = c.selectbox("Swing-strategi (ställs in automatiskt av 🏆-knappen under Backtest)",
-                              list(VARIANTS), key="sb_variant")
+        names = list(VARIANTS)
+        variant = c.selectbox("Swing-strategi", names, key=k("var"),
+                              index=names.index(base.swing_variant) if base.swing_variant in names else 0)
         c.caption(f"Daytrading-strategi: **{base.day_variant}**")
     out = replace(base, total_capital=float(capital), day_allocation_pct=float(day_pct),
                   swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
@@ -415,26 +424,31 @@ with tab_auto:
                    "så ändras det i robotens inställningsfil (config.json).")
         settings_panel(defaults, "rb", disabled=True)
 
-with tab_paper:
-    with st.expander("⚙️ Inställningar för simulerad handel (gäller även 🔎 Scanner och 📈 Backtest)",
-                     expanded=False):
-        st.caption("Här kan du prova fritt. Ändringarna påverkar INTE bakgrundsroboten och "
-                   "gäller tills sidan laddas om.")
-        settings, variant_name = settings_panel(defaults, None, disabled=False)
-risk = settings.risk_per_trade_pct
-swing_strategy = VARIANTS[variant_name]
-swing_strategy_name = variant_name
-usd_sek, fx_source = get_usd_sek(settings.usd_sek_fallback)
+
+
+def tab_settings(prefix, title, note, risk_key=None, variant_key=None):
+    """Fliken egna inställningar i en ihopfälld ruta. Returnerar (inställningar, strateginamn)."""
+    with st.expander(f"⚙️ {title}", expanded=False):
+        st.caption(note + " Alla reglage börjar med robotens inställningar. Ändringarna påverkar INTE "
+                   "bakgrundsroboten och gäller tills sidan laddas om.")
+        return settings_panel(defaults, prefix, disabled=False, risk_key=risk_key, variant_key=variant_key)
+
+
+def short_settings(s_, v_):
+    return (f"{s_.total_capital:,.0f} SEK · daytrading {s_.day_allocation_pct:.0f} % · risk "
+            f"{s_.risk_per_trade_pct:g} % per affär · swing-strategi {v_}").replace(",", " ")
+
+
+usd_sek, fx_source = get_usd_sek(defaults.usd_sek_fallback)
 with st.sidebar:
     st.metric("USD/SEK", f"{usd_sek:.2f}", help=f"Källa: {fx_source}")
 
-WEB_SETTINGS_NOTE = (f"Använder inställningarna under 🧪 Simulerad handel: {settings.total_capital:,.0f} SEK, "
-                     f"daytrading {settings.day_allocation_pct:.0f} %, risk {settings.risk_per_trade_pct:g} % per affär, "
-                     f"strategi {variant_name}.")
-
 # ---------------------------------------------------------------- scanner
 with tab_scan:
-    st.caption(WEB_SETTINGS_NOTE)
+    settings, variant_name = tab_settings("scan", "Inställningar för scannern",
+                                          "Används för att räkna hur stor varje affär blir.")
+    risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
+    st.caption("Inställningar: " + short_settings(settings, variant_name))
     mode = st.radio("Vilka aktier?", ["Min bevakningslista", LIQUID], horizontal=True)
     if mode == "Min bevakningslista":
         symbols = parse_symbols(st.text_area("Aktier (kommaseparerade)", ",".join(settings.watchlist), height=80))
@@ -481,7 +495,11 @@ with tab_scan:
 
 # ---------------------------------------------------------------- backtest
 with tab_bt:
-    st.caption(WEB_SETTINGS_NOTE)
+    settings, variant_name = tab_settings("bt", "Inställningar för backtestet",
+                                          "Testet körs med de här inställningarna.", risk_key="sb_risk",
+                                          variant_key="sb_variant")
+    risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
+    st.caption("Inställningar: " + short_settings(settings, variant_name))
     st.write("Testa hur en strategi hade gått historiskt. Köp sker alltid på stapeln **efter** signalen, "
              "och courtage och slippage räknas med.")
     bt_mode = st.radio("Vad vill du göra?",
@@ -491,7 +509,7 @@ with tab_bt:
         strat_name = "__best__"
         module = swing
         choose_risk = st.checkbox("Låt knappen även välja risk per affär", value=False, key="bt_choose_risk",
-                                  help="Av: knappen behåller din risk från sidopanelen och väljer bara strategi. "
+                                  help="Av: knappen behåller din risk från backtestets inställningar och väljer bara strategi. "
                                        "På: den testar även 0,5 %, 1 % och 2 % och väljer den jämnaste.")
         if choose_risk:
             st.caption("Testar **alla** strategier på tre risknivåer (0,5 %, 1 % och 2 % per affär) och väljer den "
@@ -610,8 +628,8 @@ with tab_bt:
             st.session_state.pop("bt_compare", None)
 
     if st.session_state.get("best_applied"):
-        st.success(f"✅ Inställt automatiskt: **{st.session_state['best_applied']}**. Scanner och simulerad "
-                   "handel använder nu detta (syns i sidopanelen).")
+        st.success(f"✅ Inställt automatiskt i backtestets inställningar: **{st.session_state['best_applied']}**. "
+                   "Vill du att bakgrundsroboten ska använda den – säg till Claude.")
 
     if "bt_best" in st.session_state:
         best = st.session_state["bt_best"]
@@ -652,7 +670,7 @@ with tab_bt:
                 (st.info if beats else st.warning)(msg)
             if len(good):
                 st.success(f"Bäst av de som går plus i både test- och kontrolldel: **{good.iloc[0].Strategi}**. "
-                           "Välj den i sidopanelen för scanner och simulerad handel.")
+                           "Du kan välja den under ⚙️ inställningarna i varje flik.")
             else:
                 st.warning("Ingen variant gick plus i både test- och kontrolldel med dessa aktier och denna period. "
                            "Prova fler aktier eller en längre period innan du drar slutsatser.")
@@ -698,6 +716,9 @@ with tab_bt:
 
 # ---------------------------------------------------------------- simulerad handel
 with tab_paper:
+    settings, variant_name = tab_settings("sim", "Inställningar för simulerad handel",
+                                          "Den simulerade roboten handlar med de här inställningarna.")
+    risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
     st.write("Handla med **låtsaspengar** – swing och daytrading på samma ställe. Slå på **Autoläge** så "
              "köper och säljer roboten själv medan sidan är öppen.")
     broker = PaperBroker(sek_to_usd(settings.total_capital, usd_sek), PAPER_FILE,
@@ -729,7 +750,7 @@ with tab_paper:
                f"({settings.day_allocation_pct:.0f} %, strategi **{settings.day_variant}**, de bästa bland de 300 "
                "mest omsatta). Den köper och säljer, "
                "flyttar stop loss uppåt på vinnare, stänger alla dagpositioner före 22:00 och använder parkerade "
-               "pengar i SPY när det behövs. Andelarna ställs in i sidopanelen.")
+               "pengar i SPY när det behövs. Andelarna ställs in under ⚙️ inställningarna högst upp i fliken.")
     d1, d2, d3 = st.columns(3)
     dt_universe = d1.radio("Daytrading bland", [LIQUID, "Min bevakningslista"], key="dt_universe")
     dt_top = d2.slider("Max antal daytrades", 1, 20, int(settings.auto_day_top_n), key="dt_top",
