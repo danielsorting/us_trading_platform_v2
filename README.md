@@ -1,5 +1,8 @@
 # US Trading Platform v0.3
 
+> 👉 **Öppna tradingroboten här:** https://ustradingplatformv2-ch5mdu5sthbdpuguzidhnn.streamlit.app
+
+
 En modulär plattform för att **skanna, backtesta och simulera handel** med amerikanska aktier.
 Skriven i Python med ett dashboard i Streamlit.
 
