@@ -65,11 +65,14 @@ def stop_and_target(module, signal_close, atr, entry):
 
 
 def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None, start=None, end=None,
-                 prepared=None):
+                 prepared=None, allowed=None):
     """Kör ett backtest. bars_by_symbol: {"AAPL": kurstabell, ...}.
 
     start/end: handla bara inom detta tidsfönster (indikatorerna räknas ändå
     på all tidigare data). Öppna positioner stängs vid fönstrets slut.
+
+    allowed: valfri funktion allowed(symbol, tid) -> bool. Nya köp görs bara när
+    den svarar True (t.ex. "aktien var bland de 300 mest omsatta just då").
 
     Returnerar {"trades": tabell, "equity": serie, "stats": dict}.
     """
@@ -180,6 +183,8 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             x = data[sym]
             prev, bar = rows[sym][i - 1], rows[sym][i]
             if not prev.SIGNAL:
+                continue
+            if allowed is not None and not allowed(sym, t):
                 continue
             if is_day and (prev.LAST_OF_DAY or bar.LAST_OF_DAY):
                 continue  # ingen signal över natten, inget köp på dagens sista stapel
