@@ -95,3 +95,6 @@ tid,typ,symbol,action,detail
 2026-11-04 16:40,swing,XPEV,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
 2026-11-04 16:40,day,TOST,stop flyttad,Ny stop loss 34.97
 2026-11-04 16:40,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 16:45,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:40: Granskade 291 aktier: 26 köpkandidater (ANET, APP, BFLY, BKNG, BMNR, BRKR, CNC, COIN). Närmast: ABT (3/4), ACN (3/4), AFRM (3/4), AG (3/4), APO (3/4). Nästa sökning ca 17:10 (dagskurser ändras långsamt)."
+2026-11-04 16:45,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: TOST (5/6), MCD (5/6), BX (5/6), WMT (5/6), PEP (5/6)."
+2026-11-04 16:45,day,TOST,stop flyttad,Ny stop loss 35.01
