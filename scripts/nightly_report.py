@@ -11,6 +11,8 @@ import json
 import sys
 import time
 import traceback
+
+import pandas as pd
 from dataclasses import replace
 from datetime import datetime, timezone
 from pathlib import Path
@@ -65,7 +67,7 @@ def main():
         pass
     if not liquid:
         try:
-            liquid = liquid_universe(p, max(SWING_LIQUID, DAY_UNIVERSE), allow_heavy=False)
+            liquid = liquid_universe(p, 300, allow_heavy=False)
         except Exception as e:
             lines += [f"> Kunde inte hämta de mest omsatta aktierna: {e}", ""]
 
@@ -151,6 +153,41 @@ def main():
                                                 "Snitt R", "Profit factor", "Största nedgång %", "Courtage USD"]), ""]
     else:
         lines += ["Hoppades över (ingen data).", ""]
+
+    # ---------------- automatiskt val för roboten (strategi + risk + antal aktier)
+    lines += ["## Robotens automatiska val", "",
+              "Alla swing-strategier × risk 0,5/1/2 % × de 100 eller 300 mest omsatta (+ bevakningslistan), 5 år. "
+              "Bara godkända kombinationer (plus i både test- och kontrolldel, minst 20 affärer) kan väljas. "
+              "Bäst poäng (avkastning per år / största nedgång) vinner och används av roboten från nästa runda.", ""]
+    try:
+        cand = []
+        for n in (100, 300):
+            syms = list(dict.fromkeys(liquid[:n] + list(s.watchlist)))
+            bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
+            df = find_best(bars, daily_variants(), swing_cap, s, benchmark=spy5.Close, risk_levels=(0.5, 1.0, 2.0))
+            df.insert(0, "Aktier", f"{n} mest omsatta")
+            df["n"] = n
+            cand.append(df)
+        allc = pd.concat(cand, ignore_index=True)
+        allc["_ok"] = allc["Godkänd"] == "ja"
+        allc = allc.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok")
+        lines += [md_table(allc.head(10), ["Aktier", "Strategi", "Risk per affär %", "Per år %", "Största nedgång %",
+                                           "Affärer", "Testdel %", "Kontrolldel %", "Godkänd", "Poäng"]), ""]
+        best = allc.iloc[0]
+        if best["Godkänd"] == "ja":
+            choice = {"date": f"{started:%Y-%m-%d}", "swing_variant": best["Strategi"],
+                      "risk_per_trade_pct": float(best["Risk per affär %"]), "swing_liquid_n": int(best["n"]),
+                      "per_year_pct": float(best["Per år %"]), "max_drawdown_pct": float(best["Största nedgång %"]),
+                      "score": float(best["Poäng"])}
+            REPORTS.mkdir(exist_ok=True)
+            (REPORTS / "best_choice.json").write_text(json.dumps(choice, indent=2, ensure_ascii=False))
+            lines += [f"**Valt:** {best['Strategi']}, risk {best['Risk per affär %']} % per affär, de "
+                      f"{int(best['n'])} mest omsatta (+ bevakningslistan) – {best['Per år %']} % per år, "
+                      f"största nedgång {best['Största nedgång %']} %.", ""]
+        else:
+            lines += ["Ingen kombination blev godkänd – roboten behåller sitt tidigare val.", ""]
+    except Exception as e:
+        lines += [f"> Fel i automatiska valet: {type(e).__name__}: {e}", ""]
 
     lines += ["---", "Rapporten är underlag för morgonsessionen. Historiska resultat är ingen garanti för framtiden."]
     REPORTS.mkdir(exist_ok=True)

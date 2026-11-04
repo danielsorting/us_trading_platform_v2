@@ -76,13 +76,22 @@ def main():
         return
     log(f"{text} Startar. USD/SEK {fx:.2f}.")
     state = load_json(STATE, {})
+    from trading_platform import autopick
+    s, choice = autopick.apply(s, swing_variants())
+    if choice:
+        state["auto_choice"] = choice
+        log(f"Automatiskt val från nattrapporten {choice['date']}: {s.swing_variant}, risk {s.risk_per_trade_pct} %, "
+            f"{s.swing_liquid_n} mest omsatta.")
     variant = swing_variants().get(s.swing_variant)
     mkt = provider.history(MARKET_SYMBOL, "2y", "1d") if variant is not None and needs_market([variant]) else None
     need_liquid = s.day_allocation_pct > 0 or s.swing_universe == "liquid"
     liquid = liquid_list(provider) if ((is_open or phase == "pre") and need_liquid) else []
     log(f"Lista över mest omsatta: {len(liquid)} aktier.")
+    swing_syms = None
+    if s.swing_universe == "liquid" and liquid:
+        swing_syms = list(dict.fromkeys(liquid[:s.swing_liquid_n] + list(s.watchlist)))
     events = tick(provider, broker, s, state, liquid, swing_strategy=variant, market_bars=mkt, usd_sek=fx,
-                  top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct)
+                  top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct, swing_symbols=swing_syms)
     log(f"Runda klar: {len(events)} händelser.")
     from trading_platform import notify
     if notify.topic() and not state.get("notify_hello"):

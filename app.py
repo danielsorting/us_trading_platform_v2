@@ -223,6 +223,10 @@ def _download_robot_files(minute):
             r = requests.get(ROBOT_RAW + name, params={"t": minute}, timeout=10)
             r.raise_for_status()
             (folder / name).write_bytes(r.content)
+        r = requests.get(ROBOT_RAW.replace("/paper/", "/reports/") + "best_choice.json", params={"t": minute},
+                         timeout=10)
+        if r.ok:
+            (folder / "best_choice.json").write_bytes(r.content)
         return str(folder)
     except Exception:
         return None
@@ -422,11 +426,27 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None):
     return out, variant
 
 
+from trading_platform import autopick  # noqa: E402
+
+AUTO_DIR = fresh_robot_files()
+_choice_file = AUTO_DIR / "best_choice.json"
+robot_settings, robot_choice = autopick.apply(
+    defaults, VARIANTS, path=_choice_file if _choice_file.exists() else autopick.CHOICE_FILE)
+
 with tab_auto:
     with st.expander("⚙️ Robotens inställningar (låsta – roboten på GitHub använder dessa)", expanded=False):
+        if robot_choice:
+            st.success(f"🤖 **Väljs automatiskt varje natt.** Senaste val ({robot_choice['date']}): "
+                       f"**{robot_settings.swing_variant}**, risk **{robot_settings.risk_per_trade_pct:g} %** per "
+                       f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** (+ bevakningslistan). "
+                       f"I testet: {robot_choice['per_year_pct']:+.1f} % per år, största nedgång "
+                       f"{robot_choice['max_drawdown_pct']:.0f} %.")
+        elif defaults.auto_pick_best:
+            st.info("🤖 Automatiskt val är påslaget. Nattrapporten väljer bästa strategi, risk och antal aktier "
+                    "i natt – tills dess används inställningarna nedan.")
         st.caption("Reglagen är låsta så att inget ändras av misstag. Vill du ändra något – säg till Claude, "
                    "så ändras det i robotens inställningsfil (config.json).")
-        settings_panel(defaults, "rb", disabled=True)
+        settings_panel(robot_settings, "rb", disabled=True)
 
 
 
@@ -512,7 +532,7 @@ with tab_bt:
     if bt_mode == "🏆 Hitta bästa automatiskt":
         strat_name = "__best__"
         module = swing
-        choose_risk = st.checkbox("Låt knappen även välja risk per affär", value=False, key="bt_choose_risk",
+        choose_risk = st.checkbox("Låt knappen även välja risk per affär", value=True, key="bt_choose_risk",
                                   help="Av: knappen behåller din risk från backtestets inställningar och väljer bara strategi. "
                                        "På: den testar även 0,5 %, 1 % och 2 % och väljer den jämnaste.")
         if choose_risk:
@@ -586,7 +606,7 @@ with tab_bt:
                 hbars = get_history_many(tuple(bt_symbols), *data_for(next(iter(hourly_variants().values())), True))
         if strat_name == "__best__":
             bar = st.progress(0.0, text="Testar kombinationer…")
-            pick_risk = st.session_state.get("bt_choose_risk", False)
+            pick_risk = st.session_state.get("bt_choose_risk", True)
             risks = (0.5, 1.0, 2.0) if pick_risk else (settings.risk_per_trade_pct,)
             parts = [find_best(bars, daily_variants(), cap_usd, settings,
                                benchmark=None if mkt is None else mkt.Close, risk_levels=risks,
@@ -918,7 +938,6 @@ with tab_paper:
 # ---------------------------------------------------------------- om
 # ---------------------------------------------------------------- automatisk handel (GitHub)
 with tab_auto:
-    AUTO_DIR = fresh_robot_files()
     if defaults.extended_hours_swing:
         st.write("Här ser du **bakgrundsroboten**. Den körs på GitHub **var 5:e minut**, även när din dator är "
                  "avstängd, och handlar med **låtsaspengar**: förhandel 11:00–15:30 (bara swing), börsdag "
