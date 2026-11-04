@@ -59,3 +59,8 @@ tid,typ,symbol,action,detail
 2026-11-04 16:15,day,LRCX,KÖP,"2 st à 232.07 USD (day), stop 230.20"
 2026-11-04 16:20,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 291 aktier: 26 köpkandidater (ANET, APP, BFLY, BKNG, BMNR, BRKR, CNC, EL). Närmast: ABT (3/4), AFRM (3/4), AG (3/4), AMD (3/4), APO (3/4). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
 2026-11-04 16:20,day,CRCL,KÖP,"6 st à 77.50 USD (day), stop 76.24"
+2026-11-04 16:25,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 291 aktier: 26 köpkandidater (ANET, APP, BFLY, BKNG, BMNR, BRKR, CNC, EL). Närmast: ABT (3/4), AFRM (3/4), AG (3/4), AMD (3/4), APO (3/4). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
+2026-11-04 16:25,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: CRCL (5/6), UPS (5/6), ADM (5/6), RAMP (4/6), CBZ (4/6)."
+2026-11-04 16:25,day,SPCX,SÄLJ,"stop loss, resultat -6.39 USD"
+2026-11-04 16:25,day,LRCX,SÄLJ,"stop loss, resultat -6.04 USD"
+2026-11-04 16:25,day,CRCL,SÄLJ,"stop loss, resultat -9.08 USD"

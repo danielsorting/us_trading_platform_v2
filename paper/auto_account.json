@@ -1,5 +1,5 @@
 {
-  "cash": 206.49282139048205,
+  "cash": 1535.2064598227942,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -80,39 +80,6 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.396
-    },
-    "SPCX": {
-      "quantity": 3.0,
-      "avg_price": 140.02998671722412,
-      "opened": "2026-11-04T15:15:52",
-      "entry_fee": 0.168,
-      "stop": 138.38,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 1.232
-    },
-    "LRCX": {
-      "quantity": 2.0,
-      "avg_price": 232.18103494262695,
-      "opened": "2026-11-04T15:15:52",
-      "entry_fee": 0.1857,
-      "stop": 230.2,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 1.525
-    },
-    "CRCL": {
-      "quantity": 6.0,
-      "avg_price": 77.53875,
-      "opened": "2026-11-04T15:20:50",
-      "entry_fee": 0.1861,
-      "stop": 76.24,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.851
     }
   },
   "orders": [
@@ -265,6 +232,42 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.851
+    },
+    {
+      "id": "77b6071b71",
+      "time": "2026-11-04T15:25:50",
+      "symbol": "SPCX",
+      "side": "sell",
+      "quantity": 3.0,
+      "price": 138.0111,
+      "fee": 0.1656,
+      "pnl": -6.39,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "c7fd70caf0",
+      "time": "2026-11-04T15:25:50",
+      "symbol": "LRCX",
+      "side": "sell",
+      "quantity": 2.0,
+      "price": 229.3453,
+      "fee": 0.1835,
+      "pnl": -6.04,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "6faebddf0e",
+      "time": "2026-11-04T15:25:50",
+      "symbol": "CRCL",
+      "side": "sell",
+      "quantity": 6.0,
+      "price": 76.0869,
+      "fee": 0.1826,
+      "pnl": -9.08,
+      "reason": "stop loss",
+      "strategy": "day"
     }
   ],
   "reset_id": null
