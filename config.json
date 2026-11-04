@@ -66,5 +66,15 @@
   "fx_fee_pct": 0.0,
   "day_variant": "Day – ORB hela dagen, lås vinst (inget mål)",
   "swing_universe": "liquid",
-  "paper_reset_id": "2026-11-04-1"
+  "paper_reset_id": "2026-11-04-1",
+  "test_defaults": {
+    "_info": "Daniels förval i Backtest och Simulerad handel (påverkar inte roboten). Hittat 2026-11-04.",
+    "swing_variant": "Swing – 5 av 6 (RSI, MACD och botten krävs)",
+    "risk_per_trade_pct": 2.0,
+    "max_position_pct_of_strategy_capital": 35,
+    "day_max_position_pct": 25,
+    "day_allocation_pct": 20,
+    "swing_allocation_pct": 80,
+    "total_capital": 100000
+  }
 }

@@ -367,8 +367,14 @@ def parse_symbols(text):
 # ---------------------------------------------------------------- sidopanel
 defaults = load_settings()
 RISK_OPTIONS = [0.25, 0.5, 0.75, 1.0, 1.5, 2.0]
-st.session_state.setdefault("sb_risk", float(defaults.risk_per_trade_pct))
-st.session_state.setdefault("sb_variant", defaults.swing_variant if defaults.swing_variant in VARIANTS
+# Daniels förval för Backtest och Simulerad handel (config.json → test_defaults). Roboten använder dem inte.
+try:
+    _td = json.loads((PROJECT_ROOT / "config.json").read_text()).get("test_defaults", {})
+except Exception:
+    _td = {}
+test_base = replace(defaults, **{k: v for k, v in _td.items() if not k.startswith("_") and hasattr(defaults, k)})
+st.session_state.setdefault("sb_risk", float(test_base.risk_per_trade_pct))
+st.session_state.setdefault("sb_variant", test_base.swing_variant if test_base.swing_variant in VARIANTS
                             else list(VARIANTS)[0])
 
 
@@ -483,14 +489,16 @@ with tab_auto:
 
 
 
-def tab_settings(prefix, title, note, risk_key=None, variant_key=None, left_extra=None, right_extra=None):
+def tab_settings(prefix, title, note, risk_key=None, variant_key=None, left_extra=None, right_extra=None,
+                 base=None):
     """Fliken egna inställningar i en ihopfälld ruta. Returnerar (inställningar, strateginamn, rutan) –
     rutan används för att lägga fler val i den längre ner i fliken."""
     box = st.expander(f"⚙️ {title}", expanded=False)
     with box:
-        st.caption(note + " Alla reglage börjar med robotens inställningar. Ändringarna påverkar INTE "
-                   "bakgrundsroboten och gäller tills sidan laddas om.")
-        out = settings_panel(defaults, prefix, disabled=False, risk_key=risk_key, variant_key=variant_key,
+        st.caption(note + (" Reglagen börjar med **dina förval** (från ditt bästa backtest)." if base is not None
+                           else " Alla reglage börjar med robotens inställningar.")
+                   + " Ändringarna påverkar INTE bakgrundsroboten och gäller tills sidan laddas om.")
+        out = settings_panel(base or defaults, prefix, disabled=False, risk_key=risk_key, variant_key=variant_key,
                              left_extra=left_extra, right_extra=right_extra)
     return out[0], out[1], box
 
@@ -601,7 +609,7 @@ with tab_bt:
     settings, variant_name, opt_box = tab_settings("bt", "Inställningar för backtestet",
                                                    "Testet körs med de här inställningarna.", risk_key="sb_risk",
                                                    variant_key="sb_variant", left_extra=bt_left,
-                                                   right_extra=bt_right)
+                                                   right_extra=bt_right, base=test_base)
     risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
     period, interval, bt_cap_sek = bt_opts["period"], bt_opts["interval"], bt_opts["cap"]
     with_hourly = bt_opts["hourly"]
@@ -836,7 +844,8 @@ with tab_bt:
 # ---------------------------------------------------------------- simulerad handel
 with tab_paper:
     settings, variant_name, opt_box = tab_settings("sim", "Inställningar för simulerad handel",
-                                          "Den simulerade roboten handlar med de här inställningarna.")
+                                          "Den simulerade roboten handlar med de här inställningarna.",
+                                          base=test_base)
     risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
     st.write("Handla med **låtsaspengar** – swing och daytrading på samma ställe. Slå på **Autoläge** så "
              "köper och säljer roboten själv medan sidan är öppen.")
