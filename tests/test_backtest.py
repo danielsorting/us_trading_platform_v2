@@ -84,3 +84,11 @@ def test_parking_follows_index_when_robot_is_idle(bars):
     spy = (mkt.Close.iloc[-1] / mkt.Close.iloc[0] - 1) * 100
     assert off["total_return_pct"] == 0
     assert abs(on["total_return_pct"] - spy) < 1.5
+
+
+def test_split_returns_from_one_equity_curve():
+    import pandas as pd
+    from trading_platform.backtest import split_returns
+    eq = pd.Series([100, 110, 120, 108, 132], index=pd.date_range("2024-01-01", periods=5))
+    a, b = split_returns(eq, pd.Timestamp("2024-01-03"), 100)
+    assert a == 20.0 and b == 10.0   # 100 → 120 (+20 %), sedan 120 → 132 (+10 %)

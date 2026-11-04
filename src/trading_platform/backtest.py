@@ -278,6 +278,18 @@ def per_year(total_pct, start, end):
     return round(((1 + total_pct / 100) ** (1 / years) - 1) * 100, 1)
 
 
+def split_returns(equity, cut, start_capital):
+    """Testdel och kontrolldel ur EN körning: avkastning före och efter tidpunkten `cut`.
+    (Tre gånger snabbare än att köra testdel och kontrolldel som egna backtest.)"""
+    if equity is None or not len(equity) or cut is None:
+        return None, None
+    before = equity[equity.index <= cut]
+    mid = float(before.iloc[-1]) if len(before) else float(start_capital)
+    a = round((mid / float(start_capital) - 1) * 100, 2)
+    b = round((float(equity.iloc[-1]) / mid - 1) * 100, 2) if mid else None
+    return a, b
+
+
 def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, split=0.7, benchmark=None):
     """Jämför flera strategier på samma aktier.
 
@@ -301,7 +313,8 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
     enriched = enrich_all(bars_by_symbol)
     for name, strat in strategies.items():
         prep = _prepare(bars_by_symbol, strat, enriched)
-        full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, prepared=prep)["stats"]
+        res_full = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, prepared=prep)
+        full = res_full["stats"]
         row = {"Strategi": name, "Avkastning %": full["total_return_pct"],
                "Per år %": per_year(full["total_return_pct"], first, times[-1]),
                "S&P 500 %": bench,
@@ -310,11 +323,10 @@ def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, s
                "Vinstandel %": full["win_rate_pct"], "Snitt R": full["avg_r"],
                "Profit factor": full["profit_factor"], "Största nedgång %": full["max_drawdown_pct"]}
         if cut is not None:
-            a = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=first, end=cut, prepared=prep)["stats"]
-            b = run_backtest(bars_by_symbol, strat, capital_usd, settings, start=cut, prepared=prep)["stats"]
-            row["Testdel %"] = a["total_return_pct"]
-            row["Kontrolldel %"] = b["total_return_pct"]
-            row["Håller i kontroll?"] = "ja" if (a["total_return_pct"] > 0 and b["total_return_pct"] > 0) else "nej"
+            ta, tb = split_returns(res_full["equity"], cut, capital_usd)
+            row["Testdel %"] = ta
+            row["Kontrolldel %"] = tb
+            row["Håller i kontroll?"] = "ja" if (ta is not None and tb is not None and ta > 0 and tb > 0) else "nej"
         row["Testperiod"] = f"{first:%Y-%m-%d} – {times[-1]:%Y-%m-%d}"
         rows.append(row)
     return pd.DataFrame(rows).sort_values("Avkastning %", ascending=False).reset_index(drop=True)
@@ -368,10 +380,11 @@ def find_best(bars_by_symbol, strategies, capital_usd, settings=None, benchmark=
         prep = _prepare(bars_by_symbol, strat, enriched)
         for risk in risk_levels:
             s = replace(settings, risk_per_trade_pct=risk)
-            full = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, prepared=prep)["stats"]
-            a = (run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, end=cut, prepared=prep)["stats"]
-                 if cut else full)
-            b = run_backtest(bars_by_symbol, strat, capital_usd, s, start=cut, prepared=prep)["stats"] if cut else full
+            res = run_backtest(bars_by_symbol, strat, capital_usd, s, start=first, prepared=prep)
+            full = res["stats"]
+            ta, tb = split_returns(res["equity"], cut, capital_usd)
+            a = {"total_return_pct": full["total_return_pct"] if ta is None else ta}
+            b = {"total_return_pct": full["total_return_pct"] if tb is None else tb}
             yearly = per_year(full["total_return_pct"], first, times[-1])
             dd = abs(full["max_drawdown_pct"]) or 0.0
             ok = a["total_return_pct"] > 0 and b["total_return_pct"] > 0 and full["trades"] >= min_trades

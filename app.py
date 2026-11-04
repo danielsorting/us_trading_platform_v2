@@ -223,10 +223,10 @@ def _download_robot_files(minute):
             r = requests.get(ROBOT_RAW + name, params={"t": minute}, timeout=10)
             r.raise_for_status()
             (folder / name).write_bytes(r.content)
-        r = requests.get(ROBOT_RAW.replace("/paper/", "/reports/") + "best_choice.json", params={"t": minute},
-                         timeout=10)
-        if r.ok:
-            (folder / "best_choice.json").write_bytes(r.content)
+        for name in ("best_choice.json", "best_table.csv"):
+            r = requests.get(ROBOT_RAW.replace("/paper/", "/reports/") + name, params={"t": minute}, timeout=10)
+            if r.ok:
+                (folder / name).write_bytes(r.content)
         return str(folder)
     except Exception:
         return None
@@ -616,6 +616,20 @@ with tab_bt:
             bt_default = ",".join(settings.watchlist) if bt_list.startswith("Min bevakningslista") else ""
             bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=68, key=f"bt_syms_{bt_list}"))
     st.caption(bt_help)
+    if strat_name == "__best__":
+        _night = next((f for f in (AUTO_DIR / "best_table.csv", PROJECT_ROOT / "reports" / "best_table.csv")
+                       if f.exists()), None)
+        if _night is not None:
+            try:
+                night = pd.read_csv(_night)
+                with st.expander(f"🌙 Nattens test – klart direkt ({night['Testat'].iloc[0]}, robotens inställningar, "
+                                 "5 år, 300 och 600 mest omsatta)", expanded=True):
+                    st.caption("Samma test som 🏆-knappen, men gjort i natt med alla strategier × risk 0,5/1/2 %. "
+                               "Kör knappen själv bara om du har ändrat något under ⚙️.")
+                    st.dataframe(night.drop(columns=["Testat"], errors="ignore").head(10), width="stretch",
+                                 hide_index=True)
+            except Exception:
+                pass
     bt_status = st.empty()  # förloppet visas här uppe, så du slipper scrolla
     st.caption((f"Test: {'2 år (timgraf)' if hourly_mod else period.replace('y', ' år').replace('mo', ' mån')} · "
                 f"{'300 mest omsatta' if bt_list == LIQUID else bt_list} · startkapital {bt_cap_sek:,.0f} kr · "

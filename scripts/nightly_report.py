@@ -175,6 +175,9 @@ def main():
         allc = allc.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok")
         lines += [md_table(allc.head(10), ["Aktier", "Strategi", "Risk per affär %", "Per år %", "Största nedgång %",
                                            "Affärer", "Testdel %", "Kontrolldel %", "Godkänd", "Poäng"]), ""]
+        REPORTS.mkdir(exist_ok=True)
+        allc.drop(columns=["n"], errors="ignore").head(30).assign(Testat=f"{started:%Y-%m-%d %H:%M} UTC").to_csv(
+            REPORTS / "best_table.csv", index=False)
         best = allc.iloc[0]
         if best["Godkänd"] == "ja":
             choice = {"date": f"{started:%Y-%m-%d}", "swing_variant": best["Strategi"],
