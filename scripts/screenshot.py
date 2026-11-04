@@ -18,15 +18,23 @@ with sync_playwright() as pw:
     page.get_by_text("Inställningar för backtestet").first.click()
     time.sleep(2)
     page.screenshot(path=str(OUT / "1_forval.png"), full_page=False)
-    # Flytta "Max storlek per swingaffär" fem steg åt höger och "Risk" ett steg åt vänster
-    sliders = page.locator(".st-key-bt_maxpct [role='slider']")
-    sliders.first.focus()
-    for _ in range(5):
-        page.keyboard.press("ArrowRight")
-    time.sleep(2)
-    risk = page.locator(".st-key-sb_risk [role='slider']")
-    risk.first.focus()
-    page.keyboard.press("ArrowLeft")
+    (OUT / "page.html").write_text(page.content())
+    # Klasser runt reglagen (för att kunna styla dem)
+    info = page.evaluate("""() => Array.from(document.querySelectorAll("[role='slider']")).map(s => {
+        let chain = []; let e = s;
+        for (let i = 0; i < 9 && e; i++) { chain.push(e.tagName + '.' + (e.className || '').toString().slice(0, 120)
+            + ' ' + (e.getAttribute('data-baseweb') || '') + ' ' + (e.getAttribute('data-testid') || ''));
+            e = e.parentElement; }
+        return chain.join('  <  ');
+    })""")
+    (OUT / "sliders.txt").write_text("\n\n".join(info))
+    # Flytta "Max antal positioner" tre steg åt vänster och "Max storlek per swingaffär" fem steg åt höger
+    for label, key, n in (("Max antal positioner", "ArrowLeft", 3), ("Max storlek per swingaffär", "ArrowRight", 5)):
+        box = page.locator("[data-testid='stSlider']", has_text=label).first
+        box.locator("[role='slider']").first.focus()
+        for _ in range(n):
+            page.keyboard.press(key)
+        time.sleep(2)
     time.sleep(3)
     page.screenshot(path=str(OUT / "2_andrat.png"), full_page=False)
     b.close()

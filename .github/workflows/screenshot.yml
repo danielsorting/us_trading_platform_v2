@@ -21,8 +21,10 @@ jobs:
         run: |
           streamlit run app.py --server.headless true --server.port 8501 > streamlit.log 2>&1 &
           for i in $(seq 1 60); do curl -s localhost:8501/_stcore/health && break; sleep 2; done
-          python scripts/screenshot.py screens || (tail -50 streamlit.log; exit 1)
+          mkdir -p screens
+          python scripts/screenshot.py screens || (tail -50 streamlit.log; cp streamlit.log screens/; exit 1)
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: screens
           path: screens/
