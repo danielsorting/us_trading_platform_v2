@@ -1,7 +1,7 @@
 """Nattens ÄRLIGA val av strategi (utan facit i efterhand).
 
 Steg 1: varje swing-strategi × risk × ledig kassa i S&P × listans storlek (300/600)
-        testas där listan väljs om varje kvartal utifrån handeln JUST DÅ.
+        testas där listan väljs om varje månad utifrån handeln JUST DÅ.
 Steg 2: de 5 bästa + Daniels förval testas på 10 slumpade delar av aktierna.
 Valet: bäst poäng (avkastning per år / största nedgång) bland dem som gick plus på
 minst 8 av 10 listor. Om inget klarar det behåller roboten sitt tidigare val.

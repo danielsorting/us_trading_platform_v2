@@ -1,4 +1,4 @@
-"""Test UTAN facit i efterhand: roboten får varje kvartal bara välja bland de 300
+"""Test UTAN facit i efterhand: roboten får varje månad bara välja bland de 300
 aktier som var mest omsatta JUST DÅ (inte i dag). Jämförs med det vanliga testet
 (dagens 300 mest omsatta) och med S&P 500.
 
@@ -51,7 +51,7 @@ log(f"Fick kurser för {len(raw)} aktier.")
 members = pit_members(raw, n=300)
 now_set = today_members(raw, n=300)
 ever = set().union(*[m for _, m in members]) | now_set
-log(f"{len(members)} kvartal. {len(ever)} olika aktier har någon gång varit bland de 300 mest omsatta.")
+log(f"{len(members)} månader. {len(ever)} olika aktier har någon gång varit bland de 300 mest omsatta.")
 bars = {k: add_market(raw[k], spy) for k in ever}
 times = sorted(set().union(*[b.index for b in bars.values()]))
 q0 = pd.Timestamp(members[0][0])
@@ -75,7 +75,7 @@ spy_dd = ((spy_c / spy_c.cummax()) - 1).min() * 100
 print(f"\nInställning: {VAR}, risk {s.risk_per_trade_pct} %, max {s.max_position_pct_of_strategy_capital:.0f} %")
 print(f"Period: {pd.Timestamp(start).date()} – {pd.Timestamp(times[-1]).date()} ({years:.1f} år)\n")
 tab = pd.DataFrame([
-    {"Test": "UTAN facit (lista vald varje kvartal)", "Totalt %": pit["stats"]["total_return_pct"],
+    {"Test": "UTAN facit (lista vald varje månad)", "Totalt %": pit["stats"]["total_return_pct"],
      "Per år %": round(per_year(pit["stats"]), 1), "Största nedgång %": pit["stats"]["max_drawdown_pct"],
      "Affärer": pit["stats"]["trades"]},
     {"Test": "MED facit (dagens 300, som vanligt)", "Totalt %": hind["stats"]["total_return_pct"],
@@ -105,7 +105,7 @@ print("\nObs: avnoterade bolag saknas hos Yahoo, så även testet utan facit är
 
 if "--alla" in sys.argv:
     from trading_platform.strategies.variants import daily_variants
-    print("\nALLA strategier, UTAN facit (lista vald varje kvartal):")
+    print("\nALLA strategier, UTAN facit (lista vald varje månad):")
     allowed = make_allowed(members)
     out = []
     for name, mod in daily_variants().items():

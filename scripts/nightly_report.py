@@ -156,7 +156,7 @@ def main():
 
     # ---------------- automatiskt val för roboten – ÄRLIGT test (utan facit i efterhand)
     lines += ["## Robotens automatiska val (ärligt test, utan facit)", "",
-              "Listan med mest omsatta aktier väljs om **varje kvartal** utifrån handeln just då – inte dagens "
+              "Listan med mest omsatta aktier väljs om **varje månad** utifrån handeln just då – inte dagens "
               "lista. Steg 1: alla swing-strategier × risk 1/2 % × ledig kassa i S&P 500 (ja/nej) × 300/600 aktier. "
               "Steg 2: de 5 bästa + ditt förval testas på 10 slumpade delar av aktierna. Bäst poäng (avkastning "
               "per år / största nedgång) bland dem som gick plus på minst 8 av 10 listor vinner.", ""]

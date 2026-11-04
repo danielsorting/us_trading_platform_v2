@@ -2,8 +2,8 @@
 
 Vanliga backtester väljer bland aktierna som är mest omsatta I DAG. Men aktier
 blir ofta mycket omsatta just för att de har gått bra – då vet testet redan
-vilka som blev vinnare. Här väljs listan i stället om varje kvartal, bara utifrån
-handeln de 60 börsdagarna FÖRE kvartalet. Roboten får bara köpa aktier som var
+vilka som blev vinnare. Här väljs listan i stället om varje månad, bara utifrån
+handeln de 60 börsdagarna FÖRE månaden. Roboten får bara köpa aktier som var
 med på listan just då.
 """
 import bisect
@@ -11,8 +11,8 @@ import bisect
 import pandas as pd
 
 
-def pit_members(bars_by_symbol, n=300, lookback=60, min_price=5.0, freq="QS"):
-    """Returnerar [(kvartalets_start, {symboler}), ...] sorterat på tid."""
+def pit_members(bars_by_symbol, n=300, lookback=60, min_price=5.0, freq="MS"):
+    """Returnerar [(periodens_start, {symboler}), ...] sorterat på tid. Standard: ny lista varje månad."""
     closes, dollars = {}, {}
     for sym, b in bars_by_symbol.items():
         if b is None or b.empty or "Volume" not in b:
@@ -32,7 +32,7 @@ def pit_members(bars_by_symbol, n=300, lookback=60, min_price=5.0, freq="QS"):
         before = close.index[close.index < q]
         if len(before) < lookback:
             continue
-        t = before[-1]  # sista börsdagen FÖRE kvartalet – ingen framtida information
+        t = before[-1]  # sista börsdagen FÖRE perioden – ingen framtida information
         ok = close.loc[t] >= min_price
         ranked = avg.loc[t][ok].dropna().sort_values(ascending=False)
         out.append((q, set(ranked.index[:n])))
