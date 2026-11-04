@@ -529,6 +529,16 @@ with tab_auto:
                        f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** aktierna. "
                        f"I testet: {robot_choice['per_year_pct']:+.1f} % per år, största nedgång "
                        f"{robot_choice['max_drawdown_pct']:.0f} %.")
+            y = robot_choice.get("yours")
+            if robot_choice.get("is_yours") or (y and y.get("swing_variant") == robot_settings.swing_variant
+                                               and y.get("risk_per_trade_pct") == robot_settings.risk_per_trade_pct
+                                               and y.get("max_position_pct_of_strategy_capital")
+                                               == robot_settings.max_position_pct_of_strategy_capital):
+                st.info("⭐ Roboten använder **ditt förval** – det var bäst i nattens test.")
+            elif y:
+                st.info(f"⭐ **Ditt förval** testades också i natt: {y['per_year_pct']:+.1f} % per år i snitt "
+                        f"(sämsta lista {y['worst_per_year_pct']:+.1f} %), största nedgång {y['max_drawdown_pct']:.0f} % "
+                        f"– poäng {y['score']} mot robotens val {robot_choice.get('score')}.")
         elif defaults.auto_pick_best:
             st.info("🤖 Automatiskt val är påslaget. Nattrapporten väljer bästa strategi, risk och antal aktier "
                     "i natt – tills dess används inställningarna nedan.")

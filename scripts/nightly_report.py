@@ -202,13 +202,34 @@ def main():
                                              "worst_per_year_pct", "best_per_year_pct", "max_drawdown_pct",
                                              "plus_lists", "score"]), ""]
         best = rob_df.iloc[0] if len(rob_df) else None
+        # Ditt förval (config.json → test_defaults) jämförs alltid med det som väljs.
+        mine = None
+        try:
+            td = json.loads((ROOT / "config.json").read_text()).get("test_defaults", {})
+            m = rob_df[(rob_df["Strategi"] == td.get("swing_variant"))
+                       & (rob_df["Risk %"] == float(td.get("risk_per_trade_pct", 2.0)))
+                       & (rob_df["Max/affär %"] == float(td.get("max_position_pct_of_strategy_capital", 35)))]
+            if len(m):
+                mine = m.sort_values("score", ascending=False).iloc[0]
+                lines += [f"**Ditt förval** ({mine['Strategi']}, risk {mine['Risk %']} %, max {mine['Max/affär %']} %, "
+                          f"{int(mine['Aktier'])} aktier): snitt {mine['per_year_pct']} % per år, sämsta lista "
+                          f"{mine['worst_per_year_pct']} %, största nedgång {mine['max_drawdown_pct']} %, poäng "
+                          f"{mine['score']}.", ""]
+        except Exception:
+            pass
         if best is not None and best["plus_lists"] >= 8 and best["per_year_pct"] > 0:
             choice = {"date": f"{started:%Y-%m-%d}", "swing_variant": best["Strategi"],
                       "risk_per_trade_pct": float(best["Risk %"]), "swing_liquid_n": int(best["Aktier"]),
                       "max_position_pct_of_strategy_capital": float(best["Max/affär %"]),
                       "per_year_pct": float(best["per_year_pct"]), "max_drawdown_pct": float(best["max_drawdown_pct"]),
                       "worst_per_year_pct": float(best["worst_per_year_pct"]), "lists": int(best["lists"]),
-                      "score": float(best["score"])}
+                      "score": float(best["score"]), "is_yours": bool(mine is not None and mine.equals(best))}
+            if mine is not None:
+                choice["yours"] = {"swing_variant": mine["Strategi"], "risk_per_trade_pct": float(mine["Risk %"]),
+                                   "max_position_pct_of_strategy_capital": float(mine["Max/affär %"]),
+                                   "swing_liquid_n": int(mine["Aktier"]), "per_year_pct": float(mine["per_year_pct"]),
+                                   "worst_per_year_pct": float(mine["worst_per_year_pct"]),
+                                   "max_drawdown_pct": float(mine["max_drawdown_pct"]), "score": float(mine["score"])}
             (REPORTS / "best_choice.json").write_text(json.dumps(choice, indent=2, ensure_ascii=False))
             lines += [f"**Valt:** {best['Strategi']}, risk {best['Risk %']} %, max {best['Max/affär %']} % per affär, "
                       f"de {int(best['Aktier'])} mest omsatta – snitt {best['per_year_pct']} % per år på 10 listor "
