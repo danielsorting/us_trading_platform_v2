@@ -132,3 +132,33 @@ datum,typ,lista,strategi,per_ar_pct,avkastning_pct,sp500_pct,storsta_nedgang_pct
 2026-11-04,day,50 mest omsatta,"Day – ORB 30 min, hela dagen",,2.32,-2.46,-4.25,151,
 2026-11-04,day,50 mest omsatta,"Day – ORB hela dagen, lås vinst (mål kvar)",,-0.53,-2.46,-4.9,207,
 2026-11-04,day,50 mest omsatta,"Day – ORB hela dagen, lås vinst (inget mål)",,3.23,-2.46,-4.15,158,
+2026-11-04,swing,Bevakningslistan,Utbrott + marknadsfilter – låt vinnare löpa,25.9,158.68,114.36,-22.79,83,ja
+2026-11-04,swing,Bevakningslistan,Utbrott – låt vinnare löpa,25.0,151.18,114.36,-22.79,84,ja
+2026-11-04,swing,Bevakningslistan,Swing + marknadsfilter + relativ styrka,22.3,129.16,114.36,-22.34,119,ja
+2026-11-04,swing,Bevakningslistan,Swing – grund,20.7,117.34,114.36,-24.86,188,ja
+2026-11-04,swing,Bevakningslistan,"Swing – 5 av 6 (RSI, MACD och botten krävs)",23.9,142.15,114.36,-30.51,140,ja
+2026-11-04,swing,Bevakningslistan,"Swing + marknadsfilter, mål 3R",16.0,84.52,114.36,-26.85,168,ja
+2026-11-04,swing,Bevakningslistan,Swing + marknadsfilter – låt vinnare löpa,18.1,98.27,114.36,-30.54,108,ja
+2026-11-04,swing,Bevakningslistan,Swing + marknadsfilter,14.7,75.95,114.36,-27.15,179,ja
+2026-11-04,swing,Bevakningslistan,Ditt upplägg: +2 % / −2 %,5.4,24.14,114.36,-24.62,426,ja
+2026-11-04,swing,Bevakningslistan,Swing – låt vinnare löpa,12.8,64.02,114.36,-29.24,123,nej
+2026-11-04,swing,100 mest omsatta,Swing – låt vinnare löpa,59.6,586.41,114.36,-29.67,161,ja
+2026-11-04,swing,100 mest omsatta,Utbrott – låt vinnare löpa,68.0,747.61,114.36,-34.65,142,ja
+2026-11-04,swing,100 mest omsatta,Utbrott + marknadsfilter – låt vinnare löpa,51.6,454.8,114.36,-34.5,147,ja
+2026-11-04,swing,100 mest omsatta,Swing + marknadsfilter – låt vinnare löpa,31.4,207.94,114.36,-36.82,174,ja
+2026-11-04,swing,100 mest omsatta,Swing – grund,19.9,110.89,114.36,-38.56,299,ja
+2026-11-04,swing,100 mest omsatta,"Swing + marknadsfilter, mål 3R",17.8,96.29,114.36,-34.36,249,ja
+2026-11-04,swing,100 mest omsatta,Swing + marknadsfilter + relativ styrka,19.8,110.36,114.36,-41.31,236,ja
+2026-11-04,swing,100 mest omsatta,Swing + marknadsfilter,8.5,39.72,114.36,-35.07,276,ja
+2026-11-04,swing,100 mest omsatta,"Swing – 5 av 6 (RSI, MACD och botten krävs)",23.1,135.48,114.36,-39.16,208,nej
+2026-11-04,swing,100 mest omsatta,Ditt upplägg: +2 % / −2 %,-10.1,-35.65,114.36,-47.86,859,nej
+2026-11-04,swing-kort,Bevakningslistan,Swing kort (timgraf) – låt vinnare löpa,12.9,40.17,57.38,-28.3,218,ja
+2026-11-04,swing-kort,Bevakningslistan,"Swing kort (timgraf), mål 2R",11.4,35.06,57.38,-29.64,298,ja
+2026-11-04,swing-kort,100 mest omsatta,Swing kort (timgraf) – låt vinnare löpa,30.4,109.06,57.38,-38.02,271,ja
+2026-11-04,swing-kort,100 mest omsatta,"Swing kort (timgraf), mål 2R",-5.1,-13.47,57.38,-42.14,439,nej
+2026-11-04,day,50 mest omsatta,Day – momentum (nuvarande),,-47.67,-0.65,-49.24,1532,
+2026-11-04,day,50 mest omsatta,Day – ORB 15 min,,-2.75,-0.65,-4.2,89,
+2026-11-04,day,50 mest omsatta,Day – ORB 30 min,,-0.24,-0.65,-3.43,70,
+2026-11-04,day,50 mest omsatta,"Day – ORB 30 min, hela dagen",,-3.61,-0.65,-6.42,149,
+2026-11-04,day,50 mest omsatta,"Day – ORB hela dagen, lås vinst (mål kvar)",,-7.56,-0.65,-9.48,211,
+2026-11-04,day,50 mest omsatta,"Day – ORB hela dagen, lås vinst (inget mål)",,-2.97,-0.65,-7.8,164,

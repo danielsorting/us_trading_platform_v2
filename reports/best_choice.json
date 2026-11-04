@@ -1,13 +1,28 @@
 {
   "date": "2026-11-04",
-  "swing_variant": "Swing – 5 av 6 (RSI, MACD och botten krävs)",
-  "risk_per_trade_pct": 2.0,
+  "swing_variant": "Utbrott + marknadsfilter – låt vinnare löpa",
+  "risk_per_trade_pct": 1.0,
+  "park_idle_in_index": true,
   "swing_liquid_n": 300,
   "max_position_pct_of_strategy_capital": 35.0,
-  "per_year_pct": 36.8,
-  "max_drawdown_pct": -35.9,
-  "worst_per_year_pct": 19.0,
+  "per_year_pct": 12.6,
+  "worst_per_year_pct": 7.0,
+  "max_drawdown_pct": -25.5,
+  "score": 0.49,
   "lists": 10,
-  "score": 1.02,
-  "source": "Daniels backtest, bekräftat i stabilitetstest på 10 aktielistor (vann på 9 av 10)"
+  "honest": true,
+  "sp500_per_year_pct": 13.3,
+  "beats_index": false,
+  "is_yours": false,
+  "yours": {
+    "swing_variant": "Swing – 5 av 6 (RSI, MACD och botten krävs)",
+    "risk_per_trade_pct": 2.0,
+    "park_idle_in_index": false,
+    "swing_liquid_n": 300,
+    "max_position_pct_of_strategy_capital": 35.0,
+    "per_year_pct": -0.3,
+    "worst_per_year_pct": -11.9,
+    "max_drawdown_pct": -44.7,
+    "score": -0.01
+  }
 }
