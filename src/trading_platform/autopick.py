@@ -1,6 +1,7 @@
-"""Robotens automatiska val: nattrapporten testar alla swing-strategier, risknivåer
-(0,5/1/2 %) och antal aktier (100 eller 300 mest omsatta) och sparar den bästa
-godkända kombinationen i reports/best_choice.json. Roboten använder den om
+"""Robotens automatiska val: nattrapporten testar alla swing-strategier ÄRLIGT (utan
+facit i efterhand, se honest.py) med risk 1/2 %, ledig kassa i S&P 500 eller inte och
+de 300 eller 600 mest omsatta, och sparar den bästa godkända kombinationen i
+reports/best_choice.json. Roboten använder den om
 auto_pick_best är påslaget i config.json."""
 import json
 from dataclasses import replace
@@ -35,5 +36,6 @@ def apply(settings, variants, path=CHOICE_FILE, today=None):
     risk = min(float(c.get("risk_per_trade_pct", settings.risk_per_trade_pct)), MAX_RISK_PCT)
     n = int(c.get("swing_liquid_n", settings.swing_liquid_n))
     mx = float(c.get("max_position_pct_of_strategy_capital", settings.max_position_pct_of_strategy_capital))
+    park = bool(c.get("park_idle_in_index", settings.park_idle_in_index))
     return replace(settings, swing_variant=c["swing_variant"], risk_per_trade_pct=risk, swing_liquid_n=n,
-                   max_position_pct_of_strategy_capital=mx), c
+                   max_position_pct_of_strategy_capital=mx, park_idle_in_index=park), c

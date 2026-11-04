@@ -562,9 +562,15 @@ with tab_auto:
         if robot_choice:
             st.success(f"🤖 **Väljs automatiskt varje natt.** Senaste val ({robot_choice['date']}): "
                        f"**{robot_settings.swing_variant}**, risk **{robot_settings.risk_per_trade_pct:g} %** per "
-                       f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** aktierna. "
-                       f"I testet: {robot_choice['per_year_pct']:+.1f} % per år, största nedgång "
-                       f"{robot_choice['max_drawdown_pct']:.0f} %.")
+                       f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** aktierna, ledig kassa i "
+                       f"S&P 500: **{'ja' if robot_settings.park_idle_in_index else 'nej'}**. "
+                       f"I {'det ärliga testet (utan facit)' if robot_choice.get('honest') else 'testet'}: "
+                       f"{robot_choice['per_year_pct']:+.1f} % per år, största nedgång "
+                       f"{robot_choice['max_drawdown_pct']:.0f} %."
+                       + (f" S&P 500 samma period: {robot_choice['sp500_per_year_pct']:+.1f} % per år."
+                          if robot_choice.get("sp500_per_year_pct") is not None else ""))
+            if robot_choice.get("honest") and not robot_choice.get("beats_index"):
+                st.warning("⚠️ Den bästa strategin slog **inte** indexfonden S&P 500 i nattens ärliga test.")
             y = robot_choice.get("yours")
             if robot_choice.get("is_yours") or (y and y.get("swing_variant") == robot_settings.swing_variant
                                                and y.get("risk_per_trade_pct") == robot_settings.risk_per_trade_pct

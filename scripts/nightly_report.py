@@ -154,86 +154,59 @@ def main():
     else:
         lines += ["Hoppades över (ingen data).", ""]
 
-    # ---------------- automatiskt val för roboten (strategi + risk + max storlek + antal aktier)
-    lines += ["## Robotens automatiska val", "",
-              "Steg 1: alla swing-strategier × risk 0,5/1/2 % på de 300 och 600 mest omsatta (5 år). "
-              "Steg 2 (stabilitetstest): de 5 bästa + ditt förval körs på **10 slumpade aktielistor** med max "
-              "35 % och 70 % per affär. Bäst snittpoäng (avkastning per år / största nedgång) vinner – så att "
-              "valet inte bygger på tur med en enda lista.", ""]
+    # ---------------- automatiskt val för roboten – ÄRLIGT test (utan facit i efterhand)
+    lines += ["## Robotens automatiska val (ärligt test, utan facit)", "",
+              "Listan med mest omsatta aktier väljs om **varje kvartal** utifrån handeln just då – inte dagens "
+              "lista. Steg 1: alla swing-strategier × risk 1/2 % × ledig kassa i S&P 500 (ja/nej) × 300/600 aktier. "
+              "Steg 2: de 5 bästa + ditt förval testas på 10 slumpade delar av aktierna. Bäst poäng (avkastning "
+              "per år / största nedgång) bland dem som gick plus på minst 8 av 10 listor vinner.", ""]
     try:
-        from trading_platform.robust import robust_score, with_setup  # noqa: E402
-        cand, bars_n = [], {}
-        for n in (300, 600):
-            syms = liquid[:n]
-            if len(syms) < n * 0.9:
-                continue  # Yahoo gav inte så många
-            bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
-            bars_n[n] = bars
-            df = find_best(bars, daily_variants(), swing_cap, s, benchmark=spy5.Close, risk_levels=(0.5, 1.0, 2.0))
-            df.insert(0, "Aktier", f"{n} mest omsatta")
-            df["n"] = n
-            cand.append(df)
-        allc = pd.concat(cand, ignore_index=True)
-        allc["_ok"] = allc["Godkänd"] == "ja"
-        allc = allc.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok")
+        import re
+        from trading_platform import honest
+        from trading_platform.universe import load_us_equity_symbols
+        rows_u = load_us_equity_symbols()
+        bad = re.compile(r"warrant|unit|right|preferred|notes|debenture|%", re.I)
+        all_syms = [x for x, nm in zip(rows_u["symbol"], rows_u["name"].astype(str))
+                    if "." not in x and "-" not in x and not bad.search(nm)]
+        spy6 = p.history("SPY", "6y", "1d")
+        raw = {k: v for k, v in p.history_many(all_syms, "6y", "1d", chunk=200).items()
+               if v is not None and len(v) > 80}
+        prep = honest.prepare(raw, (300, 600))
+        prep = {n: ({k: add_market(v, spy6) for k, v in bars.items()}, mem) for n, (bars, mem) in prep.items()}
+        td = json.loads((ROOT / "config.json").read_text()).get("test_defaults", {})
+        s1, s2, best, mine = honest.choose(prep, daily_variants(), swing_cap, s, yours=td)
+        bars300, mem300 = prep[min(prep)]
+        start, years = honest.start_time(bars300, mem300)
+        sc = spy6["Close"][spy6.index >= start]
+        spy_py = round(((sc.iloc[-1] / sc.iloc[0]) ** (1 / years) - 1) * 100, 1)
         REPORTS.mkdir(exist_ok=True)
-        allc.drop(columns=["n"], errors="ignore").head(30).assign(Testat=f"{started:%Y-%m-%d %H:%M} UTC").to_csv(
-            REPORTS / "best_table.csv", index=False)
-        # Steg 2: stabilitetstest
-        tops = [(r["Strategi"], float(r["Risk per affär %"]), int(r["n"]))
-                for _, r in allc[allc["Godkänd"] == "ja"].head(5).iterrows()]
-        try:
-            td = json.loads((ROOT / "config.json").read_text()).get("test_defaults", {})
-            if td.get("swing_variant") in daily_variants():
-                for n in bars_n:
-                    tops.append((td["swing_variant"], float(td.get("risk_per_trade_pct", 2.0)), n))
-        except Exception:
-            pass
-        tops = list(dict.fromkeys(tops))
-        rob = []
-        for strat, risk, n in tops:
-            for mx in (35, 70):
-                r = robust_score(bars_n[n], daily_variants()[strat], swing_cap, with_setup(s, risk, mx))
-                if r:
-                    rob.append({"Aktier": n, "Strategi": strat, "Risk %": risk, "Max/affär %": mx, **r})
-        rob_df = pd.DataFrame(rob).sort_values("score", ascending=False)
-        lines += ["### Stabilitetstest (10 aktielistor per rad)", "",
-                  md_table(rob_df.head(10), ["Aktier", "Strategi", "Risk %", "Max/affär %", "per_year_pct",
-                                             "worst_per_year_pct", "best_per_year_pct", "max_drawdown_pct",
-                                             "plus_lists", "score"]), ""]
-        best = rob_df.iloc[0] if len(rob_df) else None
-        # Ditt förval (config.json → test_defaults) jämförs alltid med det som väljs.
-        mine = None
-        try:
-            td = json.loads((ROOT / "config.json").read_text()).get("test_defaults", {})
-            m = rob_df[(rob_df["Strategi"] == td.get("swing_variant"))
-                       & (rob_df["Risk %"] == float(td.get("risk_per_trade_pct", 2.0)))
-                       & (rob_df["Max/affär %"] == float(td.get("max_position_pct_of_strategy_capital", 35)))]
-            if len(m):
-                mine = m.sort_values("score", ascending=False).iloc[0]
-                lines += [f"**Ditt förval** ({mine['Strategi']}, risk {mine['Risk %']} %, max {mine['Max/affär %']} %, "
-                          f"{int(mine['Aktier'])} aktier): snitt {mine['per_year_pct']} % per år, sämsta lista "
-                          f"{mine['worst_per_year_pct']} %, största nedgång {mine['max_drawdown_pct']} %, poäng "
-                          f"{mine['score']}.", ""]
-        except Exception:
-            pass
-        if best is not None and best["plus_lists"] >= 8 and best["per_year_pct"] > 0:
-            choice = {"date": f"{started:%Y-%m-%d}", "swing_variant": best["Strategi"],
-                      "risk_per_trade_pct": float(best["Risk %"]), "swing_liquid_n": int(best["Aktier"]),
-                      "max_position_pct_of_strategy_capital": float(best["Max/affär %"]),
-                      "per_year_pct": float(best["per_year_pct"]), "max_drawdown_pct": float(best["max_drawdown_pct"]),
-                      "worst_per_year_pct": float(best["worst_per_year_pct"]), "lists": int(best["lists"]),
-                      "score": float(best["score"]), "is_yours": bool(mine is not None and mine.equals(best))}
+        s1.head(30).assign(Testat=f"{started:%Y-%m-%d %H:%M} UTC").to_csv(REPORTS / "best_table.csv", index=False)
+        lines += [f"{len(raw)} aktier hämtade. S&P 500 samma period: **{spy_py} % per år**.", "",
+                  "### Steg 1 (topp 10)", "", md_table(s1.head(10), list(s1.columns)), "",
+                  "### Steg 2: stabilitetstest (10 listor per rad)", "",
+                  md_table(s2, ["Aktier", "Strategi", "Risk %", "Kassa i S&P", "per_year_pct", "worst_per_year_pct",
+                                "max_drawdown_pct", "plus_lists", "score"]), ""]
+
+        def pack(r):
+            return {"swing_variant": r["Strategi"], "risk_per_trade_pct": float(r["Risk %"]),
+                    "park_idle_in_index": bool(r["Kassa i S&P"]), "swing_liquid_n": int(r["Aktier"]),
+                    "max_position_pct_of_strategy_capital": float(s.max_position_pct_of_strategy_capital),
+                    "per_year_pct": float(r["per_year_pct"]), "worst_per_year_pct": float(r["worst_per_year_pct"]),
+                    "max_drawdown_pct": float(r["max_drawdown_pct"]), "score": float(r["score"])}
+        if mine is not None:
+            lines += [f"**Ditt förval** ({mine['Strategi']}, risk {mine['Risk %']} %): {mine['per_year_pct']} % per år, "
+                      f"största nedgång {mine['max_drawdown_pct']} %, poäng {mine['score']}.", ""]
+        if best is not None:
+            choice = {"date": f"{started:%Y-%m-%d}", **pack(best), "lists": int(best["lists"]),
+                      "honest": True, "sp500_per_year_pct": spy_py,
+                      "beats_index": bool(best["per_year_pct"] > spy_py),
+                      "is_yours": bool(mine is not None and mine.equals(best))}
             if mine is not None:
-                choice["yours"] = {"swing_variant": mine["Strategi"], "risk_per_trade_pct": float(mine["Risk %"]),
-                                   "max_position_pct_of_strategy_capital": float(mine["Max/affär %"]),
-                                   "swing_liquid_n": int(mine["Aktier"]), "per_year_pct": float(mine["per_year_pct"]),
-                                   "worst_per_year_pct": float(mine["worst_per_year_pct"]),
-                                   "max_drawdown_pct": float(mine["max_drawdown_pct"]), "score": float(mine["score"])}
+                choice["yours"] = pack(mine)
             (REPORTS / "best_choice.json").write_text(json.dumps(choice, indent=2, ensure_ascii=False))
-            lines += [f"**Valt:** {best['Strategi']}, risk {best['Risk %']} %, max {best['Max/affär %']} % per affär, "
-                      f"de {int(best['Aktier'])} mest omsatta – snitt {best['per_year_pct']} % per år på 10 listor "
-                      f"(sämsta {best['worst_per_year_pct']} %), största nedgång {best['max_drawdown_pct']} %.", ""]
+            lines += [f"**Valt:** {best['Strategi']}, risk {best['Risk %']} %, ledig kassa i S&P: "
+                      f"{'ja' if best['Kassa i S&P'] else 'nej'}, de {int(best['Aktier'])} mest omsatta – "
+                      f"{best['per_year_pct']} % per år (S&P 500: {spy_py} %).", ""]
         else:
             lines += ["Ingen kombination var stabil nog (plus på minst 8 av 10 listor) – roboten behåller sitt "
                       "tidigare val.", ""]
