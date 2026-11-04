@@ -70,8 +70,10 @@ def _values(w):
         lo = w.min if w.min is not None else w.value
         return [lo, (w.value or 0) * 10, w.value]
     if kind in ("SelectSlider", "Selectbox", "Radio"):
-        opts = list(w.options)
-        return opts + [w.value]
+        # Index i listan (visade texter kan vara omformaterade, t.ex. "5:e minut").
+        n = len(list(w.options))
+        cur = getattr(w, "index", None)
+        return [("idx", i) for i in range(n)] + ([("idx", cur)] if cur is not None else [])
     if kind == "Checkbox":
         return [not w.value, w.value]
     return []
@@ -81,10 +83,25 @@ def _set(w, v):
     kind = type(w).__name__
     if kind == "Checkbox":
         w.check() if v else w.uncheck()
-    elif kind in ("Selectbox", "Radio", "SelectSlider"):
-        w.set_value(v)
+    elif isinstance(v, tuple) and v and v[0] == "idx":
+        i = v[1]
+        if kind == "Selectbox":
+            w.select_index(i)
+        else:  # Radio / SelectSlider: välj värdet på plats i
+            opts = list(w.options)
+            vals = getattr(w, "_original_options", None) or opts
+            w.set_value(vals[i] if kind == "Radio" else _raw_option(w, i))
     else:
         w.set_value(v)
+
+
+def _raw_option(w, i):
+    """SelectSlider: underliggande värde på plats i (t.ex. 0.5 för risk)."""
+    opts = list(w.options)
+    try:
+        return type(w.value)(opts[i])
+    except Exception:
+        return opts[i]
 
 
 def test_every_setting_on_every_tab():
@@ -116,7 +133,10 @@ def test_all_settings_at_extremes_together():
                 continue
             vals = [v for v in _values(w) if v is not None]
             try:
-                _set(w, pick(vals) if type(w).__name__ == "Slider" else (vals[0] if pick is min else vals[-2]))
+                if type(w).__name__ == "Slider":
+                    _set(w, pick([w.min, w.max]))
+                else:
+                    _set(w, ("idx", 0 if pick is min else len(list(w.options)) - 1))
             except Exception:
                 continue
         at.run()
