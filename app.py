@@ -537,12 +537,12 @@ with tab_bt:
         period, interval = data_for(module, backtest=True)
         st.caption("Kort swing använder timgraf. Yahoo har timdata cirka 2 år bakåt, så testet gäller 2 år.")
     elif getattr(module, "NAME", "") != "day":
-        period = st.select_slider("Period", ["1y", "2y", "5y", "10y"], value="5y",
-                                  format_func=lambda p: p.replace("y", " år"))
+        _per = {"1 år": "1y", "2 år": "2y", "5 år": "5y", "10 år": "10y"}
+        period = _per[st.select_slider("Period", list(_per), value="5 år")]
         interval = "1d"
     else:
-        period = st.select_slider("Period", ["5d", "1mo", "60d"], value="60d",
-                                  format_func=lambda p: {"5d": "5 dagar", "1mo": "1 månad", "60d": "60 dagar"}[p])
+        _per = {"5 dagar": "5d", "1 månad": "1mo", "60 dagar": "60d"}
+        period = _per[st.select_slider("Period", list(_per), value="60 dagar")]
         interval = "5m"
         st.caption("Yahoo har bara 5-minutersdata cirka 60 dagar bakåt, så daytrading kan bara testas på kort period.")
     bt_list = st.radio("Aktielista", [LIQUID, "Min bevakningslista (30 stora + IREN, NBIS)", "Egen lista"],
@@ -845,7 +845,8 @@ with tab_paper:
                         help="Kör handelsrundan automatiskt under börsens öppettider. Fungerar bara så länge "
                              "den här sidan är öppen. Bakgrundsroboten på GitHub gör samma sak även när datorn är "
                              "avstängd (fliken 🤖 Automatisk handel).")
-    auto_every = a2.selectbox("Handelsrunda var", [5, 10, 15], key="auto_every", format_func=lambda m: f"{m}:e minut")
+    _every = {"5:e minut": 5, "10:e minut": 10, "15:e minut": 15}
+    auto_every = _every[a2.selectbox("Handelsrunda var", list(_every), key="auto_every_txt")]
     st.caption("Varje runda: kontrollerar alla positioner (stop loss, kursmål, dagens slut) och köper nya. "
                "Daytrading granskar alla 300 varje runda. Swing söker nytt var 30:e minut (dagsdata ändras långsamt).")
 

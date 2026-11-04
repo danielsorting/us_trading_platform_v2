@@ -92,7 +92,8 @@ traded = list(dict.fromkeys(o["symbol"] for o in reversed(orders) if o.get("stra
 choices = list(dict.fromkeys(open_syms + traded + list(settings.watchlist)))
 labels = {s: (f"{s}  · öppen ({positions[s].get('strategy')})" if s in open_syms
               else f"{s}  · handlad" if s in traded else s) for s in choices}
-symbol = c2.selectbox("Aktie", choices, format_func=lambda s: labels[s]) if choices else None
+_by_label = {labels[s]: s for s in choices}
+symbol = _by_label[c2.selectbox("Aktie", list(_by_label))] if choices else None
 custom = c2.text_input("…eller skriv ett kortnamn", "", placeholder="t.ex. TSLA").strip().upper()
 if custom:
     symbol = custom
