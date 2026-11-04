@@ -284,3 +284,12 @@ tid,typ,symbol,action,detail
 2026-11-04 20:50,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-04 20:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 291 aktier: 8 köpkandidater (AAPL, CNC, MSFT, OSCR, VRDN, W, XYZ, ZBH). Närmast: ACN (5/6), ARRY (5/6), BRKR (5/6), CL (5/6), CPNG (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
 2026-11-04 20:55,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 21:00,swing,,swing-sökning,"Granskade 291 aktier: 7 köpkandidater (AAPL, CNC, MSFT, OSCR, W, XYZ, ZBH). Närmast: ACN (5/6), ARRY (5/6), BRKR (5/6), CL (5/6), CPNG (5/6)."
+2026-11-04 21:00,swing,AAPL,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,swing,CNC,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,swing,OSCR,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,swing,W,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,swing,XYZ,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,209 av 8,192 USD)."
+2026-11-04 21:00,day,ABT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Spinal cord stimulator lawsuits surge: what is going wrong?"" (nyhetspoäng -4)."
+2026-11-04 21:00,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
