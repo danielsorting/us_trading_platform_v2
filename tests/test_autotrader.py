@@ -148,3 +148,25 @@ def test_premarket_and_afterhours_swing(tmp_path, provider):
             return {s: (90.0, None) for s in symbols}         # rasar i efterhandeln
     ev = tick(Q(), b, s, state, [], now_ny=datetime(2026, 11, 3, 16, 10, tzinfo=NY))
     assert "AAA" not in b.positions and any("stop loss" in e["detail"] for e in ev)
+
+
+def test_day_trade_sold_in_swing_round_is_labelled_day(tmp_path, provider):
+    """21:50-stängningen sker ofta i swing-rundan – den ska ändå loggas som daytrade
+    (och ge INGEN 'Swing-sälj'-notis i mobilen)."""
+    from trading_platform.notify import messages_for
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    b.submit_order("AAPL", "buy", 1, price=100, strategy="day")
+    ev = tick(provider(), b, settings(), {}, ["S1", "S2"], now_ny=datetime(2026, 11, 3, 15, 52, tzinfo=NY))
+    sells = [e for e in ev if e["action"] == "SÄLJ" and e["symbol"] == "AAPL"]
+    assert len(sells) == 1 and sells[0]["typ"] == "day"
+    assert "AAPL" not in b.positions
+    assert not any("AAPL" in title for title, _ in messages_for(ev))
+    assert all("strategy" not in e for e in ev)  # loggen har samma kolumner som förut
+
+
+def test_buy_and_sell_actions_carry_strategy(tmp_path):
+    from trading_platform.paper_trader import close_all_day_positions
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    b.submit_order("AAPL", "buy", 1, price=100, strategy="day")
+    acts = close_all_day_positions(b, {"AAPL": 101})
+    assert acts[0]["action"] == "SÄLJ" and acts[0]["strategy"] == "day"

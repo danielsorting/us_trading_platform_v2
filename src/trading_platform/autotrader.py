@@ -292,7 +292,12 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
             if a.get("action") != "inget att göra":
                 typ = "park" if ("parkering" in a.get("action", "") or a.get("symbol") == settings.park_symbol) \
                     else kind
-                events.append({"tid": stamp, "typ": typ, **a})
+                # Ett köp/sälj märks med affärens egen strategi. Swing-rundan kontrollerar stop/mål
+                # för ALLA positioner, så en daytrade kan säljas där – den ska ändå heta "day"
+                # (annars kom felaktiga "Swing-sälj"-notiser i mobilen för daytrades).
+                if a.get("action") in ("KÖP", "SÄLJ") and a.get("strategy") in ("day", "swing", "park"):
+                    typ = a["strategy"]
+                events.append({"tid": stamp, "typ": typ, **{k: v for k, v in a.items() if k != "strategy"}})
 
     phase_now = None if is_open else extended_phase(now_ny)
     if is_open or (phase_now and getattr(settings, "extended_hours_swing", False)):

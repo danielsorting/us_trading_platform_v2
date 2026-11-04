@@ -109,7 +109,8 @@ def close_all_day_positions(broker, prices, reason="stängd manuellt"):
             actions.append({"symbol": sym, "action": "ingen kurs", "detail": "Kunde inte stänga – kurs saknas."})
             continue
         order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason, strategy="day")
-        actions.append({"symbol": sym, "action": "SÄLJ", "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
+        actions.append({"symbol": sym, "action": "SÄLJ", "strategy": "day",
+                        "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
     return actions
 
 
@@ -156,7 +157,8 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
         if reason:
             order = broker.submit_order(sym, "sell", pos["quantity"], price=price, reason=reason,
                                         strategy=pos.get("strategy"), slippage_pct=slippage_pct)
-            actions.append({"symbol": sym, "action": "SÄLJ", "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
+            actions.append({"symbol": sym, "action": "SÄLJ", "strategy": pos.get("strategy"),
+                            "detail": f"{reason}, resultat {order['pnl']:+.2f} USD"})
 
     # 2) Köp.
     held = broker.get_positions()
@@ -221,7 +223,7 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
             broker.submit_order(sym, "buy", qty, price=price, stop=stop, target=target, strategy=strat,
                                 trail_atr=row.get("trail_atr"), atr=row.get("atr"), slippage_pct=slippage_pct)
             held = broker.get_positions()
-            actions.append({"symbol": sym, "action": "KÖP",
+            actions.append({"symbol": sym, "action": "KÖP", "strategy": strat,
                             "detail": f"{qty} st à {price:.2f} USD ({strat}), stop {stop:.2f}"})
         except ValueError as e:
             actions.append({"symbol": sym, "action": "hoppar över", "detail": str(e)})
