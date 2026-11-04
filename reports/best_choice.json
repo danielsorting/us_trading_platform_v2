@@ -1,9 +1,9 @@
 {
   "date": "2026-11-04",
-  "swing_variant": "Utbrott – låt vinnare löpa",
+  "swing_variant": "Utbrott + marknadsfilter – låt vinnare löpa",
   "risk_per_trade_pct": 1.0,
   "swing_liquid_n": 300,
-  "per_year_pct": 38.3,
-  "max_drawdown_pct": -24.58,
-  "score": 1.56
+  "per_year_pct": 42.2,
+  "max_drawdown_pct": -26.17,
+  "score": 1.61
 }

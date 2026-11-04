@@ -1,6 +1,6 @@
 # Nattrapport 2026-11-04
 
-Skapad 2026-11-04 09:16 UTC med riktiga kurser från Yahoo. Inställningar: kapital 100,000 SEK, risk 2.0 % per affär, max 8 positioner, max 70 % per position, parkering i SPY: på. USD/SEK 9.73.
+Skapad 2026-11-04 09:31 UTC med riktiga kurser från Yahoo. Inställningar: kapital 100,000 SEK, risk 2.0 % per affär, max 8 positioner, max 70 % per position, parkering i SPY: på. USD/SEK 9.73.
 
 ## Swingtrading (5 år, dagsdata)
 
@@ -8,31 +8,31 @@ Skapad 2026-11-04 09:16 UTC med riktiga kurser från Yahoo. Inställningar: kapi
 
 | Strategi | Per år % | Avkastning % | S&P 500 % | Slår S&P 500? | Största nedgång % | Affärer | Vinstandel % | Testdel % | Kontrolldel % | Godkänd | Poäng |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Swing + marknadsfilter + relativ styrka | 24.7 | 148.34 | 110.53 | ja | -22.41 | 109 | 45.0 | 104.58 | 14.09 | ja | 1.1 |
-| Utbrott + marknadsfilter – låt vinnare löpa | 24.1 | 143.69 | 110.53 | ja | -23.57 | 69 | 36.2 | 132.72 | 9.09 | ja | 1.02 |
-| Utbrott – låt vinnare löpa | 21.9 | 125.96 | 110.53 | ja | -23.41 | 70 | 37.1 | 115.11 | 9.09 | ja | 0.94 |
-| Swing – grund | 12.6 | 62.82 | 110.53 | nej | -29.0 | 157 | 40.1 | 61.29 | 3.48 | ja | 0.43 |
-| Swing + marknadsfilter | 10.4 | 50.52 | 110.53 | nej | -29.54 | 146 | 39.0 | 48.83 | 3.52 | ja | 0.35 |
-| Swing – 5 av 6 (RSI, MACD och botten krävs) | 13.0 | 65.66 | 110.53 | nej | -37.93 | 134 | 34.3 | 91.12 | 0.48 | ja | 0.34 |
-| Swing + marknadsfilter, mål 3R | 8.6 | 40.33 | 110.53 | nej | -29.59 | 139 | 36.7 | 48.26 | 3.45 | ja | 0.29 |
-| Ditt upplägg: +2 % / −2 % | 4.9 | 21.7 | 110.53 | nej | -21.54 | 278 | 50.7 | 7.13 | 14.64 | ja | 0.23 |
-| Swing – låt vinnare löpa | 28.1 | 177.29 | 110.53 | ja | -29.45 | 105 | 41.0 | 119.12 | -8.61 | nej | 0.95 |
-| Swing + marknadsfilter – låt vinnare löpa | 10.9 | 52.94 | 110.53 | nej | -36.74 | 106 | 30.2 | 81.59 | -8.83 | nej | 0.3 |
+| Swing + marknadsfilter + relativ styrka | 24.7 | 148.52 | 110.53 | ja | -22.41 | 109 | 45.0 | 104.32 | 21.63 | ja | 1.1 |
+| Utbrott + marknadsfilter – låt vinnare löpa | 24.1 | 143.67 | 110.53 | ja | -23.58 | 69 | 36.2 | 130.92 | 5.52 | ja | 1.02 |
+| Swing – låt vinnare löpa | 28.1 | 177.36 | 110.53 | ja | -29.45 | 105 | 41.0 | 120.34 | 25.88 | ja | 0.95 |
+| Utbrott – låt vinnare löpa | 21.9 | 126.14 | 110.53 | ja | -23.36 | 70 | 37.1 | 113.47 | 5.94 | ja | 0.94 |
+| Ditt upplägg: +2 % / −2 % | 5.4 | 24.16 | 110.53 | nej | -21.37 | 277 | 50.9 | 7.94 | 15.02 | ja | 0.25 |
+| Swing – grund | 13.1 | 66.27 | 110.53 | nej | -30.07 | 159 | 40.9 | 69.75 | -2.06 | nej | 0.44 |
+| Swing + marknadsfilter | 10.5 | 50.6 | 110.53 | nej | -29.54 | 146 | 39.0 | 50.75 | -0.1 | nej | 0.36 |
+| Swing – 5 av 6 (RSI, MACD och botten krävs) | 13.1 | 65.82 | 110.53 | nej | -37.92 | 134 | 34.3 | 91.19 | -13.27 | nej | 0.35 |
+| Swing + marknadsfilter – låt vinnare löpa | 10.9 | 53.11 | 110.53 | nej | -36.73 | 106 | 30.2 | 83.81 | -16.71 | nej | 0.3 |
+| Swing + marknadsfilter, mål 3R | 8.6 | 40.6 | 110.53 | nej | -29.6 | 137 | 36.5 | 50.9 | -6.82 | nej | 0.29 |
 
 ### 100 mest omsatta (100 aktier, testperiod 2022-09-21 – 2026-11-03)
 
 | Strategi | Per år % | Avkastning % | S&P 500 % | Slår S&P 500? | Största nedgång % | Affärer | Vinstandel % | Testdel % | Kontrolldel % | Godkänd | Poäng |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Utbrott – låt vinnare löpa | 71.6 | 824.71 | 110.53 | ja | -24.53 | 112 | 40.2 | 283.69 | 144.14 | ja | 2.92 |
-| Utbrott + marknadsfilter – låt vinnare löpa | 64.0 | 667.05 | 110.53 | ja | -22.82 | 117 | 40.2 | 272.06 | 106.38 | ja | 2.8 |
-| Swing + marknadsfilter – låt vinnare löpa | 32.4 | 217.93 | 110.53 | ja | -45.8 | 141 | 31.9 | 71.63 | 61.72 | ja | 0.71 |
-| Swing + marknadsfilter + relativ styrka | 20.0 | 111.97 | 110.53 | ja | -30.33 | 204 | 41.2 | 94.45 | 24.53 | ja | 0.66 |
-| Swing – låt vinnare löpa | 28.1 | 177.31 | 110.53 | ja | -44.39 | 142 | 33.1 | 75.97 | 37.22 | ja | 0.63 |
-| Swing + marknadsfilter, mål 3R | 6.9 | 31.49 | 110.53 | nej | -38.77 | 200 | 39.0 | 85.89 | 21.99 | ja | 0.18 |
-| Swing + marknadsfilter | 22.9 | 133.89 | 110.53 | ja | -36.38 | 226 | 43.8 | 86.97 | -4.61 | nej | 0.63 |
-| Swing – 5 av 6 (RSI, MACD och botten krävs) | 8.5 | 39.67 | 110.53 | nej | -31.23 | 186 | 33.3 | 75.6 | -10.5 | nej | 0.27 |
-| Swing – grund | 9.8 | 47.1 | 110.53 | nej | -42.29 | 246 | 41.9 | 59.79 | -7.93 | nej | 0.23 |
-| Ditt upplägg: +2 % / −2 % | -21.8 | -63.58 | 110.53 | nej | -63.79 | 538 | 50.2 | -48.01 | -32.88 | nej | -0.34 |
+| Utbrott – låt vinnare löpa | 71.6 | 824.42 | 110.53 | ja | -24.53 | 112 | 40.2 | 283.1 | 141.3 | ja | 2.92 |
+| Utbrott + marknadsfilter – låt vinnare löpa | 64.0 | 667.21 | 110.53 | ja | -22.83 | 117 | 40.2 | 271.39 | 106.58 | ja | 2.8 |
+| Swing – låt vinnare löpa | 38.4 | 280.7 | 110.53 | ja | -44.4 | 141 | 36.9 | 77.5 | 114.48 | ja | 0.86 |
+| Swing + marknadsfilter – låt vinnare löpa | 32.4 | 218.03 | 110.53 | ja | -45.82 | 141 | 31.9 | 72.82 | 84.03 | ja | 0.71 |
+| Swing + marknadsfilter + relativ styrka | 20.0 | 112.09 | 110.53 | ja | -30.33 | 204 | 41.2 | 94.61 | 8.98 | ja | 0.66 |
+| Swing + marknadsfilter | 13.2 | 66.66 | 110.53 | nej | -33.67 | 233 | 41.6 | 78.86 | -6.82 | nej | 0.39 |
+| Swing – 5 av 6 (RSI, MACD och botten krävs) | 8.5 | 39.73 | 110.53 | nej | -31.24 | 186 | 33.3 | 75.44 | -20.35 | nej | 0.27 |
+| Swing + marknadsfilter, mål 3R | 9.6 | 45.73 | 110.53 | nej | -37.38 | 202 | 40.6 | 87.52 | -22.29 | nej | 0.26 |
+| Swing – grund | 9.5 | 45.44 | 110.53 | nej | -43.08 | 249 | 41.8 | 61.19 | -9.77 | nej | 0.22 |
+| Ditt upplägg: +2 % / −2 % | -21.7 | -63.45 | 110.53 | nej | -63.65 | 537 | 50.3 | -48.18 | -29.46 | nej | -0.34 |
 
 ## Kort swing (timgraf, ca 2 år)
 
@@ -42,15 +42,15 @@ Samma regler som swing men på timstaplar: trend senaste månaden, rekyl senaste
 
 | Strategi | Per år % | Avkastning % | S&P 500 % | Slår S&P 500? | Största nedgång % | Affärer | Vinstandel % | Testdel % | Kontrolldel % | Godkänd | Poäng |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Swing kort (timgraf) – låt vinnare löpa | -1.6 | -4.44 | 55.95 | nej | -36.09 | 151 | 30.5 | 4.26 | 4.15 | ja | -0.04 |
-| Swing kort (timgraf), mål 2R | 7.0 | 20.77 | 55.95 | nej | -37.08 | 191 | 43.5 | 24.42 | -0.39 | nej | 0.19 |
+| Swing kort (timgraf), mål 2R | -1.3 | -3.66 | 55.95 | nej | -39.21 | 192 | 40.6 | -3.65 | -0.01 | nej | -0.03 |
+| Swing kort (timgraf) – låt vinnare löpa | -2.0 | -5.59 | 55.95 | nej | -36.82 | 151 | 30.5 | 4.02 | -9.23 | nej | -0.05 |
 
 ### 100 mest omsatta (97 aktier, testperiod 2024-01-23 – 2026-11-03)
 
 | Strategi | Per år % | Avkastning % | S&P 500 % | Slår S&P 500? | Största nedgång % | Affärer | Vinstandel % | Testdel % | Kontrolldel % | Godkänd | Poäng |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| Swing kort (timgraf), mål 2R | 9.1 | 27.31 | 55.95 | nej | -31.76 | 314 | 43.3 | 39.64 | 7.94 | ja | 0.29 |
-| Swing kort (timgraf) – låt vinnare löpa | 23.4 | 79.18 | 55.95 | ja | -27.63 | 218 | 41.3 | 95.91 | -1.37 | nej | 0.85 |
+| Swing kort (timgraf) – låt vinnare löpa | 22.9 | 77.42 | 55.95 | ja | -33.38 | 215 | 44.2 | 104.76 | -13.35 | nej | 0.69 |
+| Swing kort (timgraf), mål 2R | 3.8 | 11.03 | 55.95 | nej | -35.44 | 316 | 42.7 | 37.29 | -19.13 | nej | 0.11 |
 
 ## Daytrading (senaste ca 60 dagarna, 5-minutersdata)
 
@@ -58,12 +58,12 @@ Testas som experiment med 20% av kapitalet på de 50 mest omsatta aktierna. Cour
 
 | Strategi | Avkastning % | S&P 500 % | Affärer | Vinstandel % | Snitt R | Profit factor | Största nedgång % | Courtage USD |
 |---|---|---|---|---|---|---|---|---|
-| Day – momentum (nuvarande) | -38.34 | -2.46 | 1496 | 34.0 | -0.27 | 0.67 | -41.58 | 381.05 |
-| Day – ORB 15 min | 1.39 | -2.46 | 91 | 37.4 | -0.14 | 1.12 | -5.16 | 30.3 |
+| Day – momentum (nuvarande) | -38.3 | -2.46 | 1496 | 34.0 | -0.27 | 0.67 | -41.54 | 380.93 |
+| Day – ORB 15 min | 1.39 | -2.46 | 91 | 37.4 | -0.14 | 1.12 | -5.17 | 30.3 |
 | Day – ORB 30 min | 1.3 | -2.46 | 57 | 40.4 | -0.11 | 1.2 | -3.28 | 18.7 |
-| Day – ORB 30 min, hela dagen | 2.32 | -2.46 | 151 | 37.7 | -0.16 | 1.15 | -4.24 | 50.7 |
+| Day – ORB 30 min, hela dagen | 2.32 | -2.46 | 151 | 37.7 | -0.16 | 1.15 | -4.25 | 50.7 |
 | Day – ORB hela dagen, lås vinst (mål kvar) | -0.53 | -2.46 | 207 | 35.7 | -0.18 | 0.97 | -4.9 | 69.12 |
-| Day – ORB hela dagen, lås vinst (inget mål) | 3.23 | -2.46 | 158 | 37.3 | -0.15 | 1.24 | -4.14 | 53.65 |
+| Day – ORB hela dagen, lås vinst (inget mål) | 3.23 | -2.46 | 158 | 37.3 | -0.15 | 1.24 | -4.15 | 53.65 |
 
 ## Robotens automatiska val
 
@@ -71,18 +71,18 @@ Alla swing-strategier × risk 0,5/1/2 % × de 300 eller 600 mest omsatta aktiern
 
 | Aktier | Strategi | Risk per affär % | Per år % | Största nedgång % | Affärer | Testdel % | Kontrolldel % | Godkänd | Poäng |
 |---|---|---|---|---|---|---|---|---|---|
-| 300 mest omsatta | Utbrott – låt vinnare löpa | 1.0 | 38.3 | -24.58 | 261 | 154.42 | 81.26 | ja | 1.56 |
-| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 2.0 | 38.8 | -27.32 | 134 | 186.14 | 35.33 | ja | 1.42 |
-| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 1.0 | 40.8 | -29.21 | 266 | 163.66 | 66.16 | ja | 1.4 |
-| 600 mest omsatta | Swing + marknadsfilter – låt vinnare löpa | 0.5 | 17.4 | -13.17 | 363 | 57.62 | 14.43 | ja | 1.32 |
-| 300 mest omsatta | Utbrott – låt vinnare löpa | 0.5 | 30.2 | -23.5 | 336 | 106.69 | 43.6 | ja | 1.29 |
-| 300 mest omsatta | Swing – 5 av 6 (RSI, MACD och botten krävs) | 1.0 | 40.8 | -31.74 | 324 | 133.84 | 40.02 | ja | 1.29 |
-| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 0.5 | 27.1 | -22.94 | 326 | 105.84 | 36.33 | ja | 1.18 |
-| 300 mest omsatta | Swing – grund | 1.0 | 24.3 | -20.94 | 528 | 55.76 | 18.09 | ja | 1.16 |
-| 300 mest omsatta | Swing – 5 av 6 (RSI, MACD och botten krävs) | 2.0 | 40.8 | -37.18 | 207 | 224.15 | 84.02 | ja | 1.1 |
-| 600 mest omsatta | Swing – 5 av 6 (RSI, MACD och botten krävs) | 0.5 | 19.4 | -17.66 | 383 | 48.46 | 22.94 | ja | 1.1 |
+| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 1.0 | 42.2 | -26.17 | 255 | 181.73 | 51.09 | ja | 1.61 |
+| 300 mest omsatta | Utbrott – låt vinnare löpa | 1.0 | 40.9 | -25.55 | 271 | 151.16 | 63.21 | ja | 1.6 |
+| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 2.0 | 38.8 | -27.28 | 134 | 186.47 | 34.7 | ja | 1.42 |
+| 300 mest omsatta | Utbrott – låt vinnare löpa | 0.5 | 30.2 | -23.88 | 337 | 106.47 | 43.44 | ja | 1.26 |
+| 300 mest omsatta | Utbrott + marknadsfilter – låt vinnare löpa | 0.5 | 27.1 | -22.95 | 326 | 106.44 | 30.17 | ja | 1.18 |
+| 300 mest omsatta | Swing – grund | 1.0 | 24.4 | -20.91 | 528 | 55.33 | 57.94 | ja | 1.17 |
+| 600 mest omsatta | Swing – låt vinnare löpa | 2.0 | 40.2 | -35.36 | 183 | 189.94 | 38.63 | ja | 1.14 |
+| 600 mest omsatta | Swing – 5 av 6 (RSI, MACD och botten krävs) | 0.5 | 20.4 | -19.08 | 386 | 56.87 | 37.15 | ja | 1.07 |
+| 600 mest omsatta | Swing + marknadsfilter – låt vinnare löpa | 2.0 | 35.0 | -33.5 | 172 | 160.28 | 32.28 | ja | 1.04 |
+| 600 mest omsatta | Swing + marknadsfilter – låt vinnare löpa | 0.5 | 14.6 | -14.21 | 376 | 40.98 | 24.27 | ja | 1.03 |
 
-**Valt:** Utbrott – låt vinnare löpa, risk 1.0 % per affär, de 300 mest omsatta – 38.3 % per år, största nedgång -24.58 %.
+**Valt:** Utbrott + marknadsfilter – låt vinnare löpa, risk 1.0 % per affär, de 300 mest omsatta – 42.2 % per år, största nedgång -26.17 %.
 
 ---
 Rapporten är underlag för morgonsessionen. Historiska resultat är ingen garanti för framtiden.
