@@ -3,6 +3,9 @@ name: Skärmbild av webbsidan
 on:
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   shot:
     runs-on: ubuntu-latest
@@ -23,8 +26,11 @@ jobs:
           for i in $(seq 1 60); do curl -s localhost:8501/_stcore/health && break; sleep 2; done
           mkdir -p screens
           python scripts/screenshot.py screens || (tail -50 streamlit.log; cp streamlit.log screens/; exit 1)
-      - uses: actions/upload-artifact@v4
+      - name: Spara skärmbilderna i grenen "skarmbilder"
         if: always()
-        with:
-          name: screens
-          path: screens/
+        run: |
+          git config user.name "skarmbild-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout --orphan skarmbilder
+          git rm -rfq --cached . && find . -maxdepth 1 ! -name screens ! -name .git ! -name . -exec rm -rf {} +
+          git add screens && git commit -qm "Skärmbilder $(date -u +%H:%M)" && git push -fq origin skarmbilder

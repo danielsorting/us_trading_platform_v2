@@ -29,12 +29,19 @@ with sync_playwright() as pw:
     })""")
     (OUT / "sliders.txt").write_text("\n\n".join(info))
     # Flytta "Max antal positioner" tre steg åt vänster och "Max storlek per swingaffär" fem steg åt höger
-    for label, key, n in (("Max antal positioner", "ArrowLeft", 3), ("Max storlek per swingaffär", "ArrowRight", 5)):
-        box = page.locator("[data-testid='stSlider']", has_text=label).first
-        box.locator("[role='slider']").first.focus()
-        for _ in range(n):
-            page.keyboard.press(key)
-        time.sleep(2)
+    print("\n".join(info)[:6000])
+    thumbs = page.locator("[role='slider']")
+    print("antal reglage:", thumbs.count())
+    for idx, key, n in ((4, "ArrowLeft", 3), (5, "ArrowRight", 5)):
+        try:
+            t = thumbs.nth(idx)
+            t.scroll_into_view_if_needed(timeout=5000)
+            t.click(timeout=5000)
+            for _ in range(n):
+                page.keyboard.press(key)
+            time.sleep(2)
+        except Exception as e:
+            print("kunde inte flytta reglage", idx, type(e).__name__)
     time.sleep(3)
     page.screenshot(path=str(OUT / "2_andrat.png"), full_page=False)
     b.close()
