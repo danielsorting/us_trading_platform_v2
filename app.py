@@ -439,7 +439,7 @@ with tab_auto:
         if robot_choice:
             st.success(f"🤖 **Väljs automatiskt varje natt.** Senaste val ({robot_choice['date']}): "
                        f"**{robot_settings.swing_variant}**, risk **{robot_settings.risk_per_trade_pct:g} %** per "
-                       f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** (+ bevakningslistan). "
+                       f"affär, de **{robot_settings.swing_liquid_n} mest omsatta** aktierna. "
                        f"I testet: {robot_choice['per_year_pct']:+.1f} % per år, största nedgång "
                        f"{robot_choice['max_drawdown_pct']:.0f} %.")
         elif defaults.auto_pick_best:
@@ -952,7 +952,7 @@ with tab_auto:
                  "(15:30–22:00 svensk tid), även när din dator är avstängd. Den handlar med **låtsaspengar**.")
     rb = defaults
     st.caption(f"Övrigt: daytrading väljer de {rb.auto_day_top_n} bästa bland de 300 mest omsatta och stänger före 22:00. "
-               f"Swing söker bland {'de 300 mest omsatta + din bevakningslista' if rb.swing_universe == 'liquid' else 'din bevakningslista'}. "
+               f"Swing söker bland de {robot_settings.swing_liquid_n} mest omsatta aktierna (antalet väljs i nattrapporten). "
                f"Courtage {rb.commission_pct:g} % (Avanza Pro).")
     auto_acc_file = AUTO_DIR / "auto_account.json"
     if not auto_acc_file.exists():

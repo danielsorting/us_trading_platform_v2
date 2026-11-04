@@ -41,10 +41,10 @@ def load_json(p, default):
 
 def liquid_list(provider, n=300):
     saved = load_json(LIQUID, {})
-    if (len(saved.get("symbols") or []) >= min(n, 100)
+    if (len(saved.get("symbols") or []) >= min(n, 100) * 0.9 and len(saved.get("symbols") or []) >= min(n, 550)
             and time.time() - saved.get("time", 0) < LIQUID_MAX_AGE):
         return saved["symbols"][:n]
-    ranking = liquid_universe(provider, max(n, 300), fallback_symbols=load_settings().watchlist, allow_heavy=False)
+    ranking = liquid_universe(provider, max(n, 600), fallback_symbols=load_settings().watchlist, allow_heavy=False)
     LIQUID.write_text(json.dumps({"time": time.time(), "symbols": ranking}))
     return ranking[:n]
 
@@ -85,12 +85,14 @@ def main():
     variant = swing_variants().get(s.swing_variant)
     mkt = provider.history(MARKET_SYMBOL, "2y", "1d") if variant is not None and needs_market([variant]) else None
     need_liquid = s.day_allocation_pct > 0 or s.swing_universe == "liquid"
-    liquid = liquid_list(provider) if ((is_open or phase == "pre") and need_liquid) else []
+    liquid = liquid_list(provider, max(300, s.swing_liquid_n)) if ((is_open or phase == "pre") and need_liquid) else []
     log(f"Lista över mest omsatta: {len(liquid)} aktier.")
     swing_syms = None
     if s.swing_universe == "liquid" and liquid:
-        swing_syms = list(dict.fromkeys(liquid[:s.swing_liquid_n] + list(s.watchlist)))
-    events = tick(provider, broker, s, state, liquid, swing_strategy=variant, market_bars=mkt, usd_sek=fx,
+        swing_syms = list(liquid[:s.swing_liquid_n])
+        if s.swing_include_watchlist:
+            swing_syms = list(dict.fromkeys(swing_syms + list(s.watchlist)))
+    events = tick(provider, broker, s, state, liquid[:300], swing_strategy=variant, market_bars=mkt, usd_sek=fx,
                   top_n=s.auto_day_top_n, max_move_pct=s.auto_max_move_pct, swing_symbols=swing_syms)
     log(f"Runda klar: {len(events)} händelser.")
     from trading_platform import notify

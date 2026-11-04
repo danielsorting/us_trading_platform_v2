@@ -61,13 +61,13 @@ def main():
     liquid = []
     try:
         saved = json.loads((ROOT / "paper" / "liquid_ranking.json").read_text())
-        if time.time() - saved.get("time", 0) < 24 * 3600:
+        if time.time() - saved.get("time", 0) < 24 * 3600 and len(saved.get("symbols", [])) >= 550:
             liquid = saved.get("symbols", [])
     except Exception:
         pass
     if not liquid:
         try:
-            liquid = liquid_universe(p, 300, allow_heavy=False)
+            liquid = liquid_universe(p, 600, allow_heavy=False)
         except Exception as e:
             lines += [f"> Kunde inte hämta de mest omsatta aktierna: {e}", ""]
 
@@ -156,13 +156,15 @@ def main():
 
     # ---------------- automatiskt val för roboten (strategi + risk + antal aktier)
     lines += ["## Robotens automatiska val", "",
-              "Alla swing-strategier × risk 0,5/1/2 % × de 100 eller 300 mest omsatta (+ bevakningslistan), 5 år. "
+              "Alla swing-strategier × risk 0,5/1/2 % × de 100, 300 eller 600 mest omsatta aktierna, 5 år. "
               "Bara godkända kombinationer (plus i både test- och kontrolldel, minst 20 affärer) kan väljas. "
               "Bäst poäng (avkastning per år / största nedgång) vinner och används av roboten från nästa runda.", ""]
     try:
         cand = []
-        for n in (100, 300):
-            syms = list(dict.fromkeys(liquid[:n] + list(s.watchlist)))
+        for n in (100, 300, 600):
+            syms = liquid[:n]
+            if len(syms) < n * 0.9:
+                continue  # Yahoo gav inte så många
             bars = {k: add_market(v, spy5) for k, v in p.history_many(syms, "5y", "1d").items() if v is not None}
             df = find_best(bars, daily_variants(), swing_cap, s, benchmark=spy5.Close, risk_levels=(0.5, 1.0, 2.0))
             df.insert(0, "Aktier", f"{n} mest omsatta")
@@ -182,7 +184,7 @@ def main():
             REPORTS.mkdir(exist_ok=True)
             (REPORTS / "best_choice.json").write_text(json.dumps(choice, indent=2, ensure_ascii=False))
             lines += [f"**Valt:** {best['Strategi']}, risk {best['Risk per affär %']} % per affär, de "
-                      f"{int(best['n'])} mest omsatta (+ bevakningslistan) – {best['Per år %']} % per år, "
+                      f"{int(best['n'])} mest omsatta – {best['Per år %']} % per år, "
                       f"största nedgång {best['Största nedgång %']} %.", ""]
         else:
             lines += ["Ingen kombination blev godkänd – roboten behåller sitt tidigare val.", ""]

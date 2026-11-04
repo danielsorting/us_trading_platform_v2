@@ -9,6 +9,7 @@
   "day_max_position_pct": 25,
   "auto_pick_best": true,
   "swing_liquid_n": 300,
+  "swing_include_watchlist": false,
   "extended_hours_swing": false,
   "scan_mode": "watchlist",
   "watchlist": [

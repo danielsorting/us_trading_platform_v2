@@ -5,7 +5,7 @@ En "tick" (körs t.ex. var 5:e minut):
 1. Börsen stängd → stäng eventuella dagpositioner, annars inget.
 2. Daytrading: granskar alla de mest omsatta (300) varje runda. Rangordna,
    förhandelskoll, köp de bästa, sälj vid stop/mål/dagens slut.
-3. Swing: var 30:e minut – skanna de 300 mest omsatta + bevakningslistan och köp kandidater.
+3. Swing: var 30:e minut – skanna de mest omsatta (100/300/600, väljs i nattrapporten) och köp kandidater.
    Stop/mål för alla positioner kontrolleras varje tick.
 4. Ledigt kapital parkeras i SPY (om påslaget).
 """

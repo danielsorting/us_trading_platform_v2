@@ -20,7 +20,8 @@ class Settings:
     max_positions_per_strategy: int = 3
     max_position_pct_of_strategy_capital: float = 25
     auto_pick_best: bool = False            # använd nattrapportens bästa strategi + risk + antal aktier
-    swing_liquid_n: int = 300               # swing letar bland så här många mest omsatta (+ bevakningslistan)
+    swing_liquid_n: int = 300               # swing letar bland så här många mest omsatta (100/300/600)
+    swing_include_watchlist: bool = False   # ta även med bevakningslistan i swing-sökningen
     news_filter_enabled: bool = True        # köp inte aktier med tydligt dåliga nyheter senaste 48 h
     news_market_risk_cut: bool = True       # halvera risken per affär när världsnyheterna är tydligt negativa
     extended_hours_swing: bool = False      # swing även i Avanzas för- och efterhandel (avstängt)
