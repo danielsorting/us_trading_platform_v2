@@ -312,3 +312,10 @@ tid,typ,symbol,action,detail
 2026-11-04 21:30,day,SNAP,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""How Investors May Respond To Snap (SNAP) Teen Lawsuit Settlement"" (nyhetspoäng -2)."
 2026-11-04 21:30,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-04 21:30,day,CRCL,hoppar över (skydd),Paus efter stop loss 2026-11-04 (köps inte igen på 1 dagar).
+2026-11-04 21:35,swing,,swing-sökning,"Granskade 291 aktier: 6 köpkandidater (CNC, MSFT, OSCR, W, XYZ, ZBH). Närmast: AAPL (5/6), ABT (5/6), ACN (5/6), ARRY (5/6), BRKR (5/6)."
+2026-11-04 21:35,swing,CNC,hoppar över,"Swing-budgeten är fullt använd (8,201 av 8,187 USD)."
+2026-11-04 21:35,swing,OSCR,hoppar över,"Swing-budgeten är fullt använd (8,201 av 8,187 USD)."
+2026-11-04 21:35,swing,W,hoppar över,"Swing-budgeten är fullt använd (8,201 av 8,187 USD)."
+2026-11-04 21:35,swing,XYZ,hoppar över,"Swing-budgeten är fullt använd (8,201 av 8,187 USD)."
+2026-11-04 21:35,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,201 av 8,187 USD)."
+2026-11-04 21:35,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: BKNG (5/6), MDT (5/6), APTV (5/6), UNH (5/6), SNAP (5/6). Day – ORB hela dagen, lås vinst (inget mål) köper bara de första 6 timmarna efter öppning (15:30–21:30 svensk tid) – i dag är fönstret stängt, nya köp i morgon."
