@@ -788,7 +788,7 @@ with tab_paper:
 
     if st.session_state.get("paper_actions"):
         st.subheader("Senaste handelsrundan")
-        st.dataframe(pd.DataFrame(st.session_state["paper_actions"]).rename(
+        st.dataframe(pd.DataFrame(st.session_state["paper_actions"]).drop(columns=["strategy"], errors="ignore").rename(
             columns={"symbol": "Aktie", "action": "Händelse", "detail": "Detaljer"}), width="stretch", hide_index=True)
 
     st.subheader("Öppna positioner")
