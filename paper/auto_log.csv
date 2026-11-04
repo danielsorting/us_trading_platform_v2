@@ -250,3 +250,5 @@ tid,typ,symbol,action,detail
 2026-11-04 19:55,swing,XYZ,hoppar över,"Swing-budgeten är fullt använd (8,153 av 8,150 USD)."
 2026-11-04 19:55,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,153 av 8,150 USD)."
 2026-11-04 19:55,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 20:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 19:55: Granskade 291 aktier: 8 köpkandidater (AAPL, CNC, MSFT, OSCR, VRDN, W, XYZ, ZBH). Närmast: ACN (5/6), ARRY (5/6), BRKR (5/6), CL (5/6), CPNG (5/6). Nästa sökning ca 20:25 (dagskurser ändras långsamt)."
+2026-11-04 20:00,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
