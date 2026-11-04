@@ -522,7 +522,7 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
                     f" box-shadow: 0 0 0 2px white; pointer-events: none; z-index: 4;}}"
                     # förvalets siffra ovanför den blå kulan (som den röda siffran över den röda)
                     f"{g} > div:first-child::after {{content: '{label}'; position: absolute;"
-                    f" left: clamp(7px, {pct:.2f}%, calc(100% - 7px)); bottom: 12px; transform: translateX(-50%);"
+                    f" left: clamp(14px, {pct:.2f}%, calc(100% - 14px)); bottom: 12px; transform: translateX(-50%);"
                     f" color: #1f77ff; font-size: 14px; font-weight: 600; line-height: 1; white-space: nowrap;"
                     f" pointer-events: none; z-index: 4;}}")
         st.markdown(f"<style>{''.join(css)}</style>", unsafe_allow_html=True)
