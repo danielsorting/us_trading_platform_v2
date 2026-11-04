@@ -1,5 +1,6 @@
 """Dashboard för US Trading Platform. Starta med:  streamlit run app.py"""
 import json
+import os
 import sys
 from dataclasses import replace
 from datetime import datetime
@@ -64,6 +65,9 @@ def _secret(name):
 _alpaca_key, _alpaca_secret = _secret("ALPACA_KEY_ID"), _secret("ALPACA_SECRET_KEY")
 REALTIME = AlpacaRealtime(_alpaca_key, _alpaca_secret) if _alpaca_key and _alpaca_secret else None
 provider = HybridProvider(YahooResearchProvider(), REALTIME) if REALTIME else YahooResearchProvider()
+if os.environ.get("TP_FAKE_DATA"):  # automatiska tester: påhittade kurser, inget internet
+    from trading_platform.fakedata import FakeProvider
+    provider = FakeProvider()
 
 
 @st.cache_data(ttl=600, show_spinner=False)

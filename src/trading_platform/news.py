@@ -134,11 +134,18 @@ def judge(items, now=None, max_age_hours=MAX_AGE_HOURS):
 
 
 # ---------------------------------------------------------------- hämtning (Yahoo)
+def _offline():
+    import os
+    return bool(os.environ.get("TP_FAKE_DATA"))
+
+
 def fetch_symbol_news(symbol, count=10):
     """Senaste nyheterna om ett bolag från Yahoo Finance. Tom lista vid fel.
     Yahoos sökfunktion används (Ticker.news är ofta tom); bara nyheter som Yahoo
     kopplar till just den aktien tas med."""
     items = []
+    if _offline():
+        return []
     try:
         import yfinance as yf
         try:
@@ -161,6 +168,8 @@ def fetch_symbol_news(symbol, count=10):
 def fetch_market_news(queries=MARKET_QUERIES, per_query=8):
     """Nyheter om världsläget: börsen, olja, Trump/tullar, räntor."""
     items = []
+    if _offline():
+        return []
     try:
         import yfinance as yf
         for q in queries:
