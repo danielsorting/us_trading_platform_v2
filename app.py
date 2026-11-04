@@ -332,6 +332,34 @@ def account_view(acct, state, log_df, key, last_run=None, price_override=None):
         else:
             st.caption("Inga affärer än.")
 
+
+@st.cache_data(ttl=6 * 3600, show_spinner=False)
+def omx_close():
+    """Svenska börsindexet OMXS30 (dagsdata, 10 år) – för jämförelse."""
+    try:
+        df = provider.history("^OMX", "10y", "1d")
+        return None if df is None or not len(df) else df.Close
+    except Exception:
+        return None
+
+
+def add_omx(df):
+    """Lägger till kolumnen 'OMXS30 %' (svenska indexet under samma testperiod) bredvid S&P 500."""
+    if df is None or not len(df) or "Testperiod" not in df:
+        return df
+    omx = omx_close()
+    vals = []
+    for per in df["Testperiod"]:
+        try:
+            a, b = [pd.Timestamp(x.strip()) for x in str(per).split("–")]
+            vals.append(period_return(omx, a, b + pd.Timedelta(days=1)) if omx is not None else None)
+        except Exception:
+            vals.append(None)
+    out = df.copy()
+    pos = list(out.columns).index("S&P 500 %") + 1 if "S&P 500 %" in out else len(out.columns)
+    out.insert(pos, "OMXS30 %", vals)
+    return out
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -581,11 +609,10 @@ with tab_bt:
                    "Med 300 aktier tar 🏆-knappen några minuter.")
     else:
         bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
-    default_cap = int(settings.day_capital if getattr(module, "NAME", "") == "day" else settings.swing_capital)
-    if default_cap < 1000:  # t.ex. 100 % daytrading → 0 kr till swing: testa med hela kapitalet i stället
-        default_cap = max(1000, int(settings.total_capital))
+    default_cap = max(1000, int(settings.total_capital))
     bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000,
-                                 help="Förvalt: swing- eller daytrading-budgeten från inställningarna ovan.")
+                                 help="Förvalt: totalt kapital från inställningarna ovan (100 000 kr), så att "
+                                      "resultaten är lätta att räkna på.")
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
         if bt_list == LIQUID:
@@ -612,7 +639,8 @@ with tab_bt:
                                benchmark=None if mkt is None else mkt.Close, risk_levels=risks,
                                progress=lambda i, n: bar.progress(i / n * 0.8, text=f"Testat {i} av {n} kombinationer"))]
             if hbars:
-                parts.append(find_best(hbars, hourly_variants(), cap_usd, settings, risk_levels=risks))
+                parts.append(find_best(hbars, hourly_variants(), cap_usd, settings, risk_levels=risks,
+                                       benchmark=None if mkt is None else mkt.Close))
             for d in parts:
                 d["Testperiod"] = d.attrs.get("period", "")
             best_all = pd.concat([d for d in parts if len(d)], ignore_index=True)
@@ -620,7 +648,7 @@ with tab_bt:
             best_all = best_all.sort_values(["_ok", "Poäng"], ascending=[False, False]).drop(columns="_ok")
             best_all = best_all.reset_index(drop=True)
             best_all.attrs["period"] = " / ".join(dict.fromkeys(d.attrs.get("period", "") for d in parts))
-            st.session_state["bt_best"] = best_all
+            st.session_state["bt_best"] = add_omx(best_all)
             bar.empty()
             st.session_state.pop("bt", None)
             st.session_state.pop("bt_compare", None)
@@ -635,9 +663,11 @@ with tab_bt:
                 cmp_parts = [compare_strategies(bars, daily_variants(), cap_usd, settings,
                                                 benchmark=None if mkt is None else mkt.Close)]
                 if hbars:
-                    cmp_parts.append(compare_strategies(hbars, hourly_variants(), cap_usd, settings))
-                st.session_state["bt_compare"] = pd.concat([c for c in cmp_parts if len(c)], ignore_index=True) \
-                    .sort_values("Avkastning %", ascending=False).reset_index(drop=True)
+                    cmp_parts.append(compare_strategies(hbars, hourly_variants(), cap_usd, settings,
+                                                        benchmark=None if mkt is None else mkt.Close))
+                st.session_state["bt_compare"] = add_omx(pd.concat([c for c in cmp_parts if len(c)], ignore_index=True)
+                                                         .sort_values("Avkastning %", ascending=False)
+                                                         .reset_index(drop=True))
                 st.session_state["bt_bh"] = buy_and_hold_by_symbol(bars)
             st.session_state.pop("bt", None)
             st.session_state.pop("bt_best", None)
@@ -646,12 +676,15 @@ with tab_bt:
             with st.spinner("Kör backtest…"):
                 res = run_backtest(bars, module, cap_usd, settings)
                 eq = res["equity"]
-                bench = None
-                if mkt is not None and len(eq):
-                    # Jämför från första dagen strategin kunde handla (efter SMA200-uppvärmning).
+                bench = omx_v = None
+                if len(eq):
+                    # Jämför från första dagen strategin kunde handla (efter uppvärmning).
                     times = sorted(set().union(*[b.index for b in bars.values() if b is not None]))
-                    bench = period_return(mkt.Close, times[min(module.MIN_BARS, len(times) - 1)])
-                st.session_state["bt"] = (strat_name, res, bench)
+                    start = times[min(module.MIN_BARS, len(times) - 1)]
+                    spy_close = mkt.Close if mkt is not None else get_history(MARKET_SYMBOL, "5y", "1d").Close
+                    bench = period_return(spy_close, start)
+                    omx_v = period_return(omx_close(), start)
+                st.session_state["bt"] = (strat_name, res, bench, omx_v)
             st.session_state.pop("bt_compare", None)
 
     if st.session_state.get("best_applied"):
@@ -663,9 +696,11 @@ with tab_bt:
         st.subheader("🏆 Bästa kombinationen")
         if len(best) and best.iloc[0]["Godkänd"] == "ja":
             top = best.iloc[0]
-            sp = "" if top["S&P 500 %"] is None else (
-                f" S&P 500 gav {top['S&P 500 %']:+.1f} % under samma tid, så den "
-                + ("**slog indexfonden**." if top["Slår S&P 500?"] == "ja" else "**slog inte indexfonden**."))
+            sp = "" if top["S&P 500 %"] is None or top["S&P 500 %"] != top["S&P 500 %"] else (
+                f" Indexfonden S&P 500 gav {top['S&P 500 %']:+.1f} % under samma tid"
+                + (f" och svenska OMXS30 {top['OMXS30 %']:+.1f} %" if top.get("OMXS30 %") == top.get("OMXS30 %")
+                   and top.get("OMXS30 %") is not None else "")
+                + ", så den " + ("**slog indexfonden**." if top["Slår S&P 500?"] == "ja" else "**slog inte indexfonden**."))
             st.success(f"**{top['Strategi']}** med **{top['Risk per affär %']} % risk per affär**: "
                        f"{top['Avkastning %']:+.1f} % totalt ({top['Per år %']:+.1f} % per år), största nedgång "
                        f"{top['Största nedgång %']:.1f} %, {int(top['Affärer'])} affärer.{sp}")
@@ -692,8 +727,10 @@ with tab_bt:
             bench = cmp["S&P 500 %"].iloc[0] if "S&P 500 %" in cmp else None
             if bench is not None and bench == bench:
                 beats = int((cmp["Slår S&P 500?"] == "ja").sum())
-                msg = (f"S&P 500 (indexfond) gav **{bench:+.1f} %** under samma period. "
-                       f"{beats} av {len(cmp)} varianter slog den.")
+                omx_v = cmp["OMXS30 %"].iloc[0] if "OMXS30 %" in cmp else None
+                msg = (f"S&P 500 (indexfond) gav **{bench:+.1f} %** under samma period"
+                       + (f", svenska OMXS30 **{omx_v:+.1f} %**" if omx_v is not None and omx_v == omx_v else "")
+                       + f". {beats} av {len(cmp)} varianter slog S&P 500.")
                 (st.info if beats else st.warning)(msg)
             if len(good):
                 st.success(f"Bäst av de som går plus i både test- och kontrolldel: **{good.iloc[0].Strategi}**. "
@@ -713,15 +750,17 @@ with tab_bt:
             st.warning("Ingen data att jämföra.")
 
     if "bt" in st.session_state:
-        name, r, bench = st.session_state["bt"]
+        name, r, bench, omx_v = (list(st.session_state["bt"]) + [None])[:4]
         s = r["stats"]
         st.subheader(f"Resultat – {name}")
-        m = st.columns(4)
+        m = st.columns(5)
         m[0].metric("Avkastning", f"{s['total_return_pct']:+.1f} %")
         m[1].metric("S&P 500 (indexfond)", "–" if bench is None else f"{bench:+.1f} %",
                     help="Vad en indexfond på S&P 500 (SPY) gav under samma period. Det är den viktigaste jämförelsen.")
-        m[2].metric("Största nedgång", f"{s['max_drawdown_pct']:.1f} %")
-        m[3].metric("Antal affärer", s["trades"])
+        m[2].metric("OMXS30 (Sverige)", "–" if omx_v is None else f"{omx_v:+.1f} %",
+                    help="Vad det svenska börsindexet OMXS30 gav under samma period.")
+        m[3].metric("Största nedgång", f"{s['max_drawdown_pct']:.1f} %")
+        m[4].metric("Antal affärer", s["trades"])
         m = st.columns(4)
         m[0].metric("Vinstandel", f"{s['win_rate_pct']:.0f} %")
         m[1].metric("Snitt per affär (R)", f"{s['avg_r']:+.2f}", help="R = risken per affär. +1R betyder att du vann lika mycket som du riskerade.")
