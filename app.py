@@ -590,7 +590,7 @@ with tab_bt:
                                                      help="Yahoo har 5-minutersdata cirka 60 dagar bakåt.")]
             bt_opts["interval"] = "5m"
         bt_opts["cap"] = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=100_000,
-                                         step=10_000, key="bt_cap")
+                                         step=10_000, key="bt_startcap")
 
     def bt_right():
         bt_opts["choose_risk"] = st.checkbox("Låt 🏆 även välja risk per affär", value=True, key="bt_choose_risk",
