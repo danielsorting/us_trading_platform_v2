@@ -185,3 +185,6 @@ tid,typ,symbol,action,detail
 2026-11-04 18:25,day,CRCL,hoppar över (skydd),Paus efter stop loss 2026-11-04 (köps inte igen på 1 dagar).
 2026-11-04 18:30,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 291 aktier: 11 köpkandidater (AAPL, CNC, DAL, DIS, MSFT, OSCR, SN, VRDN). Närmast: AFRM (5/6), ARRY (5/6), BRKR (5/6), BUD (5/6), CCL (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
 2026-11-04 18:30,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 18:35,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng 0.0 per nyhet, 16 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""JD Vance Blamed the Iran War for the GOP's Midterm Rout. Oil Prices are Plunging.""."
+2026-11-04 18:35,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 291 aktier: 11 köpkandidater (AAPL, CNC, DAL, DIS, MSFT, OSCR, SN, VRDN). Närmast: AFRM (5/6), ARRY (5/6), BRKR (5/6), BUD (5/6), CCL (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
+2026-11-04 18:35,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
