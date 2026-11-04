@@ -423,10 +423,10 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
 
     dots = []  # (widget-key, position i %) – blå kula på förvalets plats i reglagestången
 
-    def dot(key, lo, hi, default, current):
+    def dot(key, lo, hi, default, current, label=None):
         if not disabled and hi > lo:
             pos = lambda v: max(0.0, min(100.0, (v - lo) / (hi - lo) * 100))
-            dots.append((key, pos(default), pos(current)))
+            dots.append((key, pos(default), pos(current), str(default if label is None else label)))
 
     def mark(col, value, default, text=None):
         """Blå text under rutor/listor som har ändrats från förvalet (reglagestänger får en blå kula)."""
@@ -454,7 +454,7 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
                                value=float(base.risk_per_trade_pct), key=k("risk"))
     if float(base.risk_per_trade_pct) in RISK_OPTIONS:
         dot(risk_key or k("risk"), 0, len(RISK_OPTIONS) - 1, RISK_OPTIONS.index(float(base.risk_per_trade_pct)),
-            RISK_OPTIONS.index(float(risk)) if float(risk) in RISK_OPTIONS else 0)
+            RISK_OPTIONS.index(float(risk)) if float(risk) in RISK_OPTIONS else 0, str(float(base.risk_per_trade_pct)))
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
     dot(k("maxpos"), 1, 10, int(base.max_positions_per_strategy), max_pos)
@@ -503,7 +503,7 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
         # Streamlits reglage: [role=group] > div (banan, position: relative) > [linje, knapp (style="left: x%"), …].
         # Blå linje 0 → förval och blå kula på förvalet ligger UNDER den röda, som ritas från knappen.
         css = []
-        for key, pct, cur in dots:
+        for key, pct, cur, label in dots:
             g = f".st-key-{key} [role='group'] > div"
             css.append(
                 f"{g} {{overflow-x: clip; overflow-clip-margin: 2px;}}"
@@ -518,7 +518,12 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
                     f"{g}::after {{content: ''; position: absolute; left: clamp(7px, {pct:.2f}%, calc(100% - 7px));"
                     f" top: 50%; width: 14px;"
                     f" height: 14px; transform: translate(-50%, -50%); background: #1f77ff; border-radius: 50%;"
-                    f" box-shadow: 0 0 0 2px white; pointer-events: none; z-index: 4;}}")
+                    f" box-shadow: 0 0 0 2px white; pointer-events: none; z-index: 4;}}"
+                    # förvalets siffra ovanför den blå kulan (som den röda siffran över den röda)
+                    f"{g} > div:first-child::after {{content: '{label}'; position: absolute;"
+                    f" left: clamp(7px, {pct:.2f}%, calc(100% - 7px)); bottom: 12px; transform: translateX(-50%);"
+                    f" color: #1f77ff; font-size: 14px; font-weight: 600; line-height: 1; white-space: nowrap;"
+                    f" pointer-events: none; z-index: 4;}}")
         st.markdown(f"<style>{''.join(css)}</style>", unsafe_allow_html=True)
         st.caption("🔵 Blått = ditt förval. Rött = det du ändrar till.")
     if not disabled:
