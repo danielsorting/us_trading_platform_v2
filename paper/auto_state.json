@@ -28,7 +28,7 @@
     }
   },
   "equity_peak": 10369.05,
-  "drawdown_pct": 1.75,
+  "drawdown_pct": 1.62,
   "market_news": {
     "ts": "2026-11-04T17:35:22+00:00",
     "score": 0.0,
@@ -80,7 +80,7 @@
       }
     ]
   },
-  "swing_summary": "Granskade 291 aktier: 11 köpkandidater (AAPL, CNC, DAL, DIS, MSFT, OSCR, SN, VRDN). Närmast: AFRM (5/6), ARRY (5/6), BRKR (5/6), BUD (5/6), CCL (5/6).",
+  "swing_summary": "Granskade 291 aktier: 10 köpkandidater (AAPL, CNC, DIS, MSFT, OSCR, SN, VRDN, W). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6).",
   "news": {
     "ANET": {
       "ts": "2026-11-04T15:41:07+00:00",
@@ -187,19 +187,26 @@
       ]
     },
     "MSFT": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 10,
       "score": 8,
       "block": false,
-      "worst": "Oracle Continues to Crash Lower and Lower But Two Bullish Desks Agree That Its Price WIll More Than Triple",
+      "worst": "Dow Skyrockets 1,500 Points in Best Day Since Trump's Tariff Pause",
       "best": "Microsoft Soars 7% to Record, Apple and Amazon Up 7% After Democratic Midterm Sweep",
       "headlines": [
         {
-          "title": "Oracle Continues to Crash Lower and Lower But Two Bullish Desks Agree That Its Price WIll More Than Triple",
+          "title": "Dow Skyrockets 1,500 Points in Best Day Since Trump's Tariff Pause",
           "score": -1,
-          "publisher": "24/7 Wall St.",
-          "time": "2026-11-04T15:45:32+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/oracle-continues-crash-lower-lower-154532013.html"
+          "publisher": "Barrons.com",
+          "time": "2026-11-04T17:02:21+00:00",
+          "link": "https://finance.yahoo.com/m/280f9056-9586-3201-ac6c-cdb248e692b6/dow-skyrockets-1%2C500-points.html"
+        },
+        {
+          "title": "U.S. Stocks Jump After Democrats Sweep Congress",
+          "score": 0,
+          "publisher": "The Wall Street Journal",
+          "time": "2026-11-04T17:23:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/stock-futures-rally-treasurys-strengthen-112300411.html"
         },
         {
           "title": "Has Box Stock Really Become Cheaper?",
@@ -223,18 +230,11 @@
           "link": "https://finance.yahoo.com/markets/stocks/articles/forget-voo-buy-magnificent-etf-155000608.html"
         },
         {
-          "title": "Counterparty Concentration and Depreciation Define CoreWeave Now",
-          "score": 0,
-          "publisher": "24/7 Wall St.",
-          "time": "2026-11-04T15:45:47+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/counterparty-concentration-depreciation-define-coreweave-154547528.html"
-        },
-        {
-          "title": "Forget the 12-Month Squeeze: Microsoft Is Primed for an Explosive AI Payoff",
-          "score": 0,
-          "publisher": "24/7 Wall St.",
-          "time": "2026-11-04T15:45:00+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/forget-12-month-squeeze-microsoft-154500157.html"
+          "title": "Stock market today: Dow rallies 1,400 points, S&P 500 and Nasdaq gain after Democrats win control of Congress",
+          "score": 1,
+          "publisher": "Yahoo Finance",
+          "time": "2026-11-04T17:30:07+00:00",
+          "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-nasdaq-midterm-elections-earnings-140752043.html"
         }
       ]
     },
@@ -837,7 +837,7 @@
       ]
     },
     "CNC": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 10,
       "score": 2,
       "block": false,
@@ -1138,7 +1138,7 @@
       ]
     },
     "OSCR": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 3,
       "score": 0,
       "block": false,
@@ -1862,19 +1862,40 @@
       ]
     },
     "AAPL": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 9,
-      "score": 9,
+      "score": 6,
       "block": false,
-      "worst": null,
+      "worst": "Dow Skyrockets 1,500 Points in Best Day Since Trump's Tariff Pause",
       "best": "Microsoft Soars 7% to Record, Apple and Amazon Up 7% After Democratic Midterm Sweep",
       "headlines": [
+        {
+          "title": "Dow Skyrockets 1,500 Points in Best Day Since Trump's Tariff Pause",
+          "score": -1,
+          "publisher": "Barrons.com",
+          "time": "2026-11-04T17:02:21+00:00",
+          "link": "https://finance.yahoo.com/m/280f9056-9586-3201-ac6c-cdb248e692b6/dow-skyrockets-1%2C500-points.html"
+        },
+        {
+          "title": "Apple’s Pain Could Be Micron’s Gain as Memory Prices Surge",
+          "score": 0,
+          "publisher": "24/7 Wall St.",
+          "time": "2026-11-04T17:33:14+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/apple-pain-could-micron-gain-173314457.html"
+        },
         {
           "title": "Irish tax revenue up 10% so far this year",
           "score": 0,
           "publisher": "Reuters",
           "time": "2026-11-04T16:38:07+00:00",
           "link": "https://finance.yahoo.com/economy/policy/articles/irish-tax-revenue-10-far-163807850.html"
+        },
+        {
+          "title": "Silicon Valley investor shuts London office as US dominates AI",
+          "score": 0,
+          "publisher": "The Telegraph",
+          "time": "2026-11-04T16:24:47+00:00",
+          "link": "https://finance.yahoo.com/technology/ai/articles/silicon-valley-investor-shuts-london-162447739.html"
         },
         {
           "title": "Apple's AI problem could reach your next iPhone",
@@ -1889,32 +1910,11 @@
           "publisher": "TheStreet",
           "time": "2026-11-04T16:03:03+00:00",
           "link": "https://finance.yahoo.com/markets/crypto/articles/strategy-ceo-puts-bitcoin-firm-160303174.html"
-        },
-        {
-          "title": "Apple Stocks Rise 4.5% While China AI Testing Arrives With a Product Gap",
-          "score": 0,
-          "publisher": "GuruFocus.com",
-          "time": "2026-11-04T15:57:15+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/apple-stocks-rise-4-5-155715167.html"
-        },
-        {
-          "title": "Should You Forget VOO and Buy This Magnificent ETF Instead?",
-          "score": 0,
-          "publisher": "Motley Fool",
-          "time": "2026-11-04T15:50:00+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/forget-voo-buy-magnificent-etf-155000608.html"
-        },
-        {
-          "title": "Stock market today: Dow rallies 1,400 points, S&P 500 and Nasdaq gain after Democrats win control of Congress",
-          "score": 1,
-          "publisher": "Yahoo Finance",
-          "time": "2026-11-04T17:14:41+00:00",
-          "link": "https://finance.yahoo.com/markets/live/stock-market-today-dow-sp-500-nasdaq-midterm-elections-earnings-140752043.html"
         }
       ]
     },
     "DIS": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 9,
       "score": -1,
       "block": false,
@@ -2122,12 +2122,12 @@
       ]
     },
     "SN": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 10,
-      "score": -4,
+      "score": -2,
       "block": true,
       "worst": "Smith+Nephew cuts guidance on weak orthopaedics demand, shares dip",
-      "best": null,
+      "best": "Reynolds' Q3 Earnings Beat Estimates as Pricing Offsets Inflation",
       "headlines": [
         {
           "title": "Smith+Nephew cuts guidance on weak orthopaedics demand, shares dip",
@@ -2135,6 +2135,13 @@
           "publisher": "Investing.com",
           "time": "2026-11-04T07:58:46+00:00",
           "link": "https://finance.yahoo.com/healthcare/articles/smith-nephew-cuts-guidance-weak-075846428.html"
+        },
+        {
+          "title": "SharkNinja (SN) Unveils Limited Edition Luxe Café Espresso Machine With Designer Twist",
+          "score": 0,
+          "publisher": "Simply Wall St.",
+          "time": "2026-11-04T17:16:48+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/sharkninja-sn-unveils-limited-edition-171648483.html"
         },
         {
           "title": "SharkNinja raises profit forecast as adjusted earnings jump 56%",
@@ -2163,18 +2170,11 @@
           "publisher": "MT Newswires",
           "time": "2026-11-04T12:25:12+00:00",
           "link": "https://finance.yahoo.com/markets/stocks/articles/sharkninja-q3-adjusted-earnings-revenue-122512361.html"
-        },
-        {
-          "title": "SharkNinja Crushes Third-Quarter Sales, Earnings Targets. Forecasts Bright Holiday Season.",
-          "score": 0,
-          "publisher": "Investor's Business Daily",
-          "time": "2026-11-04T12:13:07+00:00",
-          "link": "https://finance.yahoo.com/m/b643b4dc-66ea-3efc-b9f2-05a33ce68084/sharkninja-crushes.html"
         }
       ]
     },
     "VRDN": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 4,
       "score": -4,
       "block": false,
@@ -2212,13 +2212,20 @@
       ]
     },
     "W": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 10,
       "score": 4,
       "block": false,
       "worst": null,
       "best": "Wayfair’s (NYSE:W) Q3 2026: beats on revenue",
       "headlines": [
+        {
+          "title": "Wayfair notches ‘strongest quarter of growth’ since the pandemic",
+          "score": 0,
+          "publisher": "Retail Dive",
+          "time": "2026-11-04T17:18:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/wayfair-notches-strongest-quarter-growth-171800699.html"
+        },
         {
           "title": "Divided Government Sends the Dow Up 1000 Points",
           "score": 0,
@@ -2253,24 +2260,24 @@
           "publisher": "Investing.com",
           "time": "2026-11-04T12:43:57+00:00",
           "link": "https://finance.yahoo.com/markets/stocks/articles/wayfair-shares-fall-3-premarket-124357557.html"
-        },
-        {
-          "title": "Wayfair Q3 Adjusted Earnings, Revenue Rise; Shares Down Pre-Bell",
-          "score": 0,
-          "publisher": "MT Newswires",
-          "time": "2026-11-04T12:26:46+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/wayfair-q3-adjusted-earnings-revenue-122646827.html"
         }
       ]
     },
     "ZBH": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 10,
-      "score": 5,
+      "score": 6,
       "block": false,
       "worst": null,
       "best": "Zimmer Biomet Soars 15% as Hip and Tech Growth Lifts Guidance, “Validating the Progress” of Its Strategy",
       "headlines": [
+        {
+          "title": "Zimmer raises sales forecast despite slower knee business",
+          "score": 0,
+          "publisher": "MedTech Dive",
+          "time": "2026-11-04T17:30:43+00:00",
+          "link": "https://finance.yahoo.com/healthcare/articles/zimmer-raises-sales-forecast-despite-173043006.html"
+        },
         {
           "title": "Evercore ISI Adjusts Price Target on Zimmer Biomet to $122 From $115",
           "score": 0,
@@ -2305,13 +2312,6 @@
           "publisher": "Associated Press",
           "time": "2026-11-04T11:36:04+00:00",
           "link": "https://finance.yahoo.com/markets/stocks/articles/zimmer-q3-earnings-snapshot-113604170.html"
-        },
-        {
-          "title": "Zimmer Biomet Announces Third Quarter 2026 Financial Results",
-          "score": 0,
-          "publisher": "PR Newswire",
-          "time": "2026-11-04T11:30:00+00:00",
-          "link": "https://finance.yahoo.com/healthcare/articles/zimmer-biomet-announces-third-quarter-113000874.html"
         }
       ]
     },
@@ -2576,7 +2576,7 @@
       ]
     },
     "XYZ": {
-      "ts": "2026-11-04T17:16:07+00:00",
+      "ts": "2026-11-04T17:46:10+00:00",
       "count": 9,
       "score": 4,
       "block": false,
@@ -2584,11 +2584,25 @@
       "best": "Block's Q3 Earnings Beat Estimates on Cash App Lending & Square Growth",
       "headlines": [
         {
+          "title": "Americans Are Turning to Buy Now, Pay Later for the Holidays, and Trouble Paying Is Already Brewing",
+          "score": 0,
+          "publisher": "24/7 Wall St.",
+          "time": "2026-11-04T17:35:36+00:00",
+          "link": "https://finance.yahoo.com/economy/articles/americans-turning-buy-now-pay-173536286.html"
+        },
+        {
           "title": "Rothschild & Co Redburn Adjusts Price Target on Block to $85 From $75",
           "score": 0,
           "publisher": "MT Newswires",
           "time": "2026-11-04T17:01:38+00:00",
           "link": "https://finance.yahoo.com/markets/stocks/articles/rothschild-co-redburn-adjusts-price-170138442.html"
+        },
+        {
+          "title": "Block earnings lift outlook, shares as Cash App and Square drive growth",
+          "score": 0,
+          "publisher": "Proactive",
+          "time": "2026-11-04T16:34:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/block-earnings-lift-outlook-shares-163400926.html"
         },
         {
           "title": "Block reaches $964M DOJ pact",
@@ -2610,20 +2624,6 @@
           "publisher": "Motley Fool",
           "time": "2026-11-04T15:45:00+00:00",
           "link": "https://finance.yahoo.com/markets/stocks/articles/block-xyz-q3-2026-earnings-154500688.html"
-        },
-        {
-          "title": "Block Offers Solid, Early 2027 Outlook As Cash App Shines",
-          "score": 0,
-          "publisher": "Investor's Business Daily",
-          "time": "2026-11-04T15:15:57+00:00",
-          "link": "https://finance.yahoo.com/m/69e56d7a-c50b-3ec3-9877-ae49ebe44428/block-offers-solid%2C-early.html"
-        },
-        {
-          "title": "Barclays Adjusts Block Price Target to $105 From $100",
-          "score": 0,
-          "publisher": "MT Newswires",
-          "time": "2026-11-04T14:21:44+00:00",
-          "link": "https://finance.yahoo.com/markets/stocks/articles/barclays-adjusts-block-price-target-142144821.html"
         }
       ]
     },
@@ -3238,15 +3238,67 @@
           "link": "https://finance.yahoo.com/m/7b3d022b-904f-3759-9453-1bb184504784/the-election-threat-to-the-ai.html"
         }
       ]
+    },
+    "PPL": {
+      "ts": "2026-11-04T17:46:40+00:00",
+      "count": 10,
+      "score": 2,
+      "block": false,
+      "worst": null,
+      "best": "4 Utility Stocks Set to Outperform Q3 Earnings Estimates This Season",
+      "headlines": [
+        {
+          "title": "Vistra Set for Q3 Earnings Release: Is the Stock a Buy, Sell or Hold?",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T15:10:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/vistra-set-q3-earnings-release-151000938.html"
+        },
+        {
+          "title": "MGE (MGEE) Q3 Earnings and Revenues Top Estimates",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T14:05:02+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/mge-mgee-q3-earnings-revenues-140502781.html"
+        },
+        {
+          "title": "Duke Energy to Post Q3 Earnings: Here's What You Need to Know",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T13:42:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/duke-energy-post-q3-earnings-134200428.html"
+        },
+        {
+          "title": "Consolidated Edison to Report Q3 Results: What's in the Cards?",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T13:29:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/consolidated-edison-report-q3-results-132900876.html"
+        },
+        {
+          "title": "DTE Energy Gears Up to Report Q3 Earnings: What's in the Cards?",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T13:28:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/dte-energy-gears-report-q3-132800896.html"
+        },
+        {
+          "title": "Sempra to Report Q3 Results: What's in Store for the Stock?",
+          "score": 0,
+          "publisher": "Zacks",
+          "time": "2026-11-04T13:26:00+00:00",
+          "link": "https://finance.yahoo.com/markets/stocks/articles/sempra-report-q3-results-whats-132600867.html"
+        }
+      ]
     }
   },
   "swing_top": [
     {
       "symbol": "AAPL",
       "signal": "CANDIDATE",
-      "price": 354.21,
-      "rsi": 60.7,
-      "stop_reference": 337.19,
+      "price": 353.27,
+      "rsi": 60.1,
+      "stop_reference": 336.22,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3254,19 +3306,9 @@
     {
       "symbol": "CNC",
       "signal": "CANDIDATE",
-      "price": 73.5,
-      "rsi": 64.6,
-      "stop_reference": 67.67,
-      "target_reference": null,
-      "conditions_met": "6/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
-    },
-    {
-      "symbol": "DAL",
-      "signal": "CANDIDATE",
-      "price": 88.36,
-      "rsi": 66.0,
-      "stop_reference": 82.31,
+      "price": 73.42,
+      "rsi": 64.4,
+      "stop_reference": 67.56,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3274,9 +3316,9 @@
     {
       "symbol": "DIS",
       "signal": "CANDIDATE",
-      "price": 119.53,
+      "price": 119.54,
       "rsi": 75.4,
-      "stop_reference": 114.93,
+      "stop_reference": 114.94,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3284,9 +3326,9 @@
     {
       "symbol": "MSFT",
       "signal": "CANDIDATE",
-      "price": 556.46,
-      "rsi": 64.5,
-      "stop_reference": 526.94,
+      "price": 555.85,
+      "rsi": 64.3,
+      "stop_reference": 526.33,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3294,9 +3336,9 @@
     {
       "symbol": "OSCR",
       "signal": "CANDIDATE",
-      "price": 35.57,
-      "rsi": 65.3,
-      "stop_reference": 32.15,
+      "price": 35.44,
+      "rsi": 64.9,
+      "stop_reference": 32.03,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3304,9 +3346,9 @@
     {
       "symbol": "SN",
       "signal": "CANDIDATE",
-      "price": 222.8,
-      "rsi": 76.3,
-      "stop_reference": 207.57,
+      "price": 221.04,
+      "rsi": 75.5,
+      "stop_reference": 205.8,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3314,9 +3356,9 @@
     {
       "symbol": "VRDN",
       "signal": "CANDIDATE",
-      "price": 27.85,
-      "rsi": 79.0,
-      "stop_reference": 25.2,
+      "price": 28.25,
+      "rsi": 79.8,
+      "stop_reference": 25.61,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3324,9 +3366,9 @@
     {
       "symbol": "W",
       "signal": "CANDIDATE",
-      "price": 124.93,
-      "rsi": 67.7,
-      "stop_reference": 113.0,
+      "price": 124.24,
+      "rsi": 67.2,
+      "stop_reference": 112.31,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3334,9 +3376,9 @@
     {
       "symbol": "XYZ",
       "signal": "CANDIDATE",
-      "price": 87.95,
-      "rsi": 71.2,
-      "stop_reference": 81.88,
+      "price": 87.78,
+      "rsi": 71.0,
+      "stop_reference": 81.69,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3344,9 +3386,9 @@
     {
       "symbol": "ZBH",
       "signal": "CANDIDATE",
-      "price": 111.09,
-      "rsi": 75.5,
-      "stop_reference": 104.45,
+      "price": 111.29,
+      "rsi": 75.6,
+      "stop_reference": 104.65,
       "target_reference": null,
       "conditions_met": "6/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3354,9 +3396,9 @@
     {
       "symbol": "AAL",
       "signal": "WATCH",
-      "price": 13.73,
-      "rsi": 62.0,
-      "stop_reference": 12.59,
+      "price": 13.8,
+      "rsi": 62.5,
+      "stop_reference": 12.64,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3364,19 +3406,19 @@
     {
       "symbol": "AAOI",
       "signal": "WATCH",
-      "price": 59.13,
-      "rsi": 32.1,
-      "stop_reference": 43.08,
+      "price": 59.77,
+      "rsi": 32.4,
+      "stop_reference": 43.72,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "ABBV",
       "signal": "WATCH",
-      "price": 290.0,
-      "rsi": 62.3,
-      "stop_reference": 276.48,
+      "price": 291.26,
+      "rsi": 63.4,
+      "stop_reference": 277.74,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3384,9 +3426,9 @@
     {
       "symbol": "ABT",
       "signal": "WATCH",
-      "price": 114.83,
-      "rsi": 73.0,
-      "stop_reference": 108.8,
+      "price": 115.35,
+      "rsi": 73.6,
+      "stop_reference": 109.32,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3394,19 +3436,19 @@
     {
       "symbol": "ACN",
       "signal": "WATCH",
-      "price": 263.63,
-      "rsi": 69.6,
-      "stop_reference": 241.79,
+      "price": 263.93,
+      "rsi": 69.7,
+      "stop_reference": 242.08,
       "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "5/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "ADI",
       "signal": "WATCH",
-      "price": 404.46,
-      "rsi": 49.5,
-      "stop_reference": 372.19,
+      "price": 407.76,
+      "rsi": 51.0,
+      "stop_reference": 375.48,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3414,9 +3456,9 @@
     {
       "symbol": "ADM",
       "signal": "WATCH",
-      "price": 70.56,
-      "rsi": 23.3,
-      "stop_reference": 65.99,
+      "price": 70.87,
+      "rsi": 24.7,
+      "stop_reference": 66.3,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3434,9 +3476,9 @@
     {
       "symbol": "AEHR",
       "signal": "WATCH",
-      "price": 59.51,
-      "rsi": 41.3,
-      "stop_reference": 44.21,
+      "price": 59.79,
+      "rsi": 41.4,
+      "stop_reference": 44.49,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3444,9 +3486,9 @@
     {
       "symbol": "AEP",
       "signal": "WATCH",
-      "price": 127.68,
-      "rsi": 53.5,
-      "stop_reference": 122.56,
+      "price": 129.05,
+      "rsi": 58.3,
+      "stop_reference": 123.93,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3454,9 +3496,9 @@
     {
       "symbol": "AFRM",
       "signal": "WATCH",
-      "price": 77.14,
-      "rsi": 57.3,
-      "stop_reference": 69.72,
+      "price": 76.79,
+      "rsi": 56.8,
+      "stop_reference": 69.37,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3464,9 +3506,9 @@
     {
       "symbol": "AG",
       "signal": "WATCH",
-      "price": 15.23,
-      "rsi": 43.2,
-      "stop_reference": 13.66,
+      "price": 15.27,
+      "rsi": 43.5,
+      "stop_reference": 13.7,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3474,19 +3516,19 @@
     {
       "symbol": "AIG",
       "signal": "WATCH",
-      "price": 80.31,
-      "rsi": 54.4,
-      "stop_reference": 77.05,
+      "price": 80.72,
+      "rsi": 56.2,
+      "stop_reference": 77.46,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "ALAB",
       "signal": "WATCH",
-      "price": 218.61,
-      "rsi": 30.8,
-      "stop_reference": 170.71,
+      "price": 219.12,
+      "rsi": 30.9,
+      "stop_reference": 171.22,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3494,9 +3536,9 @@
     {
       "symbol": "ALNY",
       "signal": "WATCH",
-      "price": 161.96,
-      "rsi": 23.7,
-      "stop_reference": 138.36,
+      "price": 163.53,
+      "rsi": 24.9,
+      "stop_reference": 139.93,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3504,9 +3546,9 @@
     {
       "symbol": "AMAT",
       "signal": "WATCH",
-      "price": 367.53,
-      "rsi": 33.2,
-      "stop_reference": 326.03,
+      "price": 368.33,
+      "rsi": 33.3,
+      "stop_reference": 326.83,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3514,9 +3556,9 @@
     {
       "symbol": "AMD",
       "signal": "WATCH",
-      "price": 486.14,
-      "rsi": 38.9,
-      "stop_reference": 423.74,
+      "price": 486.54,
+      "rsi": 39.0,
+      "stop_reference": 424.14,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3524,9 +3566,9 @@
     {
       "symbol": "ANET",
       "signal": "WATCH",
-      "price": 178.26,
-      "rsi": 44.9,
-      "stop_reference": 159.32,
+      "price": 178.0,
+      "rsi": 44.7,
+      "stop_reference": 159.06,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3534,19 +3576,19 @@
     {
       "symbol": "APH",
       "signal": "WATCH",
-      "price": 78.69,
-      "rsi": 46.2,
-      "stop_reference": 71.2,
+      "price": 78.75,
+      "rsi": 46.3,
+      "stop_reference": 71.27,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "APO",
       "signal": "WATCH",
-      "price": 120.28,
-      "rsi": 55.3,
-      "stop_reference": 111.57,
+      "price": 121.57,
+      "rsi": 56.9,
+      "stop_reference": 112.74,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3554,9 +3596,9 @@
     {
       "symbol": "APP",
       "signal": "WATCH",
-      "price": 272.44,
-      "rsi": 51.1,
-      "stop_reference": 244.38,
+      "price": 272.73,
+      "rsi": 51.2,
+      "stop_reference": 244.52,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3564,9 +3606,9 @@
     {
       "symbol": "APTV",
       "signal": "WATCH",
-      "price": 43.76,
-      "rsi": 48.5,
-      "stop_reference": 40.63,
+      "price": 43.72,
+      "rsi": 48.3,
+      "stop_reference": 40.58,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3574,9 +3616,9 @@
     {
       "symbol": "ARM",
       "signal": "WATCH",
-      "price": 194.66,
-      "rsi": 33.3,
-      "stop_reference": 164.58,
+      "price": 196.26,
+      "rsi": 33.7,
+      "stop_reference": 166.18,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3584,9 +3626,9 @@
     {
       "symbol": "ARRY",
       "signal": "WATCH",
-      "price": 5.45,
-      "rsi": 75.8,
-      "stop_reference": 4.74,
+      "price": 5.34,
+      "rsi": 75.0,
+      "stop_reference": 4.63,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3594,9 +3636,9 @@
     {
       "symbol": "ASST",
       "signal": "WATCH",
-      "price": 23.09,
-      "rsi": 42.4,
-      "stop_reference": 18.73,
+      "price": 23.18,
+      "rsi": 42.7,
+      "stop_reference": 18.82,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3604,9 +3646,9 @@
     {
       "symbol": "ASTS",
       "signal": "WATCH",
-      "price": 36.21,
-      "rsi": 31.2,
-      "stop_reference": 28.43,
+      "price": 36.62,
+      "rsi": 31.7,
+      "stop_reference": 28.84,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3614,9 +3656,9 @@
     {
       "symbol": "ASX",
       "signal": "WATCH",
-      "price": 37.38,
-      "rsi": 39.6,
-      "stop_reference": 32.62,
+      "price": 37.57,
+      "rsi": 39.9,
+      "stop_reference": 32.81,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3624,9 +3666,9 @@
     {
       "symbol": "AVGO",
       "signal": "WATCH",
-      "price": 326.96,
-      "rsi": 42.6,
-      "stop_reference": 301.8,
+      "price": 328.57,
+      "rsi": 43.3,
+      "stop_reference": 303.41,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3634,9 +3676,9 @@
     {
       "symbol": "AXTI",
       "signal": "WATCH",
-      "price": 45.97,
-      "rsi": 37.1,
-      "stop_reference": 32.3,
+      "price": 46.18,
+      "rsi": 37.3,
+      "stop_reference": 32.51,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3644,9 +3686,9 @@
     {
       "symbol": "B",
       "signal": "WATCH",
-      "price": 39.85,
-      "rsi": 50.5,
-      "stop_reference": 36.99,
+      "price": 39.97,
+      "rsi": 50.9,
+      "stop_reference": 37.09,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3654,9 +3696,9 @@
     {
       "symbol": "BA",
       "signal": "WATCH",
-      "price": 177.26,
-      "rsi": 41.5,
-      "stop_reference": 165.77,
+      "price": 176.93,
+      "rsi": 41.0,
+      "stop_reference": 165.44,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3664,9 +3706,9 @@
     {
       "symbol": "BABA",
       "signal": "WATCH",
-      "price": 107.01,
+      "price": 106.99,
       "rsi": 53.2,
-      "stop_reference": 100.62,
+      "stop_reference": 100.61,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3674,9 +3716,9 @@
     {
       "symbol": "BAC",
       "signal": "WATCH",
-      "price": 51.38,
-      "rsi": 43.0,
-      "stop_reference": 48.99,
+      "price": 51.28,
+      "rsi": 42.3,
+      "stop_reference": 48.89,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3684,19 +3726,19 @@
     {
       "symbol": "BCS",
       "signal": "WATCH",
-      "price": 23.67,
-      "rsi": 55.0,
-      "stop_reference": 22.48,
+      "price": 23.7,
+      "rsi": 55.2,
+      "stop_reference": 22.5,
       "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "BE",
       "signal": "WATCH",
-      "price": 196.12,
-      "rsi": 39.6,
-      "stop_reference": 156.12,
+      "price": 196.79,
+      "rsi": 39.7,
+      "stop_reference": 156.79,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3704,9 +3746,9 @@
     {
       "symbol": "BFLY",
       "signal": "WATCH",
-      "price": 6.8,
-      "rsi": 43.6,
-      "stop_reference": 5.62,
+      "price": 6.76,
+      "rsi": 43.1,
+      "stop_reference": 5.57,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3714,9 +3756,9 @@
     {
       "symbol": "BHP",
       "signal": "WATCH",
-      "price": 80.3,
-      "rsi": 44.0,
-      "stop_reference": 75.94,
+      "price": 80.24,
+      "rsi": 43.8,
+      "stop_reference": 75.86,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3724,9 +3766,9 @@
     {
       "symbol": "BILI",
       "signal": "WATCH",
-      "price": 14.1,
-      "rsi": 51.0,
-      "stop_reference": 13.15,
+      "price": 14.09,
+      "rsi": 50.8,
+      "stop_reference": 13.13,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3734,9 +3776,9 @@
     {
       "symbol": "BKNG",
       "signal": "WATCH",
-      "price": 172.85,
-      "rsi": 62.5,
-      "stop_reference": 160.02,
+      "price": 172.05,
+      "rsi": 62.0,
+      "stop_reference": 159.21,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3744,19 +3786,19 @@
     {
       "symbol": "BMNR",
       "signal": "WATCH",
-      "price": 22.0,
-      "rsi": 47.4,
-      "stop_reference": 19.02,
+      "price": 22.15,
+      "rsi": 48.0,
+      "stop_reference": 19.17,
       "target_reference": null,
-      "conditions_met": "3/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "2/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "BMY",
       "signal": "WATCH",
-      "price": 63.15,
-      "rsi": 56.5,
-      "stop_reference": 59.76,
+      "price": 63.19,
+      "rsi": 56.7,
+      "stop_reference": 59.8,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3764,19 +3806,19 @@
     {
       "symbol": "BP",
       "signal": "WATCH",
-      "price": 45.72,
-      "rsi": 40.5,
-      "stop_reference": 43.14,
+      "price": 45.4,
+      "rsi": 39.5,
+      "stop_reference": 42.8,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "BRK-B",
       "signal": "WATCH",
-      "price": 573.62,
-      "rsi": 81.3,
-      "stop_reference": 557.57,
+      "price": 573.14,
+      "rsi": 81.2,
+      "stop_reference": 557.09,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3784,9 +3826,9 @@
     {
       "symbol": "BRKR",
       "signal": "WATCH",
-      "price": 62.98,
-      "rsi": 58.6,
-      "stop_reference": 55.55,
+      "price": 62.26,
+      "rsi": 57.5,
+      "stop_reference": 54.83,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3794,9 +3836,9 @@
     {
       "symbol": "BROS",
       "signal": "WATCH",
-      "price": 45.35,
-      "rsi": 62.8,
-      "stop_reference": 41.9,
+      "price": 45.07,
+      "rsi": 62.0,
+      "stop_reference": 41.61,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3804,9 +3846,9 @@
     {
       "symbol": "BSX",
       "signal": "WATCH",
-      "price": 45.79,
-      "rsi": 56.4,
-      "stop_reference": 42.4,
+      "price": 46.31,
+      "rsi": 58.1,
+      "stop_reference": 42.91,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3814,9 +3856,9 @@
     {
       "symbol": "BTDR",
       "signal": "WATCH",
-      "price": 6.59,
-      "rsi": 34.7,
-      "stop_reference": 5.05,
+      "price": 6.66,
+      "rsi": 35.0,
+      "stop_reference": 5.12,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3824,9 +3866,9 @@
     {
       "symbol": "BTI",
       "signal": "WATCH",
-      "price": 62.79,
+      "price": 62.8,
       "rsi": 70.2,
-      "stop_reference": 60.51,
+      "stop_reference": 60.52,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3834,19 +3876,19 @@
     {
       "symbol": "BUD",
       "signal": "WATCH",
-      "price": 84.54,
-      "rsi": 59.7,
-      "stop_reference": 80.5,
+      "price": 84.36,
+      "rsi": 59.3,
+      "stop_reference": 80.32,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "BX",
       "signal": "WATCH",
-      "price": 125.76,
-      "rsi": 63.3,
-      "stop_reference": 117.45,
+      "price": 126.44,
+      "rsi": 64.0,
+      "stop_reference": 118.02,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3854,9 +3896,9 @@
     {
       "symbol": "C",
       "signal": "WATCH",
-      "price": 124.84,
-      "rsi": 49.7,
-      "stop_reference": 118.39,
+      "price": 124.61,
+      "rsi": 49.1,
+      "stop_reference": 118.15,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3864,9 +3906,9 @@
     {
       "symbol": "CAT",
       "signal": "WATCH",
-      "price": 586.9,
-      "rsi": 22.6,
-      "stop_reference": 527.77,
+      "price": 585.9,
+      "rsi": 22.5,
+      "stop_reference": 526.77,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3874,9 +3916,9 @@
     {
       "symbol": "CCJ",
       "signal": "WATCH",
-      "price": 71.43,
-      "rsi": 28.8,
-      "stop_reference": 64.17,
+      "price": 71.32,
+      "rsi": 28.7,
+      "stop_reference": 64.06,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3884,9 +3926,9 @@
     {
       "symbol": "CCL",
       "signal": "WATCH",
-      "price": 31.07,
-      "rsi": 72.6,
-      "stop_reference": 28.97,
+      "price": 31.1,
+      "rsi": 72.7,
+      "stop_reference": 28.98,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3904,9 +3946,9 @@
     {
       "symbol": "CIEN",
       "signal": "WATCH",
-      "price": 276.7,
-      "rsi": 35.7,
-      "stop_reference": 224.06,
+      "price": 274.11,
+      "rsi": 35.4,
+      "stop_reference": 221.27,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3924,9 +3966,9 @@
     {
       "symbol": "CL",
       "signal": "WATCH",
-      "price": 99.14,
-      "rsi": 66.9,
-      "stop_reference": 94.63,
+      "price": 98.98,
+      "rsi": 66.6,
+      "stop_reference": 94.47,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3934,9 +3976,9 @@
     {
       "symbol": "CLSK",
       "signal": "WATCH",
-      "price": 6.95,
-      "rsi": 31.6,
-      "stop_reference": 5.29,
+      "price": 6.97,
+      "rsi": 31.7,
+      "stop_reference": 5.31,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3944,9 +3986,9 @@
     {
       "symbol": "CLX",
       "signal": "WATCH",
-      "price": 100.24,
-      "rsi": 75.8,
-      "stop_reference": 94.38,
+      "price": 100.64,
+      "rsi": 76.2,
+      "stop_reference": 94.78,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3954,9 +3996,9 @@
     {
       "symbol": "CMG",
       "signal": "WATCH",
-      "price": 34.61,
-      "rsi": 67.2,
-      "stop_reference": 32.14,
+      "price": 34.56,
+      "rsi": 67.0,
+      "stop_reference": 32.09,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3964,9 +4006,9 @@
     {
       "symbol": "CNP",
       "signal": "WATCH",
-      "price": 41.33,
-      "rsi": 57.2,
-      "stop_reference": 39.7,
+      "price": 41.44,
+      "rsi": 58.3,
+      "stop_reference": 39.82,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -3974,19 +4016,19 @@
     {
       "symbol": "COHR",
       "signal": "WATCH",
-      "price": 191.46,
-      "rsi": 32.4,
-      "stop_reference": 151.35,
+      "price": 192.04,
+      "rsi": 32.5,
+      "stop_reference": 151.93,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "COIN",
       "signal": "WATCH",
-      "price": 150.79,
-      "rsi": 40.2,
-      "stop_reference": 129.84,
+      "price": 151.95,
+      "rsi": 41.0,
+      "stop_reference": 130.99,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -3994,19 +4036,19 @@
     {
       "symbol": "COP",
       "signal": "WATCH",
-      "price": 135.86,
-      "rsi": 41.8,
-      "stop_reference": 127.63,
+      "price": 135.32,
+      "rsi": 41.2,
+      "stop_reference": 127.0,
       "target_reference": null,
-      "conditions_met": "1/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "2/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "CPNG",
       "signal": "WATCH",
-      "price": 17.3,
-      "rsi": 74.2,
-      "stop_reference": 16.0,
+      "price": 17.25,
+      "rsi": 73.9,
+      "stop_reference": 15.95,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4014,9 +4056,9 @@
     {
       "symbol": "CRCL",
       "signal": "WATCH",
-      "price": 75.57,
-      "rsi": 41.9,
-      "stop_reference": 64.87,
+      "price": 76.14,
+      "rsi": 42.7,
+      "stop_reference": 65.44,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4024,19 +4066,19 @@
     {
       "symbol": "CRDO",
       "signal": "WATCH",
-      "price": 133.92,
-      "rsi": 35.4,
-      "stop_reference": 102.95,
+      "price": 135.0,
+      "rsi": 35.7,
+      "stop_reference": 104.03,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "CRM",
       "signal": "WATCH",
-      "price": 225.31,
-      "rsi": 40.9,
-      "stop_reference": 206.7,
+      "price": 226.29,
+      "rsi": 41.9,
+      "stop_reference": 207.67,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4044,9 +4086,9 @@
     {
       "symbol": "CRWD",
       "signal": "WATCH",
-      "price": 241.62,
-      "rsi": 45.6,
-      "stop_reference": 215.26,
+      "price": 243.07,
+      "rsi": 46.3,
+      "stop_reference": 216.7,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4054,9 +4096,9 @@
     {
       "symbol": "CRWV",
       "signal": "WATCH",
-      "price": 48.52,
-      "rsi": 31.6,
-      "stop_reference": 36.99,
+      "price": 48.9,
+      "rsi": 31.9,
+      "stop_reference": 37.37,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4064,9 +4106,9 @@
     {
       "symbol": "CVI",
       "signal": "WATCH",
-      "price": 40.38,
-      "rsi": 26.5,
-      "stop_reference": 32.55,
+      "price": 40.14,
+      "rsi": 26.3,
+      "stop_reference": 32.27,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4074,9 +4116,9 @@
     {
       "symbol": "CVNA",
       "signal": "WATCH",
-      "price": 77.19,
-      "rsi": 72.6,
-      "stop_reference": 69.87,
+      "price": 77.5,
+      "rsi": 72.9,
+      "stop_reference": 70.19,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4084,9 +4126,9 @@
     {
       "symbol": "CVX",
       "signal": "WATCH",
-      "price": 216.13,
-      "rsi": 44.1,
-      "stop_reference": 205.96,
+      "price": 215.04,
+      "rsi": 43.0,
+      "stop_reference": 204.77,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4094,19 +4136,29 @@
     {
       "symbol": "D",
       "signal": "WATCH",
-      "price": 69.64,
-      "rsi": 71.3,
-      "stop_reference": 66.87,
+      "price": 69.74,
+      "rsi": 71.5,
+      "stop_reference": 66.95,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
+      "symbol": "DAL",
+      "signal": "WATCH",
+      "price": 88.49,
+      "rsi": 66.2,
+      "stop_reference": 82.4,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+    },
+    {
       "symbol": "DASH",
       "signal": "WATCH",
-      "price": 198.2,
-      "rsi": 57.5,
-      "stop_reference": 178.96,
+      "price": 197.12,
+      "rsi": 56.9,
+      "stop_reference": 177.88,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4114,9 +4166,9 @@
     {
       "symbol": "DDOG",
       "signal": "WATCH",
-      "price": 188.82,
-      "rsi": 28.7,
-      "stop_reference": 154.71,
+      "price": 190.56,
+      "rsi": 29.0,
+      "stop_reference": 156.45,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4124,9 +4176,9 @@
     {
       "symbol": "DELL",
       "signal": "WATCH",
-      "price": 371.62,
-      "rsi": 31.2,
-      "stop_reference": 306.92,
+      "price": 373.44,
+      "rsi": 31.4,
+      "stop_reference": 308.74,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4134,19 +4186,19 @@
     {
       "symbol": "DHT",
       "signal": "WATCH",
-      "price": 22.4,
-      "rsi": 41.2,
-      "stop_reference": 20.3,
+      "price": 22.32,
+      "rsi": 40.8,
+      "stop_reference": 20.2,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "DJT",
       "signal": "WATCH",
-      "price": 5.16,
-      "rsi": 24.0,
-      "stop_reference": 4.31,
+      "price": 5.02,
+      "rsi": 23.2,
+      "stop_reference": 4.17,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4154,9 +4206,9 @@
     {
       "symbol": "DOCN",
       "signal": "WATCH",
-      "price": 82.26,
-      "rsi": 30.3,
-      "stop_reference": 64.28,
+      "price": 81.57,
+      "rsi": 30.0,
+      "stop_reference": 63.58,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4164,9 +4216,9 @@
     {
       "symbol": "DT",
       "signal": "WATCH",
-      "price": 46.04,
-      "rsi": 22.3,
-      "stop_reference": 40.51,
+      "price": 46.91,
+      "rsi": 23.2,
+      "stop_reference": 41.38,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4174,9 +4226,9 @@
     {
       "symbol": "DUK",
       "signal": "WATCH",
-      "price": 129.64,
-      "rsi": 69.7,
-      "stop_reference": 125.45,
+      "price": 129.72,
+      "rsi": 69.8,
+      "stop_reference": 125.53,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4184,9 +4236,9 @@
     {
       "symbol": "DVN",
       "signal": "WATCH",
-      "price": 44.65,
-      "rsi": 33.0,
-      "stop_reference": 41.39,
+      "price": 44.51,
+      "rsi": 32.6,
+      "stop_reference": 41.24,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4194,9 +4246,9 @@
     {
       "symbol": "ECHO",
       "signal": "WATCH",
-      "price": 100.03,
-      "rsi": 61.2,
-      "stop_reference": 91.49,
+      "price": 99.49,
+      "rsi": 60.2,
+      "stop_reference": 90.95,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4204,9 +4256,9 @@
     {
       "symbol": "EL",
       "signal": "WATCH",
-      "price": 112.68,
-      "rsi": 66.6,
-      "stop_reference": 104.36,
+      "price": 112.83,
+      "rsi": 66.8,
+      "stop_reference": 104.51,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4214,19 +4266,19 @@
     {
       "symbol": "EMR",
       "signal": "WATCH",
-      "price": 171.05,
-      "rsi": 65.2,
-      "stop_reference": 161.35,
+      "price": 171.94,
+      "rsi": 66.2,
+      "stop_reference": 162.24,
       "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "5/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "ENPH",
       "signal": "WATCH",
-      "price": 33.17,
-      "rsi": 56.6,
-      "stop_reference": 28.73,
+      "price": 32.51,
+      "rsi": 54.9,
+      "stop_reference": 28.07,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4234,9 +4286,9 @@
     {
       "symbol": "EQNR",
       "signal": "WATCH",
-      "price": 42.66,
-      "rsi": 40.5,
-      "stop_reference": 39.64,
+      "price": 42.41,
+      "rsi": 39.8,
+      "stop_reference": 39.35,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4244,9 +4296,9 @@
     {
       "symbol": "EQT",
       "signal": "WATCH",
-      "price": 52.07,
-      "rsi": 42.4,
-      "stop_reference": 48.76,
+      "price": 52.38,
+      "rsi": 43.5,
+      "stop_reference": 49.07,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4254,9 +4306,9 @@
     {
       "symbol": "EQX",
       "signal": "WATCH",
-      "price": 11.12,
-      "rsi": 53.8,
-      "stop_reference": 10.04,
+      "price": 11.15,
+      "rsi": 54.1,
+      "stop_reference": 10.07,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4264,9 +4316,9 @@
     {
       "symbol": "ET",
       "signal": "WATCH",
-      "price": 19.57,
-      "rsi": 38.1,
-      "stop_reference": 18.66,
+      "price": 19.58,
+      "rsi": 38.3,
+      "stop_reference": 18.68,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4274,9 +4326,9 @@
     {
       "symbol": "ETN",
       "signal": "WATCH",
-      "price": 355.13,
-      "rsi": 37.2,
-      "stop_reference": 317.74,
+      "price": 353.96,
+      "rsi": 37.0,
+      "stop_reference": 316.57,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4284,9 +4336,9 @@
     {
       "symbol": "EW",
       "signal": "WATCH",
-      "price": 99.56,
-      "rsi": 73.6,
-      "stop_reference": 94.02,
+      "price": 99.74,
+      "rsi": 73.9,
+      "stop_reference": 94.2,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4294,19 +4346,19 @@
     {
       "symbol": "EXC",
       "signal": "WATCH",
-      "price": 46.4,
-      "rsi": 68.7,
-      "stop_reference": 44.62,
+      "price": 46.44,
+      "rsi": 69.0,
+      "stop_reference": 44.66,
       "target_reference": null,
-      "conditions_met": "3/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "2/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "EXK",
       "signal": "WATCH",
-      "price": 7.74,
-      "rsi": 44.3,
-      "stop_reference": 6.85,
+      "price": 7.8,
+      "rsi": 45.1,
+      "stop_reference": 6.9,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4314,9 +4366,9 @@
     {
       "symbol": "F",
       "signal": "WATCH",
-      "price": 12.78,
-      "rsi": 57.7,
-      "stop_reference": 12.07,
+      "price": 12.84,
+      "rsi": 58.4,
+      "stop_reference": 12.11,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4324,9 +4376,9 @@
     {
       "symbol": "FCX",
       "signal": "WATCH",
-      "price": 62.39,
-      "rsi": 33.0,
-      "stop_reference": 57.13,
+      "price": 62.18,
+      "rsi": 32.1,
+      "stop_reference": 56.92,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4334,9 +4386,9 @@
     {
       "symbol": "FIS",
       "signal": "WATCH",
-      "price": 29.53,
-      "rsi": 31.6,
-      "stop_reference": 25.72,
+      "price": 29.72,
+      "rsi": 31.9,
+      "stop_reference": 25.91,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4344,9 +4396,9 @@
     {
       "symbol": "FISV",
       "signal": "WATCH",
-      "price": 62.42,
-      "rsi": 81.9,
-      "stop_reference": 58.22,
+      "price": 62.1,
+      "rsi": 81.6,
+      "stop_reference": 57.89,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4354,9 +4406,9 @@
     {
       "symbol": "FITB",
       "signal": "WATCH",
-      "price": 54.5,
-      "rsi": 61.5,
-      "stop_reference": 52.13,
+      "price": 54.58,
+      "rsi": 61.9,
+      "stop_reference": 52.2,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4364,9 +4416,9 @@
     {
       "symbol": "FSLR",
       "signal": "WATCH",
-      "price": 201.9,
-      "rsi": 67.3,
-      "stop_reference": 183.61,
+      "price": 198.74,
+      "rsi": 65.6,
+      "stop_reference": 180.46,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4374,9 +4426,9 @@
     {
       "symbol": "FTNT",
       "signal": "WATCH",
-      "price": 127.91,
-      "rsi": 25.3,
-      "stop_reference": 109.8,
+      "price": 128.37,
+      "rsi": 25.6,
+      "stop_reference": 110.26,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4384,9 +4436,9 @@
     {
       "symbol": "FWRG",
       "signal": "WATCH",
-      "price": 13.52,
-      "rsi": 69.0,
-      "stop_reference": 12.14,
+      "price": 13.31,
+      "rsi": 66.1,
+      "stop_reference": 11.93,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4394,9 +4446,9 @@
     {
       "symbol": "GE",
       "signal": "WATCH",
-      "price": 331.36,
-      "rsi": 63.2,
-      "stop_reference": 311.03,
+      "price": 331.78,
+      "rsi": 63.4,
+      "stop_reference": 311.45,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4404,9 +4456,9 @@
     {
       "symbol": "GEV",
       "signal": "WATCH",
-      "price": 819.56,
-      "rsi": 39.0,
-      "stop_reference": 713.88,
+      "price": 820.41,
+      "rsi": 39.1,
+      "stop_reference": 714.73,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4414,9 +4466,9 @@
     {
       "symbol": "GFS",
       "signal": "WATCH",
-      "price": 40.4,
-      "rsi": 34.9,
-      "stop_reference": 35.33,
+      "price": 41.0,
+      "rsi": 36.1,
+      "stop_reference": 35.93,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4424,9 +4476,9 @@
     {
       "symbol": "GILD",
       "signal": "WATCH",
-      "price": 173.73,
-      "rsi": 72.8,
-      "stop_reference": 164.27,
+      "price": 174.41,
+      "rsi": 73.3,
+      "stop_reference": 164.81,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4434,9 +4486,9 @@
     {
       "symbol": "GIS",
       "signal": "WATCH",
-      "price": 36.4,
+      "price": 36.39,
       "rsi": 62.9,
-      "stop_reference": 34.1,
+      "stop_reference": 34.09,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4444,9 +4496,9 @@
     {
       "symbol": "GKOS",
       "signal": "WATCH",
-      "price": 251.66,
+      "price": 251.86,
       "rsi": 81.7,
-      "stop_reference": 227.93,
+      "stop_reference": 227.99,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4454,9 +4506,9 @@
     {
       "symbol": "GLW",
       "signal": "WATCH",
-      "price": 117.8,
-      "rsi": 33.8,
-      "stop_reference": 102.53,
+      "price": 117.04,
+      "rsi": 33.4,
+      "stop_reference": 101.77,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4464,9 +4516,9 @@
     {
       "symbol": "GLXY",
       "signal": "WATCH",
-      "price": 14.73,
-      "rsi": 38.9,
-      "stop_reference": 11.27,
+      "price": 14.98,
+      "rsi": 39.5,
+      "stop_reference": 11.51,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4474,9 +4526,9 @@
     {
       "symbol": "GM",
       "signal": "WATCH",
-      "price": 93.18,
-      "rsi": 68.5,
-      "stop_reference": 87.36,
+      "price": 93.25,
+      "rsi": 68.6,
+      "stop_reference": 87.43,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4484,19 +4536,19 @@
     {
       "symbol": "GOOG",
       "signal": "WATCH",
-      "price": 289.41,
-      "rsi": 31.7,
-      "stop_reference": 268.72,
+      "price": 290.2,
+      "rsi": 32.4,
+      "stop_reference": 269.52,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "GSK",
       "signal": "WATCH",
-      "price": 51.1,
-      "rsi": 58.7,
-      "stop_reference": 48.65,
+      "price": 51.21,
+      "rsi": 59.1,
+      "stop_reference": 48.74,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4504,9 +4556,9 @@
     {
       "symbol": "HAL",
       "signal": "WATCH",
-      "price": 32.35,
-      "rsi": 39.4,
-      "stop_reference": 30.21,
+      "price": 32.26,
+      "rsi": 39.0,
+      "stop_reference": 30.12,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4514,19 +4566,19 @@
     {
       "symbol": "HD",
       "signal": "WATCH",
-      "price": 351.76,
-      "rsi": 73.3,
-      "stop_reference": 334.58,
+      "price": 351.15,
+      "rsi": 73.1,
+      "stop_reference": 333.97,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "HIMS",
       "signal": "WATCH",
-      "price": 27.38,
-      "rsi": 46.4,
-      "stop_reference": 23.52,
+      "price": 27.69,
+      "rsi": 47.6,
+      "stop_reference": 23.83,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4534,9 +4586,9 @@
     {
       "symbol": "HLMN",
       "signal": "WATCH",
-      "price": 8.97,
-      "rsi": 81.4,
-      "stop_reference": 8.28,
+      "price": 8.94,
+      "rsi": 81.2,
+      "stop_reference": 8.25,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4544,9 +4596,9 @@
     {
       "symbol": "HLN",
       "signal": "WATCH",
-      "price": 9.19,
-      "rsi": 45.1,
-      "stop_reference": 8.64,
+      "price": 9.2,
+      "rsi": 45.3,
+      "stop_reference": 8.65,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4554,9 +4606,9 @@
     {
       "symbol": "HON",
       "signal": "WATCH",
-      "price": 230.04,
-      "rsi": 70.9,
-      "stop_reference": 218.89,
+      "price": 230.82,
+      "rsi": 71.6,
+      "stop_reference": 219.68,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4564,9 +4616,9 @@
     {
       "symbol": "HOOD",
       "signal": "WATCH",
-      "price": 87.2,
-      "rsi": 34.5,
-      "stop_reference": 76.9,
+      "price": 87.89,
+      "rsi": 35.7,
+      "stop_reference": 77.59,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4574,19 +4626,19 @@
     {
       "symbol": "HPQ",
       "signal": "WATCH",
-      "price": 30.16,
-      "rsi": 45.8,
-      "stop_reference": 27.12,
+      "price": 30.59,
+      "rsi": 47.7,
+      "stop_reference": 27.51,
       "target_reference": null,
-      "conditions_met": "1/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "2/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "HWM",
       "signal": "WATCH",
-      "price": 214.1,
-      "rsi": 49.7,
-      "stop_reference": 194.98,
+      "price": 214.29,
+      "rsi": 49.8,
+      "stop_reference": 195.17,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4594,9 +4646,9 @@
     {
       "symbol": "IBKR",
       "signal": "WATCH",
-      "price": 78.05,
-      "rsi": 39.6,
-      "stop_reference": 71.79,
+      "price": 78.11,
+      "rsi": 39.8,
+      "stop_reference": 71.85,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4604,9 +4656,9 @@
     {
       "symbol": "IBM",
       "signal": "WATCH",
-      "price": 254.97,
-      "rsi": 63.5,
-      "stop_reference": 240.34,
+      "price": 254.71,
+      "rsi": 63.3,
+      "stop_reference": 240.08,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4614,9 +4666,9 @@
     {
       "symbol": "INTC",
       "signal": "WATCH",
-      "price": 57.6,
-      "rsi": 22.5,
-      "stop_reference": 44.75,
+      "price": 58.94,
+      "rsi": 23.0,
+      "stop_reference": 46.09,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4624,9 +4676,9 @@
     {
       "symbol": "IONQ",
       "signal": "WATCH",
-      "price": 29.2,
-      "rsi": 36.2,
-      "stop_reference": 24.48,
+      "price": 29.58,
+      "rsi": 37.0,
+      "stop_reference": 24.86,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4634,9 +4686,9 @@
     {
       "symbol": "IREN",
       "signal": "WATCH",
-      "price": 21.77,
-      "rsi": 31.3,
-      "stop_reference": 16.38,
+      "price": 22.06,
+      "rsi": 31.7,
+      "stop_reference": 16.66,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4644,9 +4696,9 @@
     {
       "symbol": "ITUB",
       "signal": "WATCH",
-      "price": 7.23,
-      "rsi": 31.8,
-      "stop_reference": 6.48,
+      "price": 7.26,
+      "rsi": 32.5,
+      "stop_reference": 6.51,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4654,9 +4706,9 @@
     {
       "symbol": "JCI",
       "signal": "WATCH",
-      "price": 140.1,
+      "price": 140.21,
       "rsi": 40.4,
-      "stop_reference": 128.67,
+      "stop_reference": 128.78,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4664,9 +4716,9 @@
     {
       "symbol": "JD",
       "signal": "WATCH",
-      "price": 27.95,
-      "rsi": 64.9,
-      "stop_reference": 26.71,
+      "price": 27.91,
+      "rsi": 64.6,
+      "stop_reference": 26.66,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4674,9 +4726,9 @@
     {
       "symbol": "JNJ",
       "signal": "WATCH",
-      "price": 273.72,
-      "rsi": 58.8,
-      "stop_reference": 260.39,
+      "price": 274.39,
+      "rsi": 59.3,
+      "stop_reference": 260.92,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4684,9 +4736,9 @@
     {
       "symbol": "JPM",
       "signal": "WATCH",
-      "price": 351.39,
-      "rsi": 63.1,
-      "stop_reference": 337.94,
+      "price": 351.23,
+      "rsi": 63.0,
+      "stop_reference": 337.75,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4694,9 +4746,9 @@
     {
       "symbol": "KHC",
       "signal": "WATCH",
-      "price": 25.97,
-      "rsi": 66.2,
-      "stop_reference": 24.55,
+      "price": 25.74,
+      "rsi": 65.0,
+      "stop_reference": 24.33,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4704,9 +4756,9 @@
     {
       "symbol": "KKR",
       "signal": "WATCH",
-      "price": 101.86,
-      "rsi": 65.5,
-      "stop_reference": 95.49,
+      "price": 102.0,
+      "rsi": 65.6,
+      "stop_reference": 95.58,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4714,9 +4766,9 @@
     {
       "symbol": "KLAC",
       "signal": "WATCH",
-      "price": 151.12,
+      "price": 151.08,
       "rsi": 37.2,
-      "stop_reference": 134.78,
+      "stop_reference": 134.74,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4724,9 +4776,9 @@
     {
       "symbol": "KMI",
       "signal": "WATCH",
-      "price": 31.5,
-      "rsi": 40.8,
-      "stop_reference": 29.67,
+      "price": 31.51,
+      "rsi": 40.9,
+      "stop_reference": 29.69,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4734,19 +4786,19 @@
     {
       "symbol": "KO",
       "signal": "WATCH",
-      "price": 95.9,
-      "rsi": 65.3,
-      "stop_reference": 92.52,
+      "price": 95.97,
+      "rsi": 65.5,
+      "stop_reference": 92.59,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "KTOS",
       "signal": "WATCH",
-      "price": 36.6,
-      "rsi": 34.5,
-      "stop_reference": 31.91,
+      "price": 36.8,
+      "rsi": 34.9,
+      "stop_reference": 32.1,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4754,9 +4806,9 @@
     {
       "symbol": "LEN",
       "signal": "WATCH",
-      "price": 92.83,
-      "rsi": 65.9,
-      "stop_reference": 85.7,
+      "price": 92.75,
+      "rsi": 65.8,
+      "stop_reference": 85.62,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4764,9 +4816,9 @@
     {
       "symbol": "LITE",
       "signal": "WATCH",
-      "price": 605.8,
-      "rsi": 30.6,
-      "stop_reference": 450.3,
+      "price": 609.0,
+      "rsi": 30.7,
+      "stop_reference": 453.49,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4774,9 +4826,9 @@
     {
       "symbol": "LOW",
       "signal": "WATCH",
-      "price": 228.35,
+      "price": 228.19,
       "rsi": 75.1,
-      "stop_reference": 216.28,
+      "stop_reference": 216.11,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4784,9 +4836,9 @@
     {
       "symbol": "LRCX",
       "signal": "WATCH",
-      "price": 223.35,
-      "rsi": 30.5,
-      "stop_reference": 194.79,
+      "price": 223.62,
+      "rsi": 30.6,
+      "stop_reference": 195.07,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4795,8 +4847,8 @@
       "symbol": "LYG",
       "signal": "WATCH",
       "price": 5.28,
-      "rsi": 45.3,
-      "stop_reference": 4.98,
+      "rsi": 45.1,
+      "stop_reference": 4.97,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4804,9 +4856,9 @@
     {
       "symbol": "MA",
       "signal": "WATCH",
-      "price": 668.83,
-      "rsi": 74.2,
-      "stop_reference": 641.87,
+      "price": 667.74,
+      "rsi": 73.9,
+      "stop_reference": 640.79,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4814,9 +4866,9 @@
     {
       "symbol": "MCD",
       "signal": "WATCH",
-      "price": 277.01,
-      "rsi": 77.9,
-      "stop_reference": 265.81,
+      "price": 277.72,
+      "rsi": 78.2,
+      "stop_reference": 266.49,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4824,9 +4876,9 @@
     {
       "symbol": "MDLN",
       "signal": "WATCH",
-      "price": 39.04,
-      "rsi": 70.2,
-      "stop_reference": 36.05,
+      "price": 39.21,
+      "rsi": 70.6,
+      "stop_reference": 36.22,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4834,9 +4886,9 @@
     {
       "symbol": "MDLZ",
       "signal": "WATCH",
-      "price": 67.96,
-      "rsi": 67.1,
-      "stop_reference": 64.93,
+      "price": 67.82,
+      "rsi": 66.8,
+      "stop_reference": 64.79,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4844,9 +4896,9 @@
     {
       "symbol": "MDT",
       "signal": "WATCH",
-      "price": 105.04,
+      "price": 105.06,
       "rsi": 73.9,
-      "stop_reference": 99.95,
+      "stop_reference": 99.97,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4854,9 +4906,9 @@
     {
       "symbol": "MGM",
       "signal": "WATCH",
-      "price": 32.6,
-      "rsi": 59.3,
-      "stop_reference": 30.17,
+      "price": 32.4,
+      "rsi": 58.4,
+      "stop_reference": 29.97,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4864,9 +4916,9 @@
     {
       "symbol": "MNST",
       "signal": "WATCH",
-      "price": 48.95,
-      "rsi": 66.9,
-      "stop_reference": 46.77,
+      "price": 48.83,
+      "rsi": 66.5,
+      "stop_reference": 46.65,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4874,9 +4926,9 @@
     {
       "symbol": "MO",
       "signal": "WATCH",
-      "price": 78.08,
-      "rsi": 67.7,
-      "stop_reference": 74.74,
+      "price": 78.05,
+      "rsi": 67.6,
+      "stop_reference": 74.7,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4884,9 +4936,9 @@
     {
       "symbol": "MOD",
       "signal": "WATCH",
-      "price": 95.18,
-      "rsi": 21.4,
-      "stop_reference": 72.37,
+      "price": 95.02,
+      "rsi": 21.3,
+      "stop_reference": 72.21,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4894,9 +4946,9 @@
     {
       "symbol": "MOS",
       "signal": "WATCH",
-      "price": 20.17,
-      "rsi": 54.6,
-      "stop_reference": 18.46,
+      "price": 20.38,
+      "rsi": 55.9,
+      "stop_reference": 18.65,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4904,9 +4956,9 @@
     {
       "symbol": "MP",
       "signal": "WATCH",
-      "price": 36.61,
-      "rsi": 32.8,
-      "stop_reference": 31.89,
+      "price": 36.4,
+      "rsi": 32.3,
+      "stop_reference": 31.68,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4914,9 +4966,9 @@
     {
       "symbol": "MRK",
       "signal": "WATCH",
-      "price": 148.26,
-      "rsi": 54.2,
-      "stop_reference": 139.24,
+      "price": 148.68,
+      "rsi": 54.8,
+      "stop_reference": 139.66,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4924,9 +4976,9 @@
     {
       "symbol": "MRNA",
       "signal": "WATCH",
-      "price": 247.82,
+      "price": 248.01,
       "rsi": 65.6,
-      "stop_reference": 208.62,
+      "stop_reference": 208.81,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4934,9 +4986,9 @@
     {
       "symbol": "MRVL",
       "signal": "WATCH",
-      "price": 157.87,
+      "price": 157.86,
       "rsi": 26.5,
-      "stop_reference": 122.37,
+      "stop_reference": 122.36,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4944,9 +4996,9 @@
     {
       "symbol": "MS",
       "signal": "WATCH",
-      "price": 192.24,
-      "rsi": 55.8,
-      "stop_reference": 182.32,
+      "price": 192.42,
+      "rsi": 56.0,
+      "stop_reference": 182.46,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -4954,19 +5006,19 @@
     {
       "symbol": "MSTR",
       "signal": "WATCH",
-      "price": 143.37,
-      "rsi": 50.3,
-      "stop_reference": 124.69,
+      "price": 144.79,
+      "rsi": 51.3,
+      "stop_reference": 126.11,
       "target_reference": null,
-      "conditions_met": "3/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "MU",
       "signal": "WATCH",
-      "price": 805.21,
-      "rsi": 36.1,
-      "stop_reference": 703.91,
+      "price": 809.28,
+      "rsi": 36.4,
+      "stop_reference": 707.98,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4974,9 +5026,9 @@
     {
       "symbol": "NBIS",
       "signal": "WATCH",
-      "price": 142.41,
-      "rsi": 34.8,
-      "stop_reference": 111.35,
+      "price": 142.76,
+      "rsi": 34.9,
+      "stop_reference": 111.69,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -4984,29 +5036,29 @@
     {
       "symbol": "NCLH",
       "signal": "WATCH",
-      "price": 18.53,
+      "price": 18.52,
       "rsi": 68.5,
-      "stop_reference": 16.94,
+      "stop_reference": 16.92,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "NDAQ",
       "signal": "WATCH",
-      "price": 108.5,
-      "rsi": 74.1,
-      "stop_reference": 103.95,
+      "price": 108.92,
+      "rsi": 74.7,
+      "stop_reference": 104.37,
       "target_reference": null,
-      "conditions_met": "3/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "NEE",
       "signal": "WATCH",
-      "price": 88.35,
-      "rsi": 74.0,
-      "stop_reference": 84.87,
+      "price": 88.45,
+      "rsi": 74.2,
+      "stop_reference": 84.95,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5014,9 +5066,9 @@
     {
       "symbol": "NEM",
       "signal": "WATCH",
-      "price": 116.73,
-      "rsi": 53.3,
-      "stop_reference": 108.15,
+      "price": 116.92,
+      "rsi": 53.5,
+      "stop_reference": 108.26,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5024,9 +5076,9 @@
     {
       "symbol": "NET",
       "signal": "WATCH",
-      "price": 263.73,
-      "rsi": 33.5,
-      "stop_reference": 226.28,
+      "price": 266.57,
+      "rsi": 34.1,
+      "stop_reference": 229.13,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5034,9 +5086,9 @@
     {
       "symbol": "NFLX",
       "signal": "WATCH",
-      "price": 66.03,
-      "rsi": 46.3,
-      "stop_reference": 62.11,
+      "price": 66.25,
+      "rsi": 47.0,
+      "stop_reference": 62.33,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5044,9 +5096,9 @@
     {
       "symbol": "NKE",
       "signal": "WATCH",
-      "price": 40.96,
-      "rsi": 69.6,
-      "stop_reference": 38.62,
+      "price": 40.85,
+      "rsi": 69.2,
+      "stop_reference": 38.51,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5054,9 +5106,9 @@
     {
       "symbol": "NOK",
       "signal": "WATCH",
-      "price": 8.27,
-      "rsi": 38.9,
-      "stop_reference": 7.27,
+      "price": 8.28,
+      "rsi": 39.1,
+      "stop_reference": 7.29,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5064,9 +5116,9 @@
     {
       "symbol": "NOW",
       "signal": "WATCH",
-      "price": 108.49,
-      "rsi": 30.5,
-      "stop_reference": 93.13,
+      "price": 109.19,
+      "rsi": 30.9,
+      "stop_reference": 93.82,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5074,9 +5126,9 @@
     {
       "symbol": "NRG",
       "signal": "WATCH",
-      "price": 85.49,
+      "price": 85.43,
       "rsi": 31.9,
-      "stop_reference": 75.82,
+      "stop_reference": 75.76,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5084,9 +5136,9 @@
     {
       "symbol": "NRIX",
       "signal": "WATCH",
-      "price": 15.22,
-      "rsi": 20.5,
-      "stop_reference": 11.43,
+      "price": 15.28,
+      "rsi": 20.6,
+      "stop_reference": 11.49,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5094,18 +5146,18 @@
     {
       "symbol": "NTRA",
       "signal": "WATCH",
-      "price": 378.3,
-      "rsi": 43.4,
-      "stop_reference": 338.79,
+      "price": 381.11,
+      "rsi": 44.2,
+      "stop_reference": 341.59,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "NU",
       "signal": "WATCH",
       "price": 12.03,
-      "rsi": 36.0,
+      "rsi": 36.1,
       "stop_reference": 10.7,
       "target_reference": null,
       "conditions_met": "1/6",
@@ -5114,19 +5166,19 @@
     {
       "symbol": "NVDA",
       "signal": "WATCH",
-      "price": 202.92,
-      "rsi": 36.4,
-      "stop_reference": 190.16,
+      "price": 203.43,
+      "rsi": 36.7,
+      "stop_reference": 190.67,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "NVO",
       "signal": "WATCH",
-      "price": 43.03,
-      "rsi": 68.5,
-      "stop_reference": 41.09,
+      "price": 42.85,
+      "rsi": 67.8,
+      "stop_reference": 40.91,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5134,9 +5186,9 @@
     {
       "symbol": "NVTS",
       "signal": "WATCH",
-      "price": 8.98,
-      "rsi": 44.3,
-      "stop_reference": 7.42,
+      "price": 9.03,
+      "rsi": 44.8,
+      "stop_reference": 7.47,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5144,19 +5196,19 @@
     {
       "symbol": "NXPI",
       "signal": "WATCH",
-      "price": 265.73,
-      "rsi": 66.1,
-      "stop_reference": 243.96,
+      "price": 268.3,
+      "rsi": 67.3,
+      "stop_reference": 246.53,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "NXT",
       "signal": "WATCH",
-      "price": 108.05,
-      "rsi": 74.1,
-      "stop_reference": 95.69,
+      "price": 106.85,
+      "rsi": 73.5,
+      "stop_reference": 94.49,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5164,9 +5216,9 @@
     {
       "symbol": "NYT",
       "signal": "WATCH",
-      "price": 65.74,
-      "rsi": 41.5,
-      "stop_reference": 61.58,
+      "price": 65.82,
+      "rsi": 41.8,
+      "stop_reference": 61.66,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5174,9 +5226,9 @@
     {
       "symbol": "O",
       "signal": "WATCH",
-      "price": 59.02,
-      "rsi": 67.1,
-      "stop_reference": 57.06,
+      "price": 58.99,
+      "rsi": 67.0,
+      "stop_reference": 57.02,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5184,9 +5236,9 @@
     {
       "symbol": "OC",
       "signal": "WATCH",
-      "price": 123.28,
-      "rsi": 56.3,
-      "stop_reference": 113.14,
+      "price": 123.03,
+      "rsi": 56.0,
+      "stop_reference": 112.89,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5194,9 +5246,9 @@
     {
       "symbol": "OKLO",
       "signal": "WATCH",
-      "price": 22.04,
-      "rsi": 22.5,
-      "stop_reference": 18.12,
+      "price": 22.29,
+      "rsi": 22.9,
+      "stop_reference": 18.37,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5204,9 +5256,9 @@
     {
       "symbol": "OKTA",
       "signal": "WATCH",
-      "price": 186.27,
-      "rsi": 41.3,
-      "stop_reference": 160.2,
+      "price": 186.82,
+      "rsi": 41.5,
+      "stop_reference": 160.75,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5214,9 +5266,9 @@
     {
       "symbol": "ON",
       "signal": "WATCH",
-      "price": 70.38,
-      "rsi": 42.4,
-      "stop_reference": 62.67,
+      "price": 71.25,
+      "rsi": 43.6,
+      "stop_reference": 63.54,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5224,9 +5276,9 @@
     {
       "symbol": "ONDS",
       "signal": "WATCH",
-      "price": 5.32,
-      "rsi": 30.9,
-      "stop_reference": 4.43,
+      "price": 5.41,
+      "rsi": 31.8,
+      "stop_reference": 4.53,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5234,19 +5286,19 @@
     {
       "symbol": "ONON",
       "signal": "WATCH",
-      "price": 38.49,
-      "rsi": 72.9,
-      "stop_reference": 35.82,
+      "price": 38.53,
+      "rsi": 73.0,
+      "stop_reference": 35.85,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "ORCL",
       "signal": "WATCH",
-      "price": 125.76,
-      "rsi": 44.0,
-      "stop_reference": 109.7,
+      "price": 126.75,
+      "rsi": 44.7,
+      "stop_reference": 110.69,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5254,9 +5306,9 @@
     {
       "symbol": "OUST",
       "signal": "WATCH",
-      "price": 31.7,
-      "rsi": 46.6,
-      "stop_reference": 26.36,
+      "price": 32.08,
+      "rsi": 47.5,
+      "stop_reference": 26.74,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5264,9 +5316,9 @@
     {
       "symbol": "OXY",
       "signal": "WATCH",
-      "price": 56.93,
-      "rsi": 34.9,
-      "stop_reference": 53.42,
+      "price": 56.7,
+      "rsi": 34.4,
+      "stop_reference": 53.15,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5274,9 +5326,9 @@
     {
       "symbol": "PAAS",
       "signal": "WATCH",
-      "price": 40.96,
-      "rsi": 43.8,
-      "stop_reference": 37.32,
+      "price": 41.03,
+      "rsi": 44.0,
+      "stop_reference": 37.38,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5284,9 +5336,9 @@
     {
       "symbol": "PANW",
       "signal": "WATCH",
-      "price": 348.46,
-      "rsi": 41.3,
-      "stop_reference": 310.21,
+      "price": 349.33,
+      "rsi": 41.5,
+      "stop_reference": 311.08,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5294,9 +5346,9 @@
     {
       "symbol": "PBR",
       "signal": "WATCH",
-      "price": 19.76,
-      "rsi": 29.7,
-      "stop_reference": 17.87,
+      "price": 19.62,
+      "rsi": 29.2,
+      "stop_reference": 17.71,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5304,9 +5356,9 @@
     {
       "symbol": "PCG",
       "signal": "WATCH",
-      "price": 13.48,
-      "rsi": 56.8,
-      "stop_reference": 12.72,
+      "price": 13.47,
+      "rsi": 56.5,
+      "stop_reference": 12.7,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5314,19 +5366,19 @@
     {
       "symbol": "PDD",
       "signal": "WATCH",
-      "price": 83.73,
-      "rsi": 60.7,
-      "stop_reference": 79.09,
+      "price": 83.6,
+      "rsi": 60.4,
+      "stop_reference": 78.96,
       "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "PENG",
       "signal": "WATCH",
-      "price": 49.01,
-      "rsi": 41.1,
-      "stop_reference": 37.99,
+      "price": 49.24,
+      "rsi": 41.3,
+      "stop_reference": 38.23,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5334,9 +5386,9 @@
     {
       "symbol": "PEP",
       "signal": "WATCH",
-      "price": 143.57,
-      "rsi": 66.8,
-      "stop_reference": 137.12,
+      "price": 143.24,
+      "rsi": 66.5,
+      "stop_reference": 136.79,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5344,19 +5396,19 @@
     {
       "symbol": "PFE",
       "signal": "WATCH",
-      "price": 30.51,
-      "rsi": 62.5,
-      "stop_reference": 29.21,
+      "price": 30.67,
+      "rsi": 63.6,
+      "stop_reference": 29.36,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "4/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "PFGC",
       "signal": "WATCH",
-      "price": 110.14,
-      "rsi": 71.8,
-      "stop_reference": 103.39,
+      "price": 109.87,
+      "rsi": 71.5,
+      "stop_reference": 103.13,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5364,9 +5416,9 @@
     {
       "symbol": "PG",
       "signal": "WATCH",
-      "price": 167.96,
-      "rsi": 70.5,
-      "stop_reference": 161.64,
+      "price": 167.68,
+      "rsi": 70.2,
+      "stop_reference": 161.35,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5374,19 +5426,19 @@
     {
       "symbol": "PLD",
       "signal": "WATCH",
-      "price": 128.76,
-      "rsi": 48.8,
-      "stop_reference": 123.72,
+      "price": 129.44,
+      "rsi": 51.0,
+      "stop_reference": 124.4,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "PLTR",
       "signal": "WATCH",
-      "price": 170.67,
-      "rsi": 32.9,
-      "stop_reference": 152.68,
+      "price": 170.92,
+      "rsi": 33.0,
+      "stop_reference": 152.93,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5394,9 +5446,9 @@
     {
       "symbol": "PM",
       "signal": "WATCH",
-      "price": 210.21,
-      "rsi": 66.0,
-      "stop_reference": 199.93,
+      "price": 210.76,
+      "rsi": 66.6,
+      "stop_reference": 200.48,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5404,9 +5456,9 @@
     {
       "symbol": "PPL",
       "signal": "WATCH",
-      "price": 35.78,
-      "rsi": 62.9,
-      "stop_reference": 34.63,
+      "price": 35.88,
+      "rsi": 63.7,
+      "stop_reference": 34.72,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5414,9 +5466,9 @@
     {
       "symbol": "PSLV",
       "signal": "WATCH",
-      "price": 16.89,
-      "rsi": 37.6,
-      "stop_reference": 15.71,
+      "price": 17.0,
+      "rsi": 38.9,
+      "stop_reference": 15.81,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5424,9 +5476,9 @@
     {
       "symbol": "PURR",
       "signal": "WATCH",
-      "price": 9.62,
-      "rsi": 45.5,
-      "stop_reference": 7.65,
+      "price": 9.6,
+      "rsi": 45.4,
+      "stop_reference": 7.62,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5436,7 +5488,7 @@
       "signal": "WATCH",
       "price": 60.47,
       "rsi": 68.8,
-      "stop_reference": 57.48,
+      "stop_reference": 57.49,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5444,9 +5496,9 @@
     {
       "symbol": "QBTS",
       "signal": "WATCH",
-      "price": 10.35,
-      "rsi": 27.9,
-      "stop_reference": 8.77,
+      "price": 10.44,
+      "rsi": 28.9,
+      "stop_reference": 8.86,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5454,9 +5506,9 @@
     {
       "symbol": "QCOM",
       "signal": "WATCH",
-      "price": 168.41,
-      "rsi": 43.6,
-      "stop_reference": 153.22,
+      "price": 169.04,
+      "rsi": 44.2,
+      "stop_reference": 153.84,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5464,9 +5516,9 @@
     {
       "symbol": "QXO",
       "signal": "WATCH",
-      "price": 12.6,
-      "rsi": 61.7,
-      "stop_reference": 11.3,
+      "price": 12.64,
+      "rsi": 62.0,
+      "stop_reference": 11.35,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5474,9 +5526,9 @@
     {
       "symbol": "RDDT",
       "signal": "WATCH",
-      "price": 103.68,
-      "rsi": 29.6,
-      "stop_reference": 85.28,
+      "price": 104.35,
+      "rsi": 30.2,
+      "stop_reference": 85.95,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5484,9 +5536,9 @@
     {
       "symbol": "RGTI",
       "signal": "WATCH",
-      "price": 11.19,
-      "rsi": 36.3,
-      "stop_reference": 9.59,
+      "price": 11.33,
+      "rsi": 37.7,
+      "stop_reference": 9.72,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5494,9 +5546,9 @@
     {
       "symbol": "RIG",
       "signal": "WATCH",
-      "price": 5.47,
-      "rsi": 40.5,
-      "stop_reference": 4.86,
+      "price": 5.43,
+      "rsi": 40.0,
+      "stop_reference": 4.83,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5504,9 +5556,9 @@
     {
       "symbol": "RIOT",
       "signal": "WATCH",
-      "price": 15.62,
-      "rsi": 50.2,
-      "stop_reference": 12.78,
+      "price": 15.93,
+      "rsi": 51.4,
+      "stop_reference": 13.08,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5514,9 +5566,9 @@
     {
       "symbol": "RKT",
       "signal": "WATCH",
-      "price": 15.0,
-      "rsi": 75.1,
-      "stop_reference": 13.68,
+      "price": 14.97,
+      "rsi": 75.0,
+      "stop_reference": 13.64,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5524,9 +5576,9 @@
     {
       "symbol": "RTX",
       "signal": "WATCH",
-      "price": 197.74,
-      "rsi": 54.5,
-      "stop_reference": 187.79,
+      "price": 197.25,
+      "rsi": 53.7,
+      "stop_reference": 187.3,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5534,9 +5586,9 @@
     {
       "symbol": "RUN",
       "signal": "WATCH",
-      "price": 9.11,
-      "rsi": 66.3,
-      "stop_reference": 8.06,
+      "price": 9.03,
+      "rsi": 65.6,
+      "stop_reference": 7.98,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5545,8 +5597,8 @@
       "symbol": "SAN",
       "signal": "WATCH",
       "price": 12.12,
-      "rsi": 42.3,
-      "stop_reference": 11.37,
+      "rsi": 42.1,
+      "stop_reference": 11.36,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5554,9 +5606,9 @@
     {
       "symbol": "SBUX",
       "signal": "WATCH",
-      "price": 108.9,
-      "rsi": 73.1,
-      "stop_reference": 103.75,
+      "price": 108.82,
+      "rsi": 73.0,
+      "stop_reference": 103.65,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5564,9 +5616,9 @@
     {
       "symbol": "SCHW",
       "signal": "WATCH",
-      "price": 92.41,
-      "rsi": 46.5,
-      "stop_reference": 88.43,
+      "price": 92.77,
+      "rsi": 47.7,
+      "stop_reference": 88.79,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5574,9 +5626,9 @@
     {
       "symbol": "SE",
       "signal": "WATCH",
-      "price": 80.92,
+      "price": 80.95,
       "rsi": 40.9,
-      "stop_reference": 74.16,
+      "stop_reference": 74.19,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5584,9 +5636,9 @@
     {
       "symbol": "SEDG",
       "signal": "WATCH",
-      "price": 30.77,
-      "rsi": 45.7,
-      "stop_reference": 26.04,
+      "price": 30.94,
+      "rsi": 46.2,
+      "stop_reference": 26.21,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5594,9 +5646,9 @@
     {
       "symbol": "SGHC",
       "signal": "WATCH",
-      "price": 11.68,
-      "rsi": 56.9,
-      "stop_reference": 10.83,
+      "price": 11.7,
+      "rsi": 57.3,
+      "stop_reference": 10.85,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5604,9 +5656,9 @@
     {
       "symbol": "SHEL",
       "signal": "WATCH",
-      "price": 101.58,
-      "rsi": 47.0,
-      "stop_reference": 97.46,
+      "price": 100.89,
+      "rsi": 45.4,
+      "stop_reference": 96.68,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5614,9 +5666,9 @@
     {
       "symbol": "SHLS",
       "signal": "WATCH",
-      "price": 9.34,
-      "rsi": 67.4,
-      "stop_reference": 8.15,
+      "price": 8.98,
+      "rsi": 64.6,
+      "stop_reference": 7.8,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5624,9 +5676,9 @@
     {
       "symbol": "SIRI",
       "signal": "WATCH",
-      "price": 33.08,
-      "rsi": 84.5,
-      "stop_reference": 31.34,
+      "price": 33.13,
+      "rsi": 84.6,
+      "stop_reference": 31.39,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5634,9 +5686,9 @@
     {
       "symbol": "SLB",
       "signal": "WATCH",
-      "price": 49.83,
-      "rsi": 42.7,
-      "stop_reference": 46.54,
+      "price": 49.79,
+      "rsi": 42.5,
+      "stop_reference": 46.51,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5644,9 +5696,9 @@
     {
       "symbol": "SMCI",
       "signal": "WATCH",
-      "price": 29.93,
-      "rsi": 35.7,
-      "stop_reference": 25.01,
+      "price": 30.13,
+      "rsi": 36.0,
+      "stop_reference": 25.21,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5654,9 +5706,9 @@
     {
       "symbol": "SMR",
       "signal": "WATCH",
-      "price": 5.1,
-      "rsi": 30.2,
-      "stop_reference": 4.17,
+      "price": 5.16,
+      "rsi": 30.7,
+      "stop_reference": 4.22,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5664,9 +5716,9 @@
     {
       "symbol": "SMTC",
       "signal": "WATCH",
-      "price": 110.51,
-      "rsi": 33.1,
-      "stop_reference": 85.7,
+      "price": 111.28,
+      "rsi": 33.3,
+      "stop_reference": 86.47,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5674,9 +5726,9 @@
     {
       "symbol": "SNAP",
       "signal": "WATCH",
-      "price": 5.89,
-      "rsi": 50.2,
-      "stop_reference": 5.21,
+      "price": 5.93,
+      "rsi": 51.1,
+      "stop_reference": 5.26,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5684,9 +5736,9 @@
     {
       "symbol": "SNDK",
       "signal": "WATCH",
-      "price": 1038.01,
-      "rsi": 30.7,
-      "stop_reference": 839.85,
+      "price": 1040.59,
+      "rsi": 30.8,
+      "stop_reference": 842.43,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5694,19 +5746,19 @@
     {
       "symbol": "SNOW",
       "signal": "WATCH",
-      "price": 286.4,
-      "rsi": 34.7,
-      "stop_reference": 253.85,
+      "price": 288.66,
+      "rsi": 35.3,
+      "stop_reference": 256.11,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "SO",
       "signal": "WATCH",
-      "price": 92.9,
-      "rsi": 60.1,
-      "stop_reference": 89.62,
+      "price": 93.27,
+      "rsi": 61.9,
+      "stop_reference": 89.99,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5714,9 +5766,9 @@
     {
       "symbol": "SOFI",
       "signal": "WATCH",
-      "price": 17.4,
-      "rsi": 61.1,
-      "stop_reference": 15.84,
+      "price": 17.47,
+      "rsi": 61.5,
+      "stop_reference": 15.91,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5724,9 +5776,9 @@
     {
       "symbol": "SRE",
       "signal": "WATCH",
-      "price": 82.53,
-      "rsi": 46.8,
-      "stop_reference": 79.32,
+      "price": 82.7,
+      "rsi": 47.5,
+      "stop_reference": 79.49,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5734,9 +5786,9 @@
     {
       "symbol": "STM",
       "signal": "WATCH",
-      "price": 45.8,
-      "rsi": 42.6,
-      "stop_reference": 41.07,
+      "price": 45.94,
+      "rsi": 42.8,
+      "stop_reference": 41.21,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5744,9 +5796,9 @@
     {
       "symbol": "STX",
       "signal": "WATCH",
-      "price": 564.24,
+      "price": 563.35,
       "rsi": 31.2,
-      "stop_reference": 462.44,
+      "stop_reference": 461.54,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5754,9 +5806,9 @@
     {
       "symbol": "SYF",
       "signal": "WATCH",
-      "price": 74.3,
-      "rsi": 49.1,
-      "stop_reference": 69.98,
+      "price": 74.58,
+      "rsi": 50.1,
+      "stop_reference": 70.26,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5764,19 +5816,19 @@
     {
       "symbol": "SYY",
       "signal": "WATCH",
-      "price": 76.89,
-      "rsi": 40.8,
-      "stop_reference": 72.59,
+      "price": 76.79,
+      "rsi": 40.5,
+      "stop_reference": 72.48,
       "target_reference": null,
-      "conditions_met": "2/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
+      "conditions_met": "1/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "T",
       "signal": "WATCH",
       "price": 21.95,
-      "rsi": 44.7,
-      "stop_reference": 20.59,
+      "rsi": 44.6,
+      "stop_reference": 20.58,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5784,9 +5836,9 @@
     {
       "symbol": "TEAM",
       "signal": "WATCH",
-      "price": 185.16,
-      "rsi": 38.9,
-      "stop_reference": 164.93,
+      "price": 188.52,
+      "rsi": 40.6,
+      "stop_reference": 168.29,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5794,9 +5846,9 @@
     {
       "symbol": "TEM",
       "signal": "WATCH",
-      "price": 75.18,
-      "rsi": 54.1,
-      "stop_reference": 62.6,
+      "price": 75.53,
+      "rsi": 54.5,
+      "stop_reference": 62.95,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5804,9 +5856,9 @@
     {
       "symbol": "TER",
       "signal": "WATCH",
-      "price": 252.65,
+      "price": 252.96,
       "rsi": 27.4,
-      "stop_reference": 209.55,
+      "stop_reference": 209.86,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5814,9 +5866,9 @@
     {
       "symbol": "TEVA",
       "signal": "WATCH",
-      "price": 42.44,
-      "rsi": 61.9,
-      "stop_reference": 39.85,
+      "price": 42.34,
+      "rsi": 61.5,
+      "stop_reference": 39.75,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5824,9 +5876,9 @@
     {
       "symbol": "TFC",
       "signal": "WATCH",
-      "price": 50.79,
-      "rsi": 64.9,
-      "stop_reference": 48.67,
+      "price": 50.72,
+      "rsi": 64.6,
+      "stop_reference": 48.6,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5834,9 +5886,9 @@
     {
       "symbol": "TGT",
       "signal": "WATCH",
-      "price": 161.79,
-      "rsi": 59.8,
-      "stop_reference": 152.61,
+      "price": 161.93,
+      "rsi": 60.0,
+      "stop_reference": 152.66,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5844,9 +5896,9 @@
     {
       "symbol": "TJX",
       "signal": "WATCH",
-      "price": 146.22,
+      "price": 146.24,
       "rsi": 59.7,
-      "stop_reference": 139.53,
+      "stop_reference": 139.52,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5854,9 +5906,9 @@
     {
       "symbol": "TMUS",
       "signal": "WATCH",
-      "price": 160.87,
-      "rsi": 52.9,
-      "stop_reference": 148.71,
+      "price": 160.31,
+      "rsi": 52.4,
+      "stop_reference": 148.15,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5864,9 +5916,9 @@
     {
       "symbol": "TOST",
       "signal": "WATCH",
-      "price": 35.8,
-      "rsi": 69.9,
-      "stop_reference": 33.0,
+      "price": 35.68,
+      "rsi": 69.6,
+      "stop_reference": 32.88,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5874,9 +5926,9 @@
     {
       "symbol": "TSCO",
       "signal": "WATCH",
-      "price": 37.07,
-      "rsi": 67.3,
-      "stop_reference": 34.3,
+      "price": 37.01,
+      "rsi": 67.1,
+      "stop_reference": 34.24,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5884,9 +5936,9 @@
     {
       "symbol": "TSN",
       "signal": "WATCH",
-      "price": 59.41,
-      "rsi": 73.8,
-      "stop_reference": 57.14,
+      "price": 59.22,
+      "rsi": 73.3,
+      "stop_reference": 56.95,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5894,9 +5946,9 @@
     {
       "symbol": "TTMI",
       "signal": "WATCH",
-      "price": 72.05,
-      "rsi": 33.9,
-      "stop_reference": 54.14,
+      "price": 73.14,
+      "rsi": 34.3,
+      "stop_reference": 55.23,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5904,9 +5956,9 @@
     {
       "symbol": "TXN",
       "signal": "WATCH",
-      "price": 310.42,
-      "rsi": 65.2,
-      "stop_reference": 289.75,
+      "price": 312.04,
+      "rsi": 66.8,
+      "stop_reference": 291.37,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5914,9 +5966,9 @@
     {
       "symbol": "U",
       "signal": "WATCH",
-      "price": 42.15,
-      "rsi": 53.1,
-      "stop_reference": 37.71,
+      "price": 42.13,
+      "rsi": 53.0,
+      "stop_reference": 37.69,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5924,19 +5976,19 @@
     {
       "symbol": "UAL",
       "signal": "WATCH",
-      "price": 115.76,
-      "rsi": 63.2,
-      "stop_reference": 105.84,
+      "price": 115.95,
+      "rsi": 63.4,
+      "stop_reference": 105.9,
       "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
     },
     {
       "symbol": "UBER",
       "signal": "WATCH",
-      "price": 71.54,
-      "rsi": 59.5,
-      "stop_reference": 67.6,
+      "price": 70.71,
+      "rsi": 57.4,
+      "stop_reference": 66.76,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5944,9 +5996,9 @@
     {
       "symbol": "UGP",
       "signal": "WATCH",
-      "price": 5.59,
-      "rsi": 19.1,
-      "stop_reference": 5.0,
+      "price": 5.61,
+      "rsi": 19.3,
+      "stop_reference": 5.02,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5954,9 +6006,9 @@
     {
       "symbol": "UNH",
       "signal": "WATCH",
-      "price": 407.4,
-      "rsi": 55.8,
-      "stop_reference": 384.63,
+      "price": 407.73,
+      "rsi": 56.0,
+      "stop_reference": 384.79,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5964,9 +6016,9 @@
     {
       "symbol": "UPS",
       "signal": "WATCH",
-      "price": 113.89,
-      "rsi": 80.4,
-      "stop_reference": 109.0,
+      "price": 113.8,
+      "rsi": 80.3,
+      "stop_reference": 108.91,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5974,9 +6026,9 @@
     {
       "symbol": "USAR",
       "signal": "WATCH",
-      "price": 8.27,
-      "rsi": 27.2,
-      "stop_reference": 6.61,
+      "price": 8.3,
+      "rsi": 27.3,
+      "stop_reference": 6.64,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -5984,9 +6036,9 @@
     {
       "symbol": "V",
       "signal": "WATCH",
-      "price": 432.31,
-      "rsi": 74.3,
-      "stop_reference": 416.07,
+      "price": 431.61,
+      "rsi": 74.0,
+      "stop_reference": 415.37,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -5995,8 +6047,8 @@
       "symbol": "VALE",
       "signal": "WATCH",
       "price": 11.48,
-      "rsi": 33.7,
-      "stop_reference": 10.7,
+      "rsi": 33.5,
+      "stop_reference": 10.69,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6004,9 +6056,9 @@
     {
       "symbol": "VFC",
       "signal": "WATCH",
-      "price": 21.2,
-      "rsi": 86.5,
-      "stop_reference": 19.69,
+      "price": 21.1,
+      "rsi": 86.2,
+      "stop_reference": 19.59,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6014,9 +6066,9 @@
     {
       "symbol": "VIAV",
       "signal": "WATCH",
-      "price": 28.1,
-      "rsi": 35.5,
-      "stop_reference": 22.61,
+      "price": 28.16,
+      "rsi": 35.6,
+      "stop_reference": 22.67,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -6024,9 +6076,9 @@
     {
       "symbol": "VMRK",
       "signal": "WATCH",
-      "price": 63.37,
-      "rsi": 58.8,
-      "stop_reference": 60.98,
+      "price": 63.59,
+      "rsi": 59.9,
+      "stop_reference": 61.2,
       "target_reference": null,
       "conditions_met": "3/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6034,9 +6086,9 @@
     {
       "symbol": "VRT",
       "signal": "WATCH",
-      "price": 206.53,
-      "rsi": 41.8,
-      "stop_reference": 175.19,
+      "price": 204.95,
+      "rsi": 41.4,
+      "stop_reference": 173.61,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -6044,9 +6096,9 @@
     {
       "symbol": "VST",
       "signal": "WATCH",
-      "price": 121.07,
-      "rsi": 32.9,
-      "stop_reference": 104.8,
+      "price": 119.86,
+      "rsi": 32.3,
+      "stop_reference": 103.59,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -6054,9 +6106,9 @@
     {
       "symbol": "VZ",
       "signal": "WATCH",
-      "price": 46.44,
-      "rsi": 57.9,
-      "stop_reference": 43.96,
+      "price": 46.35,
+      "rsi": 57.5,
+      "stop_reference": 43.87,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6064,9 +6116,9 @@
     {
       "symbol": "WDC",
       "signal": "WATCH",
-      "price": 327.44,
-      "rsi": 37.0,
-      "stop_reference": 276.69,
+      "price": 326.86,
+      "rsi": 36.9,
+      "stop_reference": 276.12,
       "target_reference": null,
       "conditions_met": "1/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -6074,9 +6126,9 @@
     {
       "symbol": "WFC",
       "signal": "WATCH",
-      "price": 87.09,
-      "rsi": 62.6,
-      "stop_reference": 83.18,
+      "price": 86.79,
+      "rsi": 61.8,
+      "stop_reference": 82.88,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6084,9 +6136,9 @@
     {
       "symbol": "WMB",
       "signal": "WATCH",
-      "price": 67.88,
-      "rsi": 39.4,
-      "stop_reference": 62.73,
+      "price": 68.08,
+      "rsi": 39.8,
+      "stop_reference": 62.94,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
@@ -6094,9 +6146,9 @@
     {
       "symbol": "WMT",
       "signal": "WATCH",
-      "price": 130.55,
-      "rsi": 75.0,
-      "stop_reference": 124.84,
+      "price": 130.32,
+      "rsi": 74.8,
+      "stop_reference": 124.61,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6104,38 +6156,38 @@
     {
       "symbol": "WTRG",
       "signal": "WATCH",
-      "price": 44.71,
-      "rsi": 71.5,
-      "stop_reference": 42.75,
+      "price": 44.48,
+      "rsi": 70.6,
+      "stop_reference": 42.53,
       "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
+      "conditions_met": "3/6",
+      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: nej, RSI stiger: ja, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
       "symbol": "WULF",
       "signal": "WATCH",
-      "price": 11.82,
-      "rsi": 43.7,
-      "stop_reference": 9.42,
+      "price": 11.91,
+      "rsi": 44.0,
+      "stop_reference": 9.51,
+      "target_reference": null,
+      "conditions_met": "3/6",
+      "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: ja, marknaden i upptrend: ja"
+    },
+    {
+      "symbol": "XOM",
+      "signal": "WATCH",
+      "price": 167.72,
+      "rsi": 41.0,
+      "stop_reference": 158.59,
       "target_reference": null,
       "conditions_met": "2/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
     },
     {
-      "symbol": "XOM",
-      "signal": "WATCH",
-      "price": 168.54,
-      "rsi": 41.8,
-      "stop_reference": 159.53,
-      "target_reference": null,
-      "conditions_met": "3/6",
-      "conditions": "upptrend: ja, ny 50-dagars högsta: nej, stark volym: ja, RSI stiger: nej, MACD stiger: nej, marknaden i upptrend: ja"
-    },
-    {
       "symbol": "XPEV",
       "signal": "WATCH",
       "price": 9.94,
-      "rsi": 55.3,
+      "rsi": 55.4,
       "stop_reference": 9.22,
       "target_reference": null,
       "conditions_met": "4/6",
@@ -6144,9 +6196,9 @@
     {
       "symbol": "YUM",
       "signal": "WATCH",
-      "price": 165.26,
-      "rsi": 77.1,
-      "stop_reference": 157.43,
+      "price": 165.67,
+      "rsi": 77.4,
+      "stop_reference": 157.75,
       "target_reference": null,
       "conditions_met": "4/6",
       "conditions": "upptrend: nej, ny 50-dagars högsta: ja, stark volym: nej, RSI stiger: ja, MACD stiger: ja, marknaden i upptrend: ja"
@@ -6244,49 +6296,229 @@
   ],
   "last_swing_date": "2026-11-04",
   "day_list": [
-    "BMNR",
-    "CLX",
-    "VMRK",
-    "SGHC",
-    "MDLN",
-    "APTV",
-    "BX",
-    "LOW",
-    "YUM",
-    "MCD",
-    "AAPL",
-    "BSX",
-    "UNH",
-    "EMR",
-    "CHWY",
-    "UPS",
-    "ONON",
-    "PAAS",
-    "CL",
-    "BABA",
-    "AEP",
+    "HPQ",
     "PPL",
-    "NDAQ",
-    "GE",
-    "D",
-    "HON",
-    "RTX",
-    "RAMP",
-    "CBZ",
-    "CPNG"
+    "APP",
+    "BKNG",
+    "MOS",
+    "MDLN",
+    "TOST",
+    "APO",
+    "U",
+    "KKR",
+    "ZBH",
+    "AAPL",
+    "MDT",
+    "CLX",
+    "FISV",
+    "SGHC",
+    "EXK",
+    "SIRI",
+    "NFLX",
+    "GIS",
+    "MCD",
+    "BX",
+    "UPS",
+    "CCL",
+    "NKE",
+    "QXO",
+    "DAL",
+    "WMT",
+    "TSN",
+    "BSX"
   ],
   "day_top": [
     {
-      "symbol": "BMNR",
+      "symbol": "HPQ",
+      "signal": "CANDIDATE",
+      "score": 608.3,
+      "price": 30.58,
+      "ext_price": 30.584999084472656,
+      "ext_move_pct": 0.02,
+      "change_today_pct": 7.66,
+      "rel_volume": 0.07,
+      "rsi": 71.9,
+      "stop_reference": 30.39,
+      "target_reference": null,
+      "conditions_met": "6/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
+    },
+    {
+      "symbol": "PPL",
+      "signal": "CANDIDATE",
+      "score": 602.1,
+      "price": 35.9,
+      "ext_price": 35.904998779296875,
+      "ext_move_pct": 0.01,
+      "change_today_pct": 1.14,
+      "rel_volume": 0.09,
+      "rsi": 64.4,
+      "stop_reference": 35.79,
+      "target_reference": null,
+      "conditions_met": "6/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
+    },
+    {
+      "symbol": "APP",
+      "signal": "WATCH",
+      "score": 510.9,
+      "price": 272.71,
+      "ext_price": 272.6499938964844,
+      "ext_move_pct": -0.02,
+      "change_today_pct": 8.82,
+      "rel_volume": 0.21,
+      "rsi": 68.7,
+      "stop_reference": 270.38,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "BKNG",
+      "signal": "WATCH",
+      "score": 509.6,
+      "price": 172.28,
+      "ext_price": 172.32000732421875,
+      "ext_move_pct": 0.02,
+      "change_today_pct": 7.34,
+      "rel_volume": 0.23,
+      "rsi": 57.6,
+      "stop_reference": 170.88,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "MOS",
+      "signal": "WATCH",
+      "score": 508.9,
+      "price": 20.44,
+      "ext_price": 20.475000381469727,
+      "ext_move_pct": 0.17,
+      "change_today_pct": 7.64,
+      "rel_volume": 0.13,
+      "rsi": 84.0,
+      "stop_reference": 20.29,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: nej, MACD stiger: ja"
+    },
+    {
+      "symbol": "MDLN",
+      "signal": "WATCH",
+      "score": 508.3,
+      "price": 39.26,
+      "ext_price": 39.25,
+      "ext_move_pct": -0.03,
+      "change_today_pct": 5.06,
+      "rel_volume": 0.33,
+      "rsi": 67.9,
+      "stop_reference": 38.97,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "TOST",
+      "signal": "WATCH",
+      "score": 508.1,
+      "price": 35.67,
+      "ext_price": 35.65999984741211,
+      "ext_move_pct": -0.03,
+      "change_today_pct": 7.78,
+      "rel_volume": 0.03,
+      "rsi": 54.9,
+      "stop_reference": 35.39,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "APO",
+      "signal": "WATCH",
+      "score": 507.5,
+      "price": 121.69,
+      "ext_price": 121.73999786376953,
+      "ext_move_pct": 0.04,
+      "change_today_pct": 4.12,
+      "rel_volume": 0.33,
+      "rsi": 73.4,
+      "stop_reference": 120.89,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: nej, RSI stiger: ja, MACD stiger: ja"
+    },
+    {
+      "symbol": "U",
       "signal": "WATCH",
       "score": 507.4,
-      "price": 22.08,
-      "ext_price": 22.082399368286133,
+      "price": 42.08,
+      "ext_price": 42.060001373291016,
+      "ext_move_pct": -0.05,
+      "change_today_pct": 6.08,
+      "rel_volume": 0.13,
+      "rsi": 56.3,
+      "stop_reference": 41.74,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "KKR",
+      "signal": "WATCH",
+      "score": 507.1,
+      "price": 102.0,
+      "ext_price": 102.08000183105469,
+      "ext_move_pct": 0.08,
+      "change_today_pct": 3.3,
+      "rel_volume": 0.38,
+      "rsi": 64.3,
+      "stop_reference": 101.45,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "ZBH",
+      "signal": "WATCH",
+      "score": 507.0,
+      "price": 111.58,
+      "ext_price": 111.5,
+      "ext_move_pct": -0.07,
+      "change_today_pct": 5.37,
+      "rel_volume": 0.16,
+      "rsi": 63.9,
+      "stop_reference": 110.78,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "AAPL",
+      "signal": "WATCH",
+      "score": 506.5,
+      "price": 353.32,
+      "ext_price": 353.3500061035156,
       "ext_move_pct": 0.01,
-      "change_today_pct": 7.42,
-      "rel_volume": 0.0,
-      "rsi": 55.2,
-      "stop_reference": 21.85,
+      "change_today_pct": 3.44,
+      "rel_volume": 0.3,
+      "rsi": 62.8,
+      "stop_reference": 352.1,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "MDT",
+      "signal": "WATCH",
+      "score": 506.2,
+      "price": 105.15,
+      "ext_price": 105.13500213623047,
+      "ext_move_pct": -0.01,
+      "change_today_pct": 4.94,
+      "rel_volume": 0.12,
+      "rsi": 69.0,
+      "stop_reference": 104.77,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
@@ -6295,118 +6527,103 @@
       "symbol": "CLX",
       "signal": "WATCH",
       "score": 506.0,
-      "price": 100.76,
-      "ext_price": 100.78500366210938,
-      "ext_move_pct": 0.02,
-      "change_today_pct": 6.01,
+      "price": 100.75,
+      "ext_price": 100.75,
+      "ext_move_pct": 0.0,
+      "change_today_pct": 6.0,
       "rel_volume": 0.0,
-      "rsi": 67.3,
+      "rsi": 66.3,
       "stop_reference": 100.15,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
     },
     {
-      "symbol": "VMRK",
+      "symbol": "FISV",
+      "signal": "WATCH",
+      "score": 505.9,
+      "price": 62.14,
+      "ext_price": 62.15999984741211,
+      "ext_move_pct": 0.03,
+      "change_today_pct": 3.57,
+      "rel_volume": 0.23,
+      "rsi": 57.0,
+      "stop_reference": 61.77,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "SGHC",
+      "signal": "WATCH",
+      "score": 505.9,
+      "price": 11.71,
+      "ext_price": 11.710000038146973,
+      "ext_move_pct": 0.0,
+      "change_today_pct": 5.5,
+      "rel_volume": 0.04,
+      "rsi": 60.9,
+      "stop_reference": 11.63,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "EXK",
+      "signal": "WATCH",
+      "score": 505.7,
+      "price": 7.8,
+      "ext_price": 7.789999961853027,
+      "ext_move_pct": -0.13,
+      "change_today_pct": 3.86,
+      "rel_volume": 0.19,
+      "rsi": 72.4,
+      "stop_reference": 7.74,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "SIRI",
       "signal": "WATCH",
       "score": 505.6,
-      "price": 63.59,
-      "ext_price": 63.56999969482422,
-      "ext_move_pct": -0.03,
-      "change_today_pct": 0.83,
-      "rel_volume": 0.47,
-      "rsi": 66.7,
-      "stop_reference": 63.4,
+      "price": 33.14,
+      "ext_price": 33.14500045776367,
+      "ext_move_pct": 0.02,
+      "change_today_pct": 5.32,
+      "rel_volume": 0.03,
+      "rsi": 69.2,
+      "stop_reference": 32.99,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "NFLX",
+      "signal": "WATCH",
+      "score": 505.4,
+      "price": 66.25,
+      "ext_price": 66.25,
+      "ext_move_pct": 0.0,
+      "change_today_pct": 2.61,
+      "rel_volume": 0.28,
+      "rsi": 63.8,
+      "stop_reference": 66.02,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: nej, RSI stiger: ja, MACD stiger: ja"
     },
     {
-      "symbol": "SGHC",
+      "symbol": "GIS",
       "signal": "WATCH",
-      "score": 505.3,
-      "price": 11.69,
-      "ext_price": 11.6850004196167,
-      "ext_move_pct": -0.04,
-      "change_today_pct": 5.3,
-      "rel_volume": 0.0,
-      "rsi": 58.7,
-      "stop_reference": 11.61,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "MDLN",
-      "signal": "WATCH",
-      "score": 505.2,
-      "price": 39.32,
-      "ext_price": 39.32500076293945,
-      "ext_move_pct": 0.01,
-      "change_today_pct": 5.22,
-      "rel_volume": 0.0,
-      "rsi": 70.8,
-      "stop_reference": 39.03,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "APTV",
-      "signal": "WATCH",
-      "score": 504.9,
-      "price": 43.78,
-      "ext_price": 43.75,
-      "ext_move_pct": -0.07,
-      "change_today_pct": 4.85,
-      "rel_volume": 0.0,
-      "rsi": 62.6,
-      "stop_reference": 43.51,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "BX",
-      "signal": "WATCH",
-      "score": 503.9,
-      "price": 126.15,
-      "ext_price": 126.10050201416016,
-      "ext_move_pct": -0.04,
-      "change_today_pct": 3.91,
-      "rel_volume": 0.0,
-      "rsi": 69.4,
-      "stop_reference": 125.53,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "LOW",
-      "signal": "WATCH",
-      "score": 503.7,
-      "price": 228.59,
-      "ext_price": 228.4199981689453,
-      "ext_move_pct": -0.07,
-      "change_today_pct": 2.55,
-      "rel_volume": 0.11,
-      "rsi": 64.5,
-      "stop_reference": 227.4,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "YUM",
-      "signal": "WATCH",
-      "score": 503.6,
-      "price": 165.82,
-      "ext_price": 165.7100067138672,
-      "ext_move_pct": -0.07,
-      "change_today_pct": 3.63,
-      "rel_volume": 0.0,
-      "rsi": 74.5,
-      "stop_reference": 165.17,
+      "score": 505.4,
+      "price": 36.43,
+      "ext_price": 36.439998626708984,
+      "ext_move_pct": 0.03,
+      "change_today_pct": 4.21,
+      "rel_volume": 0.12,
+      "rsi": 63.2,
+      "stop_reference": 36.27,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
@@ -6414,89 +6631,29 @@
     {
       "symbol": "MCD",
       "signal": "WATCH",
-      "score": 503.5,
-      "price": 277.65,
-      "ext_price": 277.6400146484375,
-      "ext_move_pct": -0.0,
-      "change_today_pct": 3.46,
-      "rel_volume": 0.0,
-      "rsi": 68.7,
-      "stop_reference": 276.7,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "AAPL",
-      "signal": "WATCH",
-      "score": 503.3,
-      "price": 352.79,
-      "ext_price": 352.81500244140625,
-      "ext_move_pct": 0.01,
-      "change_today_pct": 3.28,
-      "rel_volume": 0.0,
-      "rsi": 59.4,
-      "stop_reference": 351.55,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "BSX",
-      "signal": "WATCH",
-      "score": 503.3,
-      "price": 46.27,
-      "ext_price": 46.255001068115234,
-      "ext_move_pct": -0.03,
-      "change_today_pct": 3.28,
-      "rel_volume": 0.0,
-      "rsi": 62.6,
-      "stop_reference": 45.98,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: nej, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
-    },
-    {
-      "symbol": "UNH",
-      "signal": "WATCH",
-      "score": 503.2,
-      "price": 409.24,
-      "ext_price": 409.1499938964844,
+      "score": 505.3,
+      "price": 277.89,
+      "ext_price": 277.8299865722656,
       "ext_move_pct": -0.02,
-      "change_today_pct": 3.19,
-      "rel_volume": 0.0,
-      "rsi": 65.8,
-      "stop_reference": 406.94,
+      "change_today_pct": 3.55,
+      "rel_volume": 0.18,
+      "rsi": 70.4,
+      "stop_reference": 276.95,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
     },
     {
-      "symbol": "EMR",
+      "symbol": "BX",
       "signal": "WATCH",
-      "score": 503.2,
-      "price": 171.59,
-      "ext_price": 171.7050018310547,
-      "ext_move_pct": 0.07,
-      "change_today_pct": 3.19,
-      "rel_volume": 0.0,
-      "rsi": 64.4,
-      "stop_reference": 170.43,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "CHWY",
-      "signal": "WATCH",
-      "score": 503.2,
-      "price": 23.7,
-      "ext_price": 23.68720054626465,
-      "ext_move_pct": -0.05,
-      "change_today_pct": 3.15,
-      "rel_volume": 0.0,
-      "rsi": 61.6,
-      "stop_reference": 23.58,
+      "score": 505.3,
+      "price": 126.54,
+      "ext_price": 126.54000091552734,
+      "ext_move_pct": 0.0,
+      "change_today_pct": 4.23,
+      "rel_volume": 0.11,
+      "rsi": 72.8,
+      "stop_reference": 125.91,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
@@ -6504,232 +6661,127 @@
     {
       "symbol": "UPS",
       "signal": "WATCH",
-      "score": 503.2,
-      "price": 113.88,
-      "ext_price": 113.8499984741211,
-      "ext_move_pct": -0.03,
-      "change_today_pct": 3.24,
-      "rel_volume": 0.0,
-      "rsi": 65.6,
-      "stop_reference": 113.51,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "ONON",
-      "signal": "WATCH",
-      "score": 502.9,
-      "price": 38.53,
-      "ext_price": 38.540000915527344,
-      "ext_move_pct": 0.03,
-      "change_today_pct": 2.93,
-      "rel_volume": 0.0,
+      "score": 505.2,
+      "price": 113.86,
+      "ext_price": 113.8550033569336,
+      "ext_move_pct": -0.0,
+      "change_today_pct": 3.21,
+      "rel_volume": 0.19,
       "rsi": 64.3,
-      "stop_reference": 38.33,
+      "stop_reference": 113.48,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
     },
     {
-      "symbol": "PAAS",
+      "symbol": "CCL",
       "signal": "WATCH",
-      "score": 502.5,
-      "price": 41.01,
-      "ext_price": 41.01499938964844,
-      "ext_move_pct": 0.01,
-      "change_today_pct": 2.5,
-      "rel_volume": 0.0,
-      "rsi": 64.0,
-      "stop_reference": 40.78,
+      "score": 505.1,
+      "price": 31.11,
+      "ext_price": 31.140100479125977,
+      "ext_move_pct": 0.1,
+      "change_today_pct": 3.67,
+      "rel_volume": 0.15,
+      "rsi": 72.7,
+      "stop_reference": 30.91,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
     },
     {
-      "symbol": "CL",
+      "symbol": "NKE",
       "signal": "WATCH",
-      "score": 502.1,
-      "price": 99.11,
-      "ext_price": 99.03500366210938,
-      "ext_move_pct": -0.08,
-      "change_today_pct": 2.13,
-      "rel_volume": 0.0,
-      "rsi": 57.2,
-      "stop_reference": 98.8,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "BABA",
-      "signal": "WATCH",
-      "score": 502.0,
-      "price": 107.01,
-      "ext_price": 106.91999816894531,
-      "ext_move_pct": -0.08,
-      "change_today_pct": 2.04,
-      "rel_volume": 0.0,
-      "rsi": 60.7,
-      "stop_reference": 106.59,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "AEP",
-      "signal": "WATCH",
-      "score": 501.1,
-      "price": 128.98,
-      "ext_price": 128.97999572753906,
-      "ext_move_pct": -0.0,
-      "change_today_pct": 1.14,
-      "rel_volume": 0.0,
-      "rsi": 71.2,
-      "stop_reference": 128.38,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: nej, MACD stiger: ja"
-    },
-    {
-      "symbol": "PPL",
-      "signal": "WATCH",
-      "score": 501.0,
-      "price": 35.87,
-      "ext_price": 35.869998931884766,
-      "ext_move_pct": -0.0,
-      "change_today_pct": 1.04,
-      "rel_volume": 0.0,
-      "rsi": 62.3,
-      "stop_reference": 35.75,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: nej, MACD stiger: ja"
-    },
-    {
-      "symbol": "NDAQ",
-      "signal": "WATCH",
-      "score": 500.9,
-      "price": 108.77,
-      "ext_price": 108.80000305175781,
-      "ext_move_pct": 0.03,
-      "change_today_pct": 0.95,
-      "rel_volume": 0.0,
-      "rsi": 56.0,
-      "stop_reference": 108.46,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: nej, RSI stiger: ja, MACD stiger: ja"
-    },
-    {
-      "symbol": "GE",
-      "signal": "WATCH",
-      "score": 500.7,
-      "price": 331.87,
-      "ext_price": 331.7225036621094,
-      "ext_move_pct": -0.04,
-      "change_today_pct": 0.73,
-      "rel_volume": 0.0,
-      "rsi": 66.7,
-      "stop_reference": 329.69,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "D",
-      "signal": "WATCH",
-      "score": 500.7,
-      "price": 69.69,
-      "ext_price": 69.69000244140625,
-      "ext_move_pct": 0.0,
-      "change_today_pct": 0.66,
-      "rel_volume": 0.0,
-      "rsi": 64.8,
-      "stop_reference": 69.48,
-      "target_reference": null,
-      "conditions_met": "5/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
-    },
-    {
-      "symbol": "HON",
-      "signal": "WATCH",
-      "score": 500.5,
-      "price": 230.51,
-      "ext_price": 230.50999450683594,
-      "ext_move_pct": -0.0,
-      "change_today_pct": 0.5,
-      "rel_volume": 0.0,
+      "score": 504.9,
+      "price": 40.87,
+      "ext_price": 40.880001068115234,
+      "ext_move_pct": 0.02,
+      "change_today_pct": 3.02,
+      "rel_volume": 0.19,
       "rsi": 61.5,
-      "stop_reference": 229.26,
+      "stop_reference": 40.71,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
     },
     {
-      "symbol": "RTX",
+      "symbol": "QXO",
       "signal": "WATCH",
-      "score": 499.2,
-      "price": 197.73,
-      "ext_price": 197.63999938964844,
-      "ext_move_pct": -0.05,
-      "change_today_pct": -0.77,
-      "rel_volume": 0.0,
-      "rsi": 53.7,
-      "stop_reference": 196.77,
+      "score": 504.9,
+      "price": 12.63,
+      "ext_price": 12.635000228881836,
+      "ext_move_pct": 0.04,
+      "change_today_pct": 1.69,
+      "rel_volume": 0.32,
+      "rsi": 65.2,
+      "stop_reference": 12.53,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "DAL",
+      "signal": "WATCH",
+      "score": 504.7,
+      "price": 88.43,
+      "ext_price": 88.44999694824219,
+      "ext_move_pct": 0.02,
+      "change_today_pct": 3.3,
+      "rel_volume": 0.14,
+      "rsi": 64.3,
+      "stop_reference": 87.85,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "WMT",
+      "signal": "WATCH",
+      "score": 504.1,
+      "price": 130.41,
+      "ext_price": 130.41000366210938,
+      "ext_move_pct": 0.0,
+      "change_today_pct": 2.67,
+      "rel_volume": 0.14,
+      "rsi": 62.8,
+      "stop_reference": 129.97,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "TSN",
+      "signal": "WATCH",
+      "score": 504.0,
+      "price": 59.29,
+      "ext_price": 59.29499816894531,
+      "ext_move_pct": 0.01,
+      "change_today_pct": 2.57,
+      "rel_volume": 0.14,
+      "rsi": 58.6,
+      "stop_reference": 59.09,
+      "target_reference": null,
+      "conditions_met": "5/6",
+      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: nej"
+    },
+    {
+      "symbol": "BSX",
+      "signal": "WATCH",
+      "score": 503.8,
+      "price": 46.35,
+      "ext_price": 46.33000183105469,
+      "ext_move_pct": -0.04,
+      "change_today_pct": 3.45,
+      "rel_volume": 0.03,
+      "rsi": 64.3,
+      "stop_reference": 46.06,
       "target_reference": null,
       "conditions_met": "5/6",
       "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: nej, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
-    },
-    {
-      "symbol": "RAMP",
-      "signal": "WATCH",
-      "score": 450.0,
-      "price": 38.51,
-      "ext_price": null,
-      "ext_move_pct": null,
-      "change_today_pct": 0.03,
-      "rel_volume": 7.67,
-      "rsi": 61.9,
-      "stop_reference": 38.5,
-      "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "efter öppningsintervallet: nej, bryter öppningens högsta: nej, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
-    },
-    {
-      "symbol": "CBZ",
-      "signal": "WATCH",
-      "score": 429.8,
-      "price": 54.99,
-      "ext_price": null,
-      "ext_move_pct": null,
-      "change_today_pct": 0.04,
-      "rel_volume": 2.97,
-      "rsi": 73.1,
-      "stop_reference": 54.97,
-      "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "efter öppningsintervallet: nej, bryter öppningens högsta: nej, över VWAP: ja, hög volym: ja, RSI stiger: ja, MACD stiger: ja"
-    },
-    {
-      "symbol": "CPNG",
-      "signal": "WATCH",
-      "score": 410.0,
-      "price": 17.25,
-      "ext_price": 17.225000381469727,
-      "ext_move_pct": -0.14,
-      "change_today_pct": 11.97,
-      "rel_volume": 0.0,
-      "rsi": 61.3,
-      "stop_reference": 17.12,
-      "target_reference": null,
-      "conditions_met": "4/6",
-      "conditions": "efter öppningsintervallet: ja, bryter öppningens högsta: ja, över VWAP: ja, hög volym: ja, RSI stiger: nej, MACD stiger: nej"
     }
   ],
-  "last_search_ts": 1793812521.413872,
-  "last_search_time": "2026-11-04 18:15",
-  "last_tick_time": "2026-11-04 18:40",
+  "last_search_ts": 1793814321.709247,
+  "last_search_time": "2026-11-04 18:45",
+  "last_tick_time": "2026-11-04 18:45",
   "notify_hello": true,
-  "last_run": "2026-11-04T17:40:50+00:00"
+  "last_run": "2026-11-04T17:46:40+00:00"
 }

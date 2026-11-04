@@ -190,3 +190,14 @@ tid,typ,symbol,action,detail
 2026-11-04 18:35,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-04 18:40,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 291 aktier: 11 köpkandidater (AAPL, CNC, DAL, DIS, MSFT, OSCR, SN, VRDN). Närmast: AFRM (5/6), ARRY (5/6), BRKR (5/6), BUD (5/6), CCL (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
 2026-11-04 18:40,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: BMNR (5/6), CLX (5/6), VMRK (5/6), SGHC (5/6), MDLN (5/6)."
+2026-11-04 18:45,swing,,swing-sökning,"Granskade 291 aktier: 10 köpkandidater (AAPL, CNC, DIS, MSFT, OSCR, SN, VRDN, W). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6)."
+2026-11-04 18:45,swing,SN,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Smith+Nephew cuts guidance on weak orthopaedics demand, shares dip"" (nyhetspoäng -2)."
+2026-11-04 18:45,swing,AAPL,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,CNC,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,DIS,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,OSCR,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,VRDN,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,W,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,XYZ,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,164 av 8,159 USD)."
+2026-11-04 18:45,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
