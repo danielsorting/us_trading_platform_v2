@@ -396,7 +396,7 @@ tab_auto, tab_scan, tab_bt, tab_paper, tab_info = st.tabs(
     ["🤖 Automatisk handel", "🔎 Scanner", "📈 Backtest", "🧪 Simulerad handel", "ℹ️ Om"])
 
 
-def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None):
+def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left_extra=None, right_extra=None):
     """Reglagen för kapital och risk. Varje flik har sina egna:
     - 🤖 Automatisk handel: robotens inställningar, låsta (bara för att visa)
     - 🔎 Scanner, 📈 Backtest, 🧪 Simulerad handel: egna reglage som går att ändra.
@@ -408,6 +408,9 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None):
     day_pct = a.slider("Andel till daytrading (%)", 0, 100, int(base.day_allocation_pct), 5,
                        disabled=disabled, key=k("day"))
     a.caption(f"Andel till swingtrading: {100 - day_pct} %")
+    if left_extra:
+        with a:
+            left_extra()
     if disabled:
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
                                value=float(base.risk_per_trade_pct), disabled=True, key=k("risk"))
@@ -447,10 +450,12 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None):
                   max_positions_per_strategy=max_pos, max_position_pct_of_strategy_capital=float(max_pos_pct),
                   allow_fractional_shares=fractional, park_idle_in_index=park,
                   day_max_position_pct=float(day_pct_max))
-    m = st.columns(3)
-    m[0].metric("Daytrading-budget", f"{out.day_capital:,.0f} SEK")
-    m[1].metric("Swingtrading-budget", f"{out.swing_capital:,.0f} SEK")
-    m[2].metric("Max risk per affär (swing)", f"{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} SEK")
+    if right_extra:
+        with c:
+            right_extra()
+    st.caption((f"💰 Daytrading-budget **{out.day_capital:,.0f} kr** · Swing-budget **{out.swing_capital:,.0f} kr** · "
+                f"Max risk per swingaffär **{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} kr**")
+               .replace(",", " "))
     return out, variant
 
 
@@ -478,15 +483,15 @@ with tab_auto:
 
 
 
-def tab_settings(prefix, title, note, risk_key=None, variant_key=None):
+def tab_settings(prefix, title, note, risk_key=None, variant_key=None, left_extra=None, right_extra=None):
     """Fliken egna inställningar i en ihopfälld ruta. Returnerar (inställningar, strateginamn, rutan) –
     rutan används för att lägga fler val i den längre ner i fliken."""
     box = st.expander(f"⚙️ {title}", expanded=False)
     with box:
         st.caption(note + " Alla reglage börjar med robotens inställningar. Ändringarna påverkar INTE "
                    "bakgrundsroboten och gäller tills sidan laddas om.")
-        out = settings_panel(defaults, prefix, disabled=False, risk_key=risk_key, variant_key=variant_key)
-        st.divider()
+        out = settings_panel(defaults, prefix, disabled=False, risk_key=risk_key, variant_key=variant_key,
+                             left_extra=left_extra, right_extra=right_extra)
     return out[0], out[1], box
 
 
@@ -552,73 +557,69 @@ with tab_scan:
 
 # ---------------------------------------------------------------- backtest
 with tab_bt:
-    settings, variant_name, opt_box = tab_settings("bt", "Inställningar för backtestet",
-                                          "Testet körs med de här inställningarna.", risk_key="sb_risk",
-                                          variant_key="sb_variant")
-    risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
-    st.caption("Inställningar: " + short_settings(settings, variant_name))
-    bt_status = st.empty()  # förloppet visas här uppe, så du slipper scrolla
-    st.write("Testa hur en strategi hade gått historiskt. Köp sker alltid på stapeln **efter** signalen, "
-             "och courtage och slippage räknas med.")
     bt_mode = st.radio("Vad vill du göra?",
                        ["🏆 Hitta bästa automatiskt", "Jämför swing-varianter", "Testa en strategi i detalj"],
                        horizontal=True, key="bt_mode")
     if bt_mode == "🏆 Hitta bästa automatiskt":
-        strat_name = "__best__"
-        module = swing
-        st.caption("Testar först **alla** strategier snabbt, och sedan bara de **3 bästa** vidare med risk "
-                   "0,5 %, 1 % och 2 % per affär. Godkänd = plus i både testdel och kontrolldel och minst 20 "
-                   "affärer. Poäng = avkastning per år delat med största nedgång (belönar jämn tillväxt).")
+        strat_name, module = "__best__", swing
+        bt_help = ("Testar först **alla** strategier snabbt, och sedan bara de **3 bästa** vidare med risk 0,5 %, "
+                   "1 % och 2 %. Godkänd = plus i både test- och kontrolldel och minst 20 affärer. Poäng = "
+                   "avkastning per år / största nedgång.")
     elif bt_mode == "Jämför swing-varianter":
-        strat_name = None
-        module = swing
-        st.caption("Alla varianter testas på samma aktier och period. Perioden delas: de första 70 % är "
-                   "*testdel* och de sista 30 % är *kontrolldel*. En bra strategi ska gå plus i båda.")
+        strat_name, module = None, swing
+        bt_help = ("Alla varianter på samma aktier och period. De första 70 % är *testdel*, de sista 30 % "
+                   "*kontrolldel* – en bra strategi går plus i båda.")
     else:
         choices = {**{k: v for k, v in VARIANTS.items()}, **day_variants()}
         strat_name = st.selectbox("Strategi", list(choices), key="bt_strat")
         module = choices[strat_name]
+        bt_help = "Köp sker alltid på stapeln **efter** signalen, och courtage och slippage räknas med."
     hourly_mod = getattr(module, "DATA", None) is not None
-    with opt_box:
-        st.markdown("**Testets val**")
-        choose_risk = st.checkbox("Låt 🏆-knappen även välja risk per affär", value=True, key="bt_choose_risk",
-                                  help="Av: knappen behåller risken ovan och väljer bara strategi. "
-                                       "På: de 3 bästa strategierna testas även med 0,5 %, 1 % och 2 %.")
-        with_hourly = st.checkbox("Ta med kort swing (timgraf)", value=False, key="bt_hourly",
-                                  help="Timgraf-strategierna kräver mycket mer data och gör testet betydligt "
-                                       "långsammare. De har hittills inte varit bäst i nattrapporten.")
+    bt_opts = {}
+
+    def bt_left():
         if hourly_mod:
-            period, interval = data_for(module, backtest=True)
-            st.caption("Kort swing använder timgraf. Yahoo har timdata cirka 2 år bakåt, så testet gäller 2 år.")
+            bt_opts["period"], bt_opts["interval"] = data_for(module, backtest=True)
+            st.caption("Timgraf: Yahoo har cirka 2 år bakåt.")
         elif getattr(module, "NAME", "") != "day":
-            _per = {"1 år": "1y", "2 år": "2y", "5 år": "5y", "10 år": "10y"}
-            period = _per[st.select_slider("Period", list(_per), value="5 år")]
-            interval = "1d"
+            per = {"1 år": "1y", "2 år": "2y", "5 år": "5y", "10 år": "10y"}
+            bt_opts["period"], bt_opts["interval"] = per[st.select_slider("Period", list(per), value="5 år")], "1d"
         else:
-            _per = {"5 dagar": "5d", "1 månad": "1mo", "60 dagar": "60d"}
-            period = _per[st.select_slider("Period", list(_per), value="60 dagar")]
-            interval = "5m"
-            st.caption("Yahoo har bara 5-minutersdata cirka 60 dagar bakåt, så daytrading kan bara testas kort.")
+            per = {"5 dagar": "5d", "1 månad": "1mo", "60 dagar": "60d"}
+            bt_opts["period"] = per[st.select_slider("Period", list(per), value="60 dagar",
+                                                     help="Yahoo har 5-minutersdata cirka 60 dagar bakåt.")]
+            bt_opts["interval"] = "5m"
+        bt_opts["cap"] = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=100_000,
+                                         step=10_000, key="bt_cap")
+
+    def bt_right():
+        bt_opts["choose_risk"] = st.checkbox("Låt 🏆 även välja risk per affär", value=True, key="bt_choose_risk",
+                                             help="De 3 bästa strategierna testas även med 0,5 %, 1 % och 2 %.")
+        bt_opts["hourly"] = st.checkbox("Ta med kort swing (timgraf)", value=False, key="bt_hourly",
+                                        help="Mycket mer data – testet blir betydligt långsammare.")
+
+    settings, variant_name, opt_box = tab_settings("bt", "Inställningar för backtestet",
+                                                   "Testet körs med de här inställningarna.", risk_key="sb_risk",
+                                                   variant_key="sb_variant", left_extra=bt_left,
+                                                   right_extra=bt_right)
+    risk, swing_strategy, swing_strategy_name = settings.risk_per_trade_pct, VARIANTS[variant_name], variant_name
+    period, interval, bt_cap_sek = bt_opts["period"], bt_opts["interval"], bt_opts["cap"]
+    with_hourly = bt_opts["hourly"]
+    with opt_box:
         bt_list = st.radio("Aktielista", [LIQUID, "Min bevakningslista (30 stora + IREN, NBIS)", "Egen lista"],
                            horizontal=True, key="bt_list",
-                           help="Hela USA-marknaden är samma aktier som roboten handlar och gav bäst resultat i "
-                                "testerna. Fler aktier ger fler affärer och säkrare slutsatser.")
-        if bt_list.startswith("Min bevakningslista"):
-            bt_default = ",".join(settings.watchlist)
-        else:
-            bt_default = ""
+                           help="Hela USA-marknaden är samma aktier som roboten handlar och gav bäst resultat. "
+                                "Obs: dagens mest omsatta – historiska test blir därför något för positiva.")
         if bt_list == LIQUID:
             bt_symbols = ["(hämtas vid test)"]
-            st.caption("Dagens 300 mest omsatta aktier. Obs: de är valda utifrån hur de ser ut **i dag**, så "
-                       "historiska test blir något för positiva (bolag som gått dåligt och försvunnit saknas).")
         else:
-            bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
-        default_cap = max(1000, int(settings.total_capital))
-        bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap,
-                                     step=1000, help="Förvalt: totalt kapital ovan (100 000 kr).")
-    st.caption(f"Test: {'2 år (timgraf)' if hourly_mod else period.replace('y', ' år').replace('mo', ' mån')} · "
-               f"{'300 mest omsatta' if bt_list == LIQUID else bt_list} · startkapital {bt_cap_sek:,.0f} kr"
-               .replace(",", " ") + " – ändras under ⚙️ inställningarna.")
+            bt_default = ",".join(settings.watchlist) if bt_list.startswith("Min bevakningslista") else ""
+            bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=68, key=f"bt_syms_{bt_list}"))
+    st.caption(bt_help)
+    bt_status = st.empty()  # förloppet visas här uppe, så du slipper scrolla
+    st.caption((f"Test: {'2 år (timgraf)' if hourly_mod else period.replace('y', ' år').replace('mo', ' mån')} · "
+                f"{'300 mest omsatta' if bt_list == LIQUID else bt_list} · startkapital {bt_cap_sek:,.0f} kr · "
+                + short_settings(settings, variant_name)).replace(",", " ") + " – ändras under ⚙️.")
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
         bt_status.progress(0.0, text="⏳ Startar testet…")
@@ -643,7 +644,7 @@ with tab_bt:
             show(0.12, "Hämtar timdata för kort swing…")
             hbars = get_history_many(tuple(bt_symbols), *data_for(next(iter(hourly_variants().values())), True))
         if strat_name == "__best__":
-            pick_risk = st.session_state.get("bt_choose_risk", True)
+            pick_risk = bt_opts["choose_risk"]
             base_risk = settings.risk_per_trade_pct
             more_risks = tuple(r for r in (0.5, 1.0, 2.0) if r != base_risk) if pick_risk else ()
             groups = [(bars, daily_variants(), "dagsdata")] + ([(hbars, hourly_variants(), "timgraf")] if hbars else [])
