@@ -156,12 +156,12 @@ def main():
 
     # ---------------- automatiskt val för roboten (strategi + risk + antal aktier)
     lines += ["## Robotens automatiska val", "",
-              "Alla swing-strategier × risk 0,5/1/2 % × de 100, 300 eller 600 mest omsatta aktierna, 5 år. "
+              "Alla swing-strategier × risk 0,5/1/2 % × de 300 eller 600 mest omsatta aktierna, 5 år. "
               "Bara godkända kombinationer (plus i både test- och kontrolldel, minst 20 affärer) kan väljas. "
               "Bäst poäng (avkastning per år / största nedgång) vinner och används av roboten från nästa runda.", ""]
     try:
         cand = []
-        for n in (100, 300, 600):
+        for n in (300, 600):
             syms = liquid[:n]
             if len(syms) < n * 0.9:
                 continue  # Yahoo gav inte så många
