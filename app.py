@@ -420,11 +420,19 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     - 🔎 Scanner, 📈 Backtest, 🧪 Simulerad handel: egna reglage som går att ändra.
       Alla börjar med robotens inställningar."""
     k = lambda name: f"{prefix}_{name}"
+
+    def mark(col, value, default, text=None):
+        """Blå markering under ett reglage som har flyttats från förvalet."""
+        if not disabled and value != default:
+            col.markdown(f":blue[🔵 förval: **{text if text is not None else default}**]")
+
     a, b, c = st.columns(3)
     capital = a.number_input("Totalt kapital (SEK)", min_value=1000, value=int(base.total_capital), step=1000,
                              disabled=disabled, key=k("cap"))
+    mark(a, capital, int(base.total_capital), f"{int(base.total_capital):,} kr".replace(",", " "))
     day_pct = a.slider("Andel till daytrading (%)", 0, 100, int(base.day_allocation_pct), 5,
                        disabled=disabled, key=k("day"))
+    mark(a, day_pct, int(base.day_allocation_pct), f"{int(base.day_allocation_pct)} %")
     a.caption(f"Andel till swingtrading: {100 - day_pct} %")
     if left_extra:
         with a:
@@ -437,19 +445,26 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     else:
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
                                value=float(base.risk_per_trade_pct), key=k("risk"))
+    mark(b, float(risk), float(base.risk_per_trade_pct), f"{base.risk_per_trade_pct:g} %")
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
+    mark(b, max_pos, int(base.max_positions_per_strategy))
     max_pos_pct = b.slider("Max storlek per swingaffär (% av swingkapitalet)", 5, 100,
                            int(base.max_position_pct_of_strategy_capital), 5, disabled=disabled, key=k("maxpct"))
-    day_pct_max = b.slider("Max storlek per daytrade (% av daytrading-kapitalet)", 5, 100,
-                           int(base.day_max_position_pct or base.max_position_pct_of_strategy_capital), 5,
+    mark(b, max_pos_pct, int(base.max_position_pct_of_strategy_capital),
+         f"{int(base.max_position_pct_of_strategy_capital)} %")
+    _dmx = int(base.day_max_position_pct or base.max_position_pct_of_strategy_capital)
+    day_pct_max = b.slider("Max storlek per daytrade (% av daytrading-kapitalet)", 5, 100, _dmx, 5,
                            disabled=disabled, key=k("daymaxpct"))
+    mark(b, day_pct_max, _dmx, f"{_dmx} %")
     fractional = c.checkbox("Tillåt delaktier", value=base.allow_fractional_shares, disabled=disabled,
                             key=k("frac"), help="T.ex. 0,35 aktie. Avanza säljer bara hela aktier, därför är "
                                                 "det avstängt för att likna verkligheten.")
     park = c.checkbox("Parkera ledigt kapital i S&P 500 (SPY)", value=base.park_idle_in_index, disabled=disabled,
                       key=k("park"), help="Pengar som inte används i affärer ligger i SPY och växer med börsen. "
                                           "SPY säljs automatiskt när roboten behöver pengar till ett köp.")
+    mark(c, fractional, base.allow_fractional_shares, "på" if base.allow_fractional_shares else "av")
+    mark(c, park, base.park_idle_in_index, "på" if base.park_idle_in_index else "av")
     if disabled:
         c.selectbox("Swing-strategi", [base.swing_variant], disabled=True, key=k("var"))
         c.selectbox("Daytrading-strategi", [base.day_variant], disabled=True, key=k("dvar"))
@@ -457,11 +472,13 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     elif variant_key:
         variant = c.selectbox("Swing-strategi (ställs in automatiskt av 🏆-knappen)", list(VARIANTS),
                               key=variant_key)
+        mark(c, variant, base.swing_variant)
         c.caption(f"Daytrading-strategi: **{base.day_variant}**")
     else:
         names = list(VARIANTS)
         variant = c.selectbox("Swing-strategi", names, key=k("var"),
                               index=names.index(base.swing_variant) if base.swing_variant in names else 0)
+        mark(c, variant, base.swing_variant)
         c.caption(f"Daytrading-strategi: **{base.day_variant}**")
     out = replace(base, total_capital=float(capital), day_allocation_pct=float(day_pct),
                   swing_allocation_pct=float(100 - day_pct), risk_per_trade_pct=float(risk),
@@ -474,7 +491,27 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     st.caption((f"💰 Daytrading-budget **{out.day_capital:,.0f} kr** · Swing-budget **{out.swing_capital:,.0f} kr** · "
                 f"Max risk per swingaffär **{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} kr**")
                .replace(",", " "))
+    if not disabled:
+        changed = (capital != int(base.total_capital) or day_pct != int(base.day_allocation_pct)
+                   or float(risk) != float(base.risk_per_trade_pct) or max_pos != int(base.max_positions_per_strategy)
+                   or max_pos_pct != int(base.max_position_pct_of_strategy_capital) or day_pct_max != _dmx
+                   or fractional != base.allow_fractional_shares or park != base.park_idle_in_index
+                   or variant != base.swing_variant)
+        if changed:
+            st.button("↺ Tillbaka till förval", key=k("reset"), on_click=reset_to_defaults,
+                      args=(prefix, base, risk_key, variant_key),
+                      help="Ställer tillbaka alla reglage ovan till förvalet (de blå värdena).")
     return out, variant
+
+
+def reset_to_defaults(prefix, base, risk_key=None, variant_key=None):
+    """Tar bort ändringarna så att reglagen visar förvalet igen."""
+    for name in ("cap", "day", "risk", "maxpos", "maxpct", "daymaxpct", "frac", "park", "var"):
+        st.session_state.pop(f"{prefix}_{name}", None)
+    if risk_key:
+        st.session_state[risk_key] = float(base.risk_per_trade_pct)
+    if variant_key:
+        st.session_state[variant_key] = base.swing_variant
 
 
 from trading_platform import autopick  # noqa: E402
