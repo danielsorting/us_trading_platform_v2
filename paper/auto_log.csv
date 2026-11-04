@@ -228,3 +228,5 @@ tid,typ,symbol,action,detail
 2026-11-04 19:20,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
 2026-11-04 19:20,day,AFRM,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Upstart Sinks 7% on BofA Price Target Cut to $30 Ahead of Tuesday’s Q3 Report"" (nyhetspoäng -6)."
 2026-11-04 19:20,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 19:25,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 19:20: Granskade 291 aktier: 9 köpkandidater (AAPL, CNC, MSFT, OSCR, SN, VRDN, W, XYZ). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6). Nästa sökning ca 19:50 (dagskurser ändras långsamt)."
+2026-11-04 19:25,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: SGHC (5/6), NXT (5/6), CNC (5/6), HOOD (5/6), EL (5/6)."
