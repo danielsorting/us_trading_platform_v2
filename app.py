@@ -876,6 +876,17 @@ with tab_bt:
         st.success(f"✅ Inställt automatiskt i backtestets inställningar: **{st.session_state['best_applied']}**. "
                    "Vill du att bakgrundsroboten ska använda den – säg till Claude.")
 
+    if any(k in st.session_state for k in ("bt", "bt_best", "bt_compare")):
+        honest_txt = ""
+        if robot_choice and robot_choice.get("honest"):
+            honest_txt = (f" Nattens **ärliga test** (listan vald om varje månad utifrån handeln just då) gav bästa "
+                          f"strategin **{robot_choice['swing_variant']}**: **{robot_choice['per_year_pct']:+.1f} % per år** "
+                          f"(S&P 500 samma tid {robot_choice.get('sp500_per_year_pct', float('nan')):+.1f} % per år).")
+        st.warning("⚠️ **Resultatet nedan är för bra – det har facit i efterhand.** Testet köper bland de aktier "
+                   "som är mest omsatta **i dag**. Många av dem är just de som gick bäst de senaste åren, något "
+                   "ingen kunde veta i förväg. Använd det för att **jämföra** strategier, inte som förväntad vinst."
+                   + honest_txt)
+
     if "bt_best" in st.session_state:
         best = st.session_state["bt_best"]
         st.subheader("🏆 Bästa kombinationen")
