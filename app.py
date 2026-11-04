@@ -229,6 +229,101 @@ def fresh_robot_files():
     got = _download_robot_files(datetime.now().strftime("%Y%m%d%H%M"))
     return Path(got) if got else PROJECT_ROOT / "paper"
 
+
+def account_view(acct, state, log_df, key, last_run=None, price_override=None):
+    """Samma vy för 🤖 Automatisk handel och 🧪 Simulerad handel: konto, resultat,
+    öppna positioner, nyheter, senaste runda, logg och alla affärer."""
+    acct_prices = {**cached_prices(tuple(sorted(acct.positions))), **(price_override or {})}
+    acc = acct.get_account(acct_prices)
+    park_v = sum(p["quantity"] * acct_prices.get(sy, p["avg_price"]) for sy, p in acct.positions.items()
+                 if p.get("strategy") == "park")
+    trades_a = {sy: p for sy, p in acct.positions.items() if p.get("strategy") != "park"}
+    stock_v = sum(p["quantity"] * acct_prices.get(sy, p["avg_price"]) for sy, p in trades_a.items())
+    m = st.columns(5)
+    m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK",
+                help=f"Allt tillsammans: aktier + parkerat + kontanter ({acc['equity']:,.2f} USD).")
+    m[1].metric(f"I aktier ({len(trades_a)} st)", f"{usd_to_sek(stock_v, usd_sek):,.0f} SEK",
+                help="Robotens egna affärer (swing och daytrading).")
+    m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_v, usd_sek):,.0f} SEK",
+                help="Ledigt kapital som väntar i SPY. Säljs automatiskt när roboten köper aktier.")
+    m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK",
+                help="Daytrading-andelen och en liten buffert ligger som kontanter. Resten parkeras i SPY.")
+    m[4].metric("Resultat sedan start", f"{usd_to_sek(acc['equity'] - acc['starting_cash'], usd_sek):+,.0f} kr",
+                f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
+                help="Inklusive courtage och slippage.")
+    show_pnl_by_strategy(acct, acct_prices)
+    if last_run:
+        st.caption(f"Senaste körning: {last_run} (svensk tid).")
+
+    st.subheader("Öppna positioner")
+    if acct.positions:
+        st.dataframe(positions_table(acct.positions, acct_prices, usd_sek), width="stretch", hide_index=True)
+        st.caption("Kurserna uppdateras automatiskt varannan minut. 'Resultat nu' är före försäljningens courtage.")
+    else:
+        st.caption("Inga öppna positioner.")
+    closed = [o for o in acct.orders if o.get("pnl") is not None and o.get("strategy") != "park"]
+    if closed:
+        pnl = [o["pnl"] for o in closed]
+        st.caption(f"Avslutade affärer: {len(pnl)} · vinstandel {sum(x > 0 for x in pnl) / len(pnl) * 100:.0f} % "
+                   f"· summa **{usd_to_sek(sum(pnl), usd_sek):+,.0f} kr** ({sum(pnl):+.2f} USD)")
+
+    mn = (state or {}).get("market_news") or {}
+    with st.expander(f"📰 Nyheter som roboten läser – världsläget: {mn.get('mood', 'ej läst än')}",
+                     expanded=bool(mn.get("risk_off"))):
+        st.caption("Roboten läser Yahoo Finance-nyheter om börsen, olja, Trump/tullar och räntor var 30:e minut, "
+                   "och nyheterna om varje aktie innan den köper. Tydligt dåliga bolagsnyheter (t.ex. nyemission, "
+                   "stämning, utredning, sänkt prognos) stoppar köpet. Är världsläget tydligt negativt halveras "
+                   "risken per ny affär. Det går inte att backtesta nyheter bakåt, så se det som ett extra skydd.")
+        if mn:
+            (st.error if mn.get("risk_off") else st.success if mn.get("mood") == "positivt" else st.info)(
+                f"Marknadshumör **{mn.get('mood')}** (snittpoäng {mn.get('score')} per nyhet, {mn.get('count')} "
+                f"nyheter, läst {sv_time(mn['ts'])})"
+                + (" – **risken per ny affär är halverad**." if mn.get("risk_off") else "."))
+            for h in mn.get("headlines", []):
+                icon = "🔴" if h["score"] < 0 else "🟢" if h["score"] > 0 else "⚪"
+                st.markdown(f"{icon} [{h['title']}]({h['link']})" if h.get("link") else f"{icon} {h['title']}")
+        blocked = {k: v for k, v in ((state or {}).get("news") or {}).items() if v.get("block")}
+        if blocked:
+            st.markdown("**Aktier som inte köptes på grund av nyheter:**")
+            for sym, v in blocked.items():
+                st.markdown(f"- **{sym}**: \"{v.get('worst')}\" (poäng {v.get('score')})")
+
+    st.subheader("Senaste runda")
+    for typ, name in (("day", "📅 Daytrading"), ("swing", "🔁 Swing"), ("nyheter", "📰 Nyheter")):
+        rows = log_df[log_df.typ == typ] if log_df is not None and len(log_df) and "typ" in log_df else []
+        if len(rows):
+            r = rows.iloc[-1]
+            st.info(f"**{name}** ({r.tid}): {r.action} – {r.detail}")
+        else:
+            st.info(f"**{name}**: ingen händelse än.")
+
+    st.subheader("Logg (senaste 100 händelserna)")
+    if log_df is not None and len(log_df):
+        st.dataframe(log_df.tail(100).iloc[::-1].rename(columns={
+            "tid": "Tid (svensk)", "typ": "Typ", "symbol": "Aktie", "action": "Händelse", "detail": "Detaljer"}),
+            width="stretch", hide_index=True)
+    else:
+        st.caption("Ingen logg än.")
+
+    with st.expander("📜 Alla affärer"):
+        if acct.orders:
+            hist = pd.DataFrame(acct.orders[::-1])
+            if "time" in hist:
+                hist["time"] = hist["time"].map(sv_time)
+            if "pnl" in hist:
+                hist.insert(hist.columns.get_loc("pnl"), "Resultat (SEK)",
+                            hist["pnl"].map(lambda v: None if v is None or v != v else round(usd_to_sek(v, usd_sek))))
+            hist = hist.rename(columns={"time": "Tid (svensk)", "symbol": "Aktie", "side": "Köp/sälj",
+                                        "quantity": "Antal", "price": "Kurs (USD)", "fee": "Courtage (USD)",
+                                        "pnl": "Resultat (USD)", "strategy": "Strategi", "reason": "Orsak"})
+            keep = [c for c in ["Tid (svensk)", "Aktie", "Strategi", "Köp/sälj", "Antal", "Kurs (USD)",
+                                "Resultat (SEK)", "Orsak"] if c in hist]
+            st.dataframe(hist[keep], width="stretch", hide_index=True)
+            fees = sum(o.get("fee", 0) for o in acct.orders)
+            st.caption(f"Courtage hittills: {usd_to_sek(fees, usd_sek):,.0f} kr ({fees:.2f} USD).")
+        else:
+            st.caption("Inga affärer än.")
+
 def parse_symbols(text):
     return list(dict.fromkeys(x.strip().upper() for x in text.replace("\n", ",").split(",") if x.strip()))
 
@@ -315,14 +410,14 @@ def settings_panel(base, prefix, disabled):
 
 
 with tab_auto:
-    with st.expander("⚙️ Robotens inställningar (låsta – roboten på GitHub använder dessa)", expanded=True):
+    with st.expander("⚙️ Robotens inställningar (låsta – roboten på GitHub använder dessa)", expanded=False):
         st.caption("Reglagen är låsta så att inget ändras av misstag. Vill du ändra något – säg till Claude, "
                    "så ändras det i robotens inställningsfil (config.json).")
         settings_panel(defaults, "rb", disabled=True)
 
 with tab_paper:
     with st.expander("⚙️ Inställningar för simulerad handel (gäller även 🔎 Scanner och 📈 Backtest)",
-                     expanded=True):
+                     expanded=False):
         st.caption("Här kan du prova fritt. Ändringarna påverkar INTE bakgrundsroboten och "
                    "gäller tills sidan laddas om.")
         settings, variant_name = settings_panel(defaults, None, disabled=False)
@@ -615,29 +710,15 @@ with tab_paper:
             st.session_state.pop(k, None)
         st.success("Det simulerade kontot har börjat om med ett nytt konto.")
     prices = st.session_state.get("paper_prices", {})
-    acc = broker.get_account(prices)
-    park_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in broker.positions.items()
-                   if p.get("strategy") == "park")
-    trades = {sym: p for sym, p in broker.positions.items() if p.get("strategy") != "park"}
-    stock_val = sum(p["quantity"] * prices.get(sym, p["avg_price"]) for sym, p in trades.items())
-    m = st.columns(5)
-    m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK",
-                help=f"Allt tillsammans: aktier + parkerat + kontanter ({acc['equity']:,.2f} USD).")
-    m[1].metric(f"I aktier ({len(trades)} st)", f"{usd_to_sek(stock_val, usd_sek):,.0f} SEK",
-                help="Robotens egna affärer (swing och daytrading).")
-    m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_val, usd_sek):,.0f} SEK",
-                help="Ledigt kapital som väntar i SPY. Säljs automatiskt när roboten köper aktier.")
-    m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK",
-                help="Daytrading-andelen och en liten buffert ligger som kontanter. Resten parkeras i SPY.")
-    m[4].metric("Resultat sedan start", f"{usd_to_sek(acc['equity'] - acc['starting_cash'], usd_sek):+,.0f} kr",
-                f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
-                help="Inklusive courtage och slippage, även för att köpa och sälja SPY. "
-                     "Klicka 'Uppdatera kurser' för aktuellt värde.")
-    show_pnl_by_strategy(broker, prices)
+    sim_events = st.session_state.setdefault("sim_events", [])
+    sim_log_df = pd.DataFrame(sim_events) if sim_events else None
+    _last = sim_events[-1]["tid"] if sim_events else None
+    account_view(broker, st.session_state.get("tick_state", {}), sim_log_df, key="sim", last_run=_last,
+                 price_override=prices)
 
-    # ------------------------------------------------ dagens bästa trades (swing + daytrading)
+    # ------------------------------------------------ knappar (bara för simuleringen)
     st.divider()
-    st.subheader("⚡ Dagens bästa trades")
+    st.subheader("🎛️ Styr den simulerade roboten")
     is_open, status_text = market_status()
     (st.success if is_open else st.warning)(status_text + ("" if is_open else
         " Roboten köper först när börsen är öppen."))
@@ -676,6 +757,9 @@ with tab_paper:
         bar.empty()
         st.session_state["paper_actions"] = events or [{"symbol": "", "action": "inget att göra",
                                                         "detail": "Inga köp eller sälj just nu."}]
+        ev_log = st.session_state.setdefault("sim_events", [])
+        ev_log.extend({k: e.get(k) for k in ("tid", "typ", "symbol", "action", "detail")} for e in events)
+        del ev_log[:-300]
         log = st.session_state.setdefault("auto_log", [])
         buys = sum(e["action"] == "KÖP" for e in events)
         sells = sum(e["action"] == "SÄLJ" for e in events)
@@ -786,37 +870,6 @@ with tab_paper:
                     r["Signal"] = r["Signal"].map(SIGNAL_NAMES).fillna(r["Signal"])
                 st.dataframe(r, width="stretch", hide_index=True)
 
-    if st.session_state.get("paper_actions"):
-        st.subheader("Senaste handelsrundan")
-        st.dataframe(pd.DataFrame(st.session_state["paper_actions"]).rename(
-            columns={"symbol": "Aktie", "action": "Händelse", "detail": "Detaljer"}), width="stretch", hide_index=True)
-
-    st.subheader("Öppna positioner")
-    if broker.positions:
-        pos = positions_table(broker.positions, {**cached_prices(tuple(sorted(broker.positions))), **prices}, usd_sek)
-        st.dataframe(pos, width="stretch", hide_index=True)
-    else:
-        st.caption("Inga öppna positioner.")
-
-    st.subheader("Affärshistorik")
-    if broker.orders:
-        hist = pd.DataFrame(broker.orders[::-1])
-        if "time" in hist:
-            hist["time"] = hist["time"].map(sv_time)
-        if "pnl" in hist:
-            hist.insert(hist.columns.get_loc("pnl"), "Resultat (SEK)",
-                        hist["pnl"].map(lambda v: None if v is None or v != v else round(usd_to_sek(v, usd_sek))))
-        hist = hist.rename(columns={"time": "Tid (svensk)", "symbol": "Aktie", "side": "Köp/sälj", "quantity": "Antal",
-                                    "price": "Kurs (USD)", "fee": "Courtage (USD)", "pnl": "Resultat (USD)",
-                                    "strategy": "Strategi", "reason": "Orsak"})
-        st.dataframe(hist, width="stretch", hide_index=True)
-        closed = [o["pnl"] for o in broker.orders if o.get("pnl") is not None and o.get("strategy") != "park"]
-        if closed:
-            st.caption(f"Avslutade affärer: {len(closed)} · vinstandel {sum(p > 0 for p in closed) / len(closed) * 100:.0f} % "
-                       f"· summa **{usd_to_sek(sum(closed), usd_sek):+,.0f} kr** ({sum(closed):+.2f} USD)")
-            fees = sum(o.get("fee", 0) for o in broker.orders)
-            st.caption(f"Courtage hittills: {usd_to_sek(fees, usd_sek):,.0f} kr ({fees:.2f} USD).")
-
     with st.expander("Spara, återställ eller börja om"):
         st.write("På webbversionen (Streamlit Cloud) kan kontot nollställas när appen startas om. "
                  "Ladda därför ner kontot ibland och ladda upp det igen vid behov.")
@@ -859,76 +912,12 @@ with tab_auto:
             auto_state = json.loads((AUTO_DIR / "auto_state.json").read_text())
         except Exception:
             pass
-        auto_prices = {**cached_prices(tuple(sorted(auto_broker.positions))), **st.session_state.get("auto_prices", {})}
-        acc = auto_broker.get_account(auto_prices)
-        park_v = sum(p["quantity"] * auto_prices.get(sy, p["avg_price"]) for sy, p in auto_broker.positions.items()
-                     if p.get("strategy") == "park")
-        trades_a = {sy: p for sy, p in auto_broker.positions.items() if p.get("strategy") != "park"}
-        stock_v = sum(p["quantity"] * auto_prices.get(sy, p["avg_price"]) for sy, p in trades_a.items())
-        m = st.columns(5)
-        m[0].metric("Kontovärde", f"{usd_to_sek(acc['equity'], usd_sek):,.0f} SEK",
-                    help=f"{acc['equity']:,.2f} USD. Klicka 'Uppdatera kurser' för aktuellt värde.")
-        m[1].metric(f"I aktier ({len(trades_a)} st)", f"{usd_to_sek(stock_v, usd_sek):,.0f} SEK")
-        m[2].metric("Parkerat i S&P 500", f"{usd_to_sek(park_v, usd_sek):,.0f} SEK")
-        m[3].metric("Kontanter", f"{usd_to_sek(acc['cash'], usd_sek):,.0f} SEK")
-        m[4].metric("Resultat sedan start", f"{usd_to_sek(acc['equity'] - acc['starting_cash'], usd_sek):+,.0f} kr",
-                    f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %")
-        show_pnl_by_strategy(auto_broker, auto_prices)
-        if auto_state.get("last_run"):
-            st.caption(f"Senaste körning: {sv_time(auto_state['last_run'])} (svensk tid).")
-        if st.button("🔄 Uppdatera kurser", key="auto_refresh", disabled=not auto_broker.positions):
-            st.session_state["auto_prices"] = latest_prices(provider, list(auto_broker.positions))
-            st.rerun()
-        st.subheader("Öppna positioner")
-        if auto_broker.positions:
-            st.dataframe(positions_table(auto_broker.positions, auto_prices, usd_sek), width="stretch", hide_index=True)
-            st.caption("Kurserna uppdateras automatiskt varannan minut. 'Resultat nu' är före försäljningens courtage.")
-        else:
-            st.caption("Inga öppna positioner.")
-        closed = [o for o in auto_broker.orders if o.get("pnl") is not None and o.get("strategy") != "park"]
-        if closed:
-            pnl = [o["pnl"] for o in closed]
-            st.caption(f"Avslutade affärer: {len(pnl)} · vinstandel {sum(x > 0 for x in pnl) / len(pnl) * 100:.0f} % "
-                       f"· summa **{usd_to_sek(sum(pnl), usd_sek):+,.0f} kr** ({sum(pnl):+.2f} USD)")
-        mn = auto_state.get("market_news") or {}
-        with st.expander(f"📰 Nyheter som roboten läser – världsläget: {mn.get('mood', 'ej läst än')}",
-                         expanded=bool(mn.get("risk_off"))):
-            st.caption("Roboten läser Yahoo Finance-nyheter om börsen, olja, Trump/tullar och räntor var 30:e minut, "
-                       "och nyheterna om varje aktie innan den köper. Tydligt dåliga bolagsnyheter (t.ex. nyemission, "
-                       "stämning, utredning, sänkt prognos) stoppar köpet. Är världsläget tydligt negativt halveras "
-                       "risken per ny affär. Det går inte att backtesta nyheter bakåt, så se det som ett extra skydd.")
-            if mn:
-                (st.error if mn.get("risk_off") else st.success if mn.get("mood") == "positivt" else st.info)(
-                    f"Marknadshumör **{mn.get('mood')}** (snittpoäng {mn.get('score')} per nyhet, {mn.get('count')} nyheter, "
-                    f"läst {sv_time(mn['ts'])})" + (" – **risken per ny affär är halverad**." if mn.get("risk_off") else "."))
-                for h in mn.get("headlines", []):
-                    icon = "🔴" if h["score"] < 0 else "🟢" if h["score"] > 0 else "⚪"
-                    st.markdown(f"{icon} [{h['title']}]({h['link']})" if h.get("link") else f"{icon} {h['title']}")
-            blocked = {k: v for k, v in (auto_state.get("news") or {}).items() if v.get("block")}
-            if blocked:
-                st.markdown("**Aktier som inte köptes på grund av nyheter:**")
-                for sym, v in blocked.items():
-                    st.markdown(f"- **{sym}**: \"{v.get('worst')}\" (poäng {v.get('score')})")
         try:
-            last_log = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(300)
-            st.subheader("Senaste runda")
-            for typ, name in (("day", "📅 Daytrading"), ("swing", "🔁 Swing"), ("nyheter", "📰 Nyheter")):
-                rows = last_log[last_log.typ == typ]
-                if len(rows):
-                    r = rows.iloc[-1]
-                    st.info(f"**{name}** ({r.tid}): {r.action} – {r.detail}")
-                else:
-                    st.info(f"**{name}**: ingen händelse än i dag.")
+            auto_log_df = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(300)
         except Exception:
-            pass
-        st.subheader("Logg (senaste 100 händelserna)")
-        try:
-            log_df = pd.read_csv(AUTO_DIR / "auto_log.csv").tail(100).iloc[::-1]
-            st.dataframe(log_df.rename(columns={"tid": "Tid (svensk)", "typ": "Typ", "symbol": "Aktie",
-                                                "action": "Händelse", "detail": "Detaljer"}),
-                         width="stretch", hide_index=True)
-        except Exception:
-            st.caption("Ingen logg än.")
+            auto_log_df = None
+        account_view(auto_broker, auto_state, auto_log_df, key="auto",
+                     last_run=sv_time(auto_state["last_run"]) if auto_state.get("last_run") else None)
     st.caption("Vill du starta en körning direkt, ändra något eller börja om? Säg till i chatten så fixar jag det.")
 
 with tab_info:
