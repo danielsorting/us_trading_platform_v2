@@ -421,8 +421,14 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
       Alla börjar med robotens inställningar."""
     k = lambda name: f"{prefix}_{name}"
 
+    dots = []  # (widget-key, position i %) – blå kula på förvalets plats i reglagestången
+
+    def dot(key, lo, hi, default):
+        if not disabled and hi > lo:
+            dots.append((key, max(0.0, min(100.0, (default - lo) / (hi - lo) * 100))))
+
     def mark(col, value, default, text=None):
-        """Blå markering under ett reglage som har flyttats från förvalet."""
+        """Blå text under rutor/listor som har ändrats från förvalet (reglagestänger får en blå kula)."""
         if not disabled and value != default:
             col.markdown(f":blue[🔵 förval: **{text if text is not None else default}**]")
 
@@ -432,7 +438,7 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     mark(a, capital, int(base.total_capital), f"{int(base.total_capital):,} kr".replace(",", " "))
     day_pct = a.slider("Andel till daytrading (%)", 0, 100, int(base.day_allocation_pct), 5,
                        disabled=disabled, key=k("day"))
-    mark(a, day_pct, int(base.day_allocation_pct), f"{int(base.day_allocation_pct)} %")
+    dot(k("day"), 0, 100, int(base.day_allocation_pct))
     a.caption(f"Andel till swingtrading: {100 - day_pct} %")
     if left_extra:
         with a:
@@ -445,18 +451,18 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     else:
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
                                value=float(base.risk_per_trade_pct), key=k("risk"))
-    mark(b, float(risk), float(base.risk_per_trade_pct), f"{base.risk_per_trade_pct:g} %")
+    if float(base.risk_per_trade_pct) in RISK_OPTIONS:
+        dot(risk_key or k("risk"), 0, len(RISK_OPTIONS) - 1, RISK_OPTIONS.index(float(base.risk_per_trade_pct)))
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
-    mark(b, max_pos, int(base.max_positions_per_strategy))
+    dot(k("maxpos"), 1, 10, int(base.max_positions_per_strategy))
     max_pos_pct = b.slider("Max storlek per swingaffär (% av swingkapitalet)", 5, 100,
                            int(base.max_position_pct_of_strategy_capital), 5, disabled=disabled, key=k("maxpct"))
-    mark(b, max_pos_pct, int(base.max_position_pct_of_strategy_capital),
-         f"{int(base.max_position_pct_of_strategy_capital)} %")
+    dot(k("maxpct"), 5, 100, int(base.max_position_pct_of_strategy_capital))
     _dmx = int(base.day_max_position_pct or base.max_position_pct_of_strategy_capital)
     day_pct_max = b.slider("Max storlek per daytrade (% av daytrading-kapitalet)", 5, 100, _dmx, 5,
                            disabled=disabled, key=k("daymaxpct"))
-    mark(b, day_pct_max, _dmx, f"{_dmx} %")
+    dot(k("daymaxpct"), 5, 100, _dmx)
     fractional = c.checkbox("Tillåt delaktier", value=base.allow_fractional_shares, disabled=disabled,
                             key=k("frac"), help="T.ex. 0,35 aktie. Avanza säljer bara hela aktier, därför är "
                                                 "det avstängt för att likna verkligheten.")
@@ -491,6 +497,17 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     st.caption((f"💰 Daytrading-budget **{out.day_capital:,.0f} kr** · Swing-budget **{out.swing_capital:,.0f} kr** · "
                 f"Max risk per swingaffär **{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} kr**")
                .replace(",", " "))
+    if dots:
+        css = "".join(
+            f".st-key-{key} [data-baseweb='slider'] {{position: relative;}}"
+            f".st-key-{key} [data-baseweb='slider']::before {{content: ''; position: absolute; z-index: 0;"
+            f" left: calc({pct:.2f}% - 8px); top: 50%; transform: translateY(-50%); width: 16px; height: 16px;"
+            f" border-radius: 50%; background: #1f77ff; opacity: 0.85; box-shadow: 0 0 0 2px white;"
+            f" pointer-events: none;}}"
+            f".st-key-{key} [role='slider'] {{z-index: 1;}}"
+            for key, pct in dots)
+        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
+        st.caption("🔵 Blå kula = ditt förval. Den röda är det du ändrar till.")
     if not disabled:
         changed = (capital != int(base.total_capital) or day_pct != int(base.day_allocation_pct)
                    or float(risk) != float(base.risk_per_trade_pct) or max_pos != int(base.max_positions_per_strategy)

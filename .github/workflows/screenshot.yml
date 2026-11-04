@@ -1,0 +1,28 @@
+name: Skärmbild av webbsidan
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  shot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+      - run: pip install -r requirements.txt playwright && python -m playwright install --with-deps chromium
+      - name: Starta sidan och ta skärmbilder
+        env:
+          TP_FAKE_DATA: "1"
+        run: |
+          streamlit run app.py --server.headless true --server.port 8501 > streamlit.log 2>&1 &
+          for i in $(seq 1 60); do curl -s localhost:8501/_stcore/health && break; sleep 2; done
+          python scripts/screenshot.py screens || (tail -50 streamlit.log; exit 1)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: screens
+          path: screens/
