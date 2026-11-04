@@ -419,7 +419,8 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     - 🤖 Automatisk handel: robotens inställningar, låsta (bara för att visa)
     - 🔎 Scanner, 📈 Backtest, 🧪 Simulerad handel: egna reglage som går att ändra.
       Alla börjar med robotens inställningar."""
-    k = lambda name: f"{prefix}_{name}"
+    ver = st.session_state.get(f"{prefix}_resetver", 0)  # ökas av "Tillbaka till förval" → nya reglage
+    k = lambda name: f"{prefix}_{name}" + (f"_r{ver}" if ver else "")
 
     dots = []  # (widget-key, position i %) – blå kula på förvalets plats i reglagestången
 
@@ -540,9 +541,9 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
 
 
 def reset_to_defaults(prefix, base, risk_key=None, variant_key=None):
-    """Tar bort ändringarna så att reglagen visar förvalet igen."""
-    for name in ("cap", "day", "risk", "maxpos", "maxpct", "daymaxpct", "frac", "park", "var"):
-        st.session_state.pop(f"{prefix}_{name}", None)
+    """Ställer tillbaka reglagen till förvalet. Reglagen får nya namn (version + 1), så att
+    webbläsaren inte kommer ihåg de gamla lägena."""
+    st.session_state[f"{prefix}_resetver"] = st.session_state.get(f"{prefix}_resetver", 0) + 1
     if risk_key:
         st.session_state[risk_key] = float(base.risk_per_trade_pct)
     if variant_key:

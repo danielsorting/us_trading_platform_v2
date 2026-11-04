@@ -46,5 +46,14 @@ with sync_playwright() as pw:
     print(st)
     time.sleep(3)
     page.screenshot(path=str(OUT / "2_andrat.png"), full_page=False)
+    vals = lambda: page.evaluate("""() => Array.from(document.querySelectorAll("[class*='st-key-bt_'] input[type='range'], [class*='st-key-sb_risk'] input[type='range']")).map(i => i.getAttribute('aria-label').slice(0,25) + '=' + i.value)""")
+    print("före återställning:", vals())
+    try:
+        page.get_by_role("button", name="Tillbaka till förval").first.click(timeout=5000)
+        time.sleep(4)
+        print("efter återställning:", vals())
+    except Exception as e:
+        print("hittade inte knappen", type(e).__name__)
+    page.screenshot(path=str(OUT / "3_aterstallt.png"), full_page=False)
     b.close()
 print("klart", list(OUT.iterdir()))
