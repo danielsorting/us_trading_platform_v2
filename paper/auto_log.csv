@@ -217,3 +217,14 @@ tid,typ,symbol,action,detail
 2026-11-04 19:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:45: Granskade 291 aktier: 10 köpkandidater (AAPL, CNC, DIS, MSFT, OSCR, SN, VRDN, W). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6). Nästa sökning ca 19:15 (dagskurser ändras långsamt)."
 2026-11-04 19:15,day,ABT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Spinal cord stimulator lawsuits surge: what is going wrong?"" (nyhetspoäng -4)."
 2026-11-04 19:15,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 19:20,swing,,swing-sökning,"Granskade 291 aktier: 9 köpkandidater (AAPL, CNC, MSFT, OSCR, SN, VRDN, W, XYZ). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6)."
+2026-11-04 19:20,swing,SN,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Smith+Nephew cuts guidance on weak orthopaedics demand, shares dip"" (nyhetspoäng -2)."
+2026-11-04 19:20,swing,AAPL,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,CNC,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,OSCR,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,VRDN,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,W,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,XYZ,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,swing,ZBH,hoppar över,"Swing-budgeten är fullt använd (8,174 av 8,168 USD)."
+2026-11-04 19:20,day,AFRM,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Upstart Sinks 7% on BofA Price Target Cut to $30 Ahead of Tuesday’s Q3 Report"" (nyhetspoäng -6)."
+2026-11-04 19:20,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
