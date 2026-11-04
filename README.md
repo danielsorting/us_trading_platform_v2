@@ -1,4 +1,4 @@
-# US Trading Platform v0.3
+# SORTrading Platform v0.3
 
 > 👉 **Öppna tradingroboten här:** https://ustradingplatformv2-ch5mdu5sthbdpuguzidhnn.streamlit.app
 

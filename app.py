@@ -1,4 +1,4 @@
-"""Dashboard för US Trading Platform. Starta med:  streamlit run app.py"""
+"""Dashboard för SORTrading Platform. Starta med:  streamlit run app.py"""
 import json
 import os
 import sys
@@ -50,7 +50,7 @@ COLUMN_NAMES = {
 SIGNAL_NAMES = {"CANDIDATE": "✅ Köpkandidat", "WATCH": "👀 Bevaka", "LOW_LIQUIDITY": "💧 För låg omsättning",
                 "INSUFFICIENT_DATA": "… För lite data", "DATA_ERROR": "⚠️ Datafel"}
 
-st.set_page_config(page_title="US Trading Platform", layout="wide")
+st.set_page_config(page_title="SORTrading Platform", layout="wide")
 def _secret(name):
     """Läser en hemlig nyckel från Streamlit Secrets eller miljövariabel (aldrig från koden)."""
     import os
@@ -389,7 +389,7 @@ if "pending_best" in st.session_state:
 from trading_platform.status import render_status_box
 render_status_box(provider, PROJECT_ROOT / "paper" / "auto_state.json")
 
-st.title("US Trading Platform")
+st.title("SORTrading Platform")
 st.caption("Automatisk handel · Scanner · Backtest · Simulerad handel — inga riktiga order skickas")
 
 tab_auto, tab_scan, tab_bt, tab_paper, tab_info = st.tabs(

@@ -24,7 +24,7 @@ from trading_platform.indicators import enrich
 from trading_platform.risk import usd_to_sek
 
 NY = ZoneInfo("America/New_York")
-st.set_page_config(page_title="Diagram – US Trading Platform", layout="wide")
+st.set_page_config(page_title="Diagram – SORTrading Platform", layout="wide")
 provider = YahooResearchProvider()
 import os  # noqa: E402
 if os.environ.get("TP_FAKE_DATA"):  # automatiska tester
