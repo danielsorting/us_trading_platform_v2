@@ -188,8 +188,10 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             if entry <= stop:
                 continue
             equity = cash + sum(q["qty"] * last_close.get(s, q["entry"]) for s, q in open_pos.items())
-            qty = position_size(equity, entry, stop, settings.risk_per_trade_pct,
-                                settings.max_position_pct_of_strategy_capital,
+            max_pct = settings.max_position_pct_of_strategy_capital
+            if is_day and getattr(settings, "day_max_position_pct", None):
+                max_pct = settings.day_max_position_pct  # egen gräns för daytrades
+            qty = position_size(equity, entry, stop, settings.risk_per_trade_pct, max_pct,
                                 settings.allow_fractional_shares)
             c = fee(qty, entry)
             if qty <= 0 or qty * entry + c + (qty * entry + c) * 0.01 > cash:
