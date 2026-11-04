@@ -558,7 +558,10 @@ with tab_bt:
     else:
         bt_symbols = parse_symbols(st.text_area("Aktier", bt_default, height=70, key=f"bt_syms_{bt_list}"))
     default_cap = int(settings.day_capital if getattr(module, "NAME", "") == "day" else settings.swing_capital)
-    bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000)
+    if default_cap < 1000:  # t.ex. 100 % daytrading → 0 kr till swing: testa med hela kapitalet i stället
+        default_cap = max(1000, int(settings.total_capital))
+    bt_cap_sek = st.number_input("Startkapital för testet (SEK)", min_value=1000, value=default_cap, step=1000,
+                                 help="Förvalt: swing- eller daytrading-budgeten från inställningarna ovan.")
 
     if st.button("Kör backtest", type="primary", disabled=not bt_symbols):
         if bt_list == LIQUID:
