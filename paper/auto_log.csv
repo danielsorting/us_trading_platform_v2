@@ -296,3 +296,7 @@ tid,typ,symbol,action,detail
 2026-11-04 21:05,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 21:00: Granskade 291 aktier: 7 köpkandidater (AAPL, CNC, MSFT, OSCR, W, XYZ, ZBH). Närmast: ACN (5/6), ARRY (5/6), BRKR (5/6), CL (5/6), CPNG (5/6). Nästa sökning ca 21:30 (dagskurser ändras långsamt)."
 2026-11-04 21:05,day,MSFT,stop flyttad,Ny stop loss 516.91
 2026-11-04 21:05,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 21:10,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.07 per nyhet, 15 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Oil prices fall below $90 as traders bet on Iran war ending after Democrats sweep midterms""."
+2026-11-04 21:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 21:00: Granskade 291 aktier: 7 köpkandidater (AAPL, CNC, MSFT, OSCR, W, XYZ, ZBH). Närmast: ACN (5/6), ARRY (5/6), BRKR (5/6), CL (5/6), CPNG (5/6). Nästa sökning ca 21:30 (dagskurser ändras långsamt)."
+2026-11-04 21:10,day,ABT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Spinal cord stimulator lawsuits surge: what is going wrong?"" (nyhetspoäng -4)."
+2026-11-04 21:10,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
