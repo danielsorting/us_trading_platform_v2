@@ -90,10 +90,22 @@ def get_history(symbol, period, interval):
     return provider.history(symbol, period, interval)
 
 
-@st.cache_data(ttl=900, show_spinner=False)
-def get_history_many(symbols, period, interval):
-    """Hämtar kurser för många aktier i ett svep – mycket snabbare än en i taget."""
+@st.cache_data(ttl=900, show_spinner=False, max_entries=20)
+def _history_many_fresh(symbols, period, interval):
     return provider.history_many(list(symbols), period, interval)
+
+
+@st.cache_data(ttl=6 * 3600, show_spinner=False, max_entries=20)
+def _history_many_daily(symbols, period, interval):
+    return provider.history_many(list(symbols), period, interval)
+
+
+def get_history_many(symbols, period, interval):
+    """Hämtar kurser för många aktier i ett svep. Dagsdata sparas i 6 timmar (ändras inte under
+    dagen för backtest), 5-minuters- och timdata i 15 minuter."""
+    if interval == "1d" and period not in ("1d", "5d"):
+        return _history_many_daily(tuple(symbols), period, interval)
+    return _history_many_fresh(tuple(symbols), period, interval)
 
 
 def market_bars_for(strategy, period="2y"):
