@@ -211,3 +211,6 @@ tid,typ,symbol,action,detail
 2026-11-04 19:05,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:45: Granskade 291 aktier: 10 köpkandidater (AAPL, CNC, DIS, MSFT, OSCR, SN, VRDN, W). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6). Nästa sökning ca 19:15 (dagskurser ändras långsamt)."
 2026-11-04 19:05,day,TOST,stop flyttad,Ny stop loss 35.08
 2026-11-04 19:05,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-04 19:10,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng 0.19 per nyhet, 16 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""JD Vance Blamed the Iran War for the GOP's Midterm Rout. Oil Prices are Plunging.""."
+2026-11-04 19:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 18:45: Granskade 291 aktier: 10 köpkandidater (AAPL, CNC, DIS, MSFT, OSCR, SN, VRDN, W). Närmast: ACN (5/6), AFRM (5/6), ARRY (5/6), BRKR (5/6), CCL (5/6). Nästa sökning ca 19:15 (dagskurser ändras långsamt)."
+2026-11-04 19:10,day,TOST,stop flyttad,Ny stop loss 35.13
