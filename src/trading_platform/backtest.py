@@ -65,11 +65,14 @@ def stop_and_target(module, signal_close, atr, entry):
 
 
 def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positions=None, start=None, end=None,
-                 prepared=None, allowed=None):
+                 prepared=None, allowed=None, rank=None):
     """Kör ett backtest. bars_by_symbol: {"AAPL": kurstabell, ...}.
 
     start/end: handla bara inom detta tidsfönster (indikatorerna räknas ändå
     på all tidigare data). Öppna positioner stängs vid fönstrets slut.
+
+    rank: "momentum" = när det finns fler köpsignaler än platser köps de aktier
+    som stigit mest de senaste 6 månaderna först (annars bokstavsordning).
 
     allowed: valfri funktion allowed(symbol, tid) -> bool. Nya köp görs bara när
     den svarar True (t.ex. "aktien var bland de 300 mest omsatta just då").
@@ -115,7 +118,24 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
         return c
     # Snabb åtkomst till staplarna (mycket snabbare än .iloc i loopen).
     cols = ["Open", "High", "Low", "Close", "ATR14", "SIGNAL", "LAST_OF_DAY"]
+    if rank == "momentum":
+        data = {s: x.assign(MOM=x["Close"] / x["Close"].shift(126) - 1) for s, x in data.items()}
+        cols = cols + ["MOM"]
     rows = {s: list(x[cols].itertuples(index=False)) for s, x in data.items()}
+    all_syms = sorted(data)
+
+    def buy_order(t):
+        if rank != "momentum":
+            return all_syms
+        sig = []
+        for sym in all_syms:
+            i = pos_in[sym].get(t)
+            if i is None or i == 0:
+                continue
+            prev = rows[sym][i - 1]
+            if prev.SIGNAL:
+                sig.append((-(prev.MOM if prev.MOM == prev.MOM else -9.0), sym))
+        return [sym for _, sym in sorted(sig)]
     cash = float(capital_usd)
     open_pos, trades, equity_points, last_close = {}, [], [], {}
 
@@ -176,7 +196,7 @@ def run_backtest(bars_by_symbol, module, capital_usd, settings=None, max_positio
             check_exit(sym, p, rows[sym][i], t)
 
         # 2) Nya köp på signaler från föregående stapel.
-        for sym in sorted(data):
+        for sym in buy_order(t):
             i = pos_in[sym].get(t)
             if i is None or i == 0 or sym in open_pos or len(open_pos) >= max_positions:
                 continue
