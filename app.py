@@ -515,7 +515,8 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
                 f" z-index: -1; pointer-events: none;}}")
             if abs(cur - pct) > 0.01:  # blå kula syns bara när reglaget är flyttat från förvalet
                 css.append(
-                    f"{g}::after {{content: ''; position: absolute; left: {pct:.2f}%; top: 50%; width: 14px;"
+                    f"{g}::after {{content: ''; position: absolute; left: clamp(7px, {pct:.2f}%, calc(100% - 7px));"
+                    f" top: 50%; width: 14px;"
                     f" height: 14px; transform: translate(-50%, -50%); background: #1f77ff; border-radius: 50%;"
                     f" box-shadow: 0 0 0 2px white; pointer-events: none; z-index: 4;}}")
         st.markdown(f"<style>{''.join(css)}</style>", unsafe_allow_html=True)
