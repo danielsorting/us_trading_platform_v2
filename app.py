@@ -250,6 +250,21 @@ def fresh_robot_files():
     return Path(got) if got else PROJECT_ROOT / "paper"
 
 
+def spy_since(created):
+    """S&P 500 (SPY) i procent sedan kontot startade: från senaste stängning före starten till nu."""
+    try:
+        h = get_history("SPY", "1y", "1d")
+        start = pd.Timestamp(created)
+        idx = pd.DatetimeIndex(h.index).tz_localize(None) if h.index.tz is not None else pd.DatetimeIndex(h.index)
+        before = h["Close"][idx < start.normalize()]
+        if before.empty:
+            return None
+        now = cached_prices(("SPY",)).get("SPY") or float(h["Close"].iloc[-1])
+        return (now / float(before.iloc[-1]) - 1) * 100
+    except Exception:
+        return None
+
+
 def account_view(acct, state, log_df, key, last_run=None, price_override=None):
     """Samma vy för 🤖 Automatisk handel och 🧪 Simulerad handel: konto, resultat,
     öppna positioner, nyheter, senaste runda, logg och alla affärer."""
@@ -271,6 +286,14 @@ def account_view(acct, state, log_df, key, last_run=None, price_override=None):
     m[4].metric("Resultat sedan start", f"{usd_to_sek(acc['equity'] - acc['starting_cash'], usd_sek):+,.0f} kr",
                 f"{(acc['equity'] / acc['starting_cash'] - 1) * 100:+.2f} %",
                 help="Inklusive courtage och slippage.")
+    spy_pct = spy_since(getattr(acct, "created", "") or "")
+    if spy_pct is not None:
+        robot_pct = (acc["equity"] / acc["starting_cash"] - 1) * 100
+        diff = robot_pct - spy_pct
+        (st.success if diff > 0 else st.warning)(
+            f"📈 **Jämfört med indexfonden:** roboten {robot_pct:+.2f} % · S&P 500 {spy_pct:+.2f} % sedan start "
+            f"({str(acct.created)[:10]}) → roboten ligger **{diff:+.2f} procentenheter** "
+            f"{'före' if diff > 0 else 'efter'} index.")
     show_pnl_by_strategy(acct, acct_prices)
     if last_run:
         st.caption(f"Senaste körning: {last_run} (svensk tid).")
