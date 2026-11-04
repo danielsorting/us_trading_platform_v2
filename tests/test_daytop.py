@@ -84,7 +84,7 @@ def test_orb_buys_only_after_opening_range_and_above_its_high(intraday):
     t = r["trades"]
     if len(t):
         assert (t.entry_time.dt.date == t.exit_time.dt.date).all()
-    assert len(day_variants()) == 4
+    assert len(day_variants()) == 6
 
 
 def test_configured_day_variant_is_used(intraday):
@@ -96,3 +96,23 @@ def test_configured_day_variant_is_used(intraday):
     assert isinstance(strat, DayORB) and strat.label == s.day_variant
     ranked = rank_day_candidates({"A": intraday(5, seed=1)}, strat)
     assert "efter öppningsintervallet" in ranked.conditions.iloc[0]
+
+
+def test_lock_profit_variant_trails_stop_and_keeps_target(intraday):
+    """Lås vinst: stop loss följer med uppåt, men kursmålet finns kvar."""
+    from trading_platform.backtest import run_backtest
+    from trading_platform.paper_trader import run_paper_cycle
+    from trading_platform.brokers.paper import PaperBroker
+    from trading_platform.strategies.day_variants import day_variants
+    v = day_variants()["Day – ORB hela dagen, lås vinst (mål kvar)"]
+    row = v.evaluate("X", intraday(5, seed=3))
+    assert row["trail_atr"] == 1.5 and row["target_reference"] is not None
+    r = run_backtest({f"D{i}": intraday(20, seed=i, vol=0.004) for i in range(4)}, v, 1000, Settings())
+    assert "trades" in r
+    import tempfile, pathlib
+    b = PaperBroker(10_000, pathlib.Path(tempfile.mkdtemp()) / "a.json", slippage_pct=0)
+    b.submit_order("A", "buy", 10, price=100, stop=98.5, target=103, strategy="day", trail_atr=1.5, atr=1.0)
+    run_paper_cycle(b, [], Settings(), {"A": 102.6})
+    assert b.positions["A"]["stop"] == 101.1  # vinst inlåst: 102,6 − 1,5 × 1
+    acts = run_paper_cycle(b, [], Settings(), {"A": 101.0})
+    assert "A" not in b.positions and any(a["action"] == "SÄLJ" for a in acts)

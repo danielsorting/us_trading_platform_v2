@@ -31,7 +31,7 @@ def evaluate_last(module, symbol, bars):
     stop_pct = getattr(module, "STOP_PCT", None)
     target_pct = getattr(module, "TARGET_PCT", None)
     stop = float(a.Close * (1 - stop_pct / 100)) if stop_pct else float(a.Close - module.STOP_ATR * a.ATR14)
-    if getattr(module, "TRAIL_ATR", None):
+    if getattr(module, "TRAIL_ATR", None) and not getattr(module, "KEEP_TARGET", False):
         target = None  # inget fast mål – följande stop
     elif target_pct:
         target = float(a.Close * (1 + target_pct / 100))

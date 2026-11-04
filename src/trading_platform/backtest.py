@@ -58,7 +58,7 @@ def stop_and_target(module, signal_close, atr, entry):
     stop_pct = getattr(module, "STOP_PCT", None)
     target_pct = getattr(module, "TARGET_PCT", None)
     stop = signal_close * (1 - stop_pct / 100) if stop_pct else signal_close - module.STOP_ATR * atr
-    if getattr(module, "TRAIL_ATR", None):
+    if getattr(module, "TRAIL_ATR", None) and not getattr(module, "KEEP_TARGET", False):
         return float(stop), float("inf")
     target = entry * (1 + target_pct / 100) if target_pct else entry + module.TARGET_R * (entry - stop)
     return float(stop), float(target)

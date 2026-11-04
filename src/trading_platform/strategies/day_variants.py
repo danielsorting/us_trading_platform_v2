@@ -23,8 +23,13 @@ class DayORB:
     TARGET_R = 2.0
     MAX_HOLD_BARS = 78  # hela dagen; stängs ändå vid dagens slut
 
-    def __init__(self, label, opening_bars=3, last_entry_bar=24, volume_factor=1.5):
+    def __init__(self, label, opening_bars=3, last_entry_bar=24, volume_factor=1.5, trail_atr=None,
+                 keep_target=True):
         self.label = label
+        # Följande stop: stop loss flyttas upp till (kurs − trail_atr × ATR) när kursen stiger,
+        # så att en del av vinsten låses in. keep_target=True: kursmålet (2R) gäller också.
+        self.TRAIL_ATR = trail_atr
+        self.KEEP_TARGET = keep_target
         self.opening_bars = opening_bars      # 3 × 5 min = 15 minuter
         self.last_entry_bar = last_entry_bar  # inga nya köp efter 2 timmar
         self.volume_factor = volume_factor
@@ -69,4 +74,10 @@ def day_variants():
         "Day – ORB 30 min": DayORB("Day – ORB 30 min", opening_bars=6),
         "Day – ORB 30 min, hela dagen": DayORB("Day – ORB 30 min, hela dagen", opening_bars=6,
                                                 last_entry_bar=72),  # köp fram till 15:30 New York
+        # Lås in vinst: stop loss följer med uppåt.
+        "Day – ORB hela dagen, lås vinst (mål kvar)": DayORB(
+            "Day – ORB hela dagen, lås vinst (mål kvar)", opening_bars=6, last_entry_bar=72, trail_atr=1.5),
+        "Day – ORB hela dagen, lås vinst (inget mål)": DayORB(
+            "Day – ORB hela dagen, lås vinst (inget mål)", opening_bars=6, last_entry_bar=72, trail_atr=2.0,
+            keep_target=False),
     }
