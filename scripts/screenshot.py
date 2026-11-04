@@ -29,19 +29,21 @@ with sync_playwright() as pw:
     })""")
     (OUT / "sliders.txt").write_text("\n\n".join(info))
     # Flytta "Max antal positioner" tre steg åt vänster och "Max storlek per swingaffär" fem steg åt höger
-    print("\n".join(info)[:6000])
-    thumbs = page.locator("[role='slider']")
-    print("antal reglage:", thumbs.count())
-    for idx, key, n in ((4, "ArrowLeft", 3), (5, "ArrowRight", 5)):
+    for key, press, n in (("bt_maxpct", "ArrowLeft", 3), ("bt_maxpos", "ArrowRight", 1), ("sb_risk", "ArrowLeft", 2)):
         try:
-            t = thumbs.nth(idx)
-            t.scroll_into_view_if_needed(timeout=5000)
-            t.click(timeout=5000)
+            inp = page.locator(f".st-key-{key} input[type='range']").first
+            inp.focus(timeout=5000)
             for _ in range(n):
-                page.keyboard.press(key)
-            time.sleep(2)
+                page.keyboard.press(press)
+            time.sleep(3)
         except Exception as e:
-            print("kunde inte flytta reglage", idx, type(e).__name__)
+            print("kunde inte flytta", key, type(e).__name__, str(e)[:200])
+    st = page.evaluate("""() => { const g = document.querySelector(".st-key-bt_maxpct [role='group'] > div");
+        if (!g) return 'ingen bana';
+        const kids = Array.from(g.children).map(c => { const s = getComputedStyle(c);
+            return c.className + ' h=' + s.height + ' top=' + s.top + ' bg=' + s.backgroundImage.slice(0,80) + ' ' + s.backgroundColor; });
+        return 'bana h=' + getComputedStyle(g).height + ' | ' + kids.join(' || '); }""")
+    print(st)
     time.sleep(3)
     page.screenshot(path=str(OUT / "2_andrat.png"), full_page=False)
     b.close()

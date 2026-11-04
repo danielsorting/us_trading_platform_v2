@@ -423,9 +423,10 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
 
     dots = []  # (widget-key, position i %) – blå kula på förvalets plats i reglagestången
 
-    def dot(key, lo, hi, default):
+    def dot(key, lo, hi, default, current):
         if not disabled and hi > lo:
-            dots.append((key, max(0.0, min(100.0, (default - lo) / (hi - lo) * 100))))
+            pos = lambda v: max(0.0, min(100.0, (v - lo) / (hi - lo) * 100))
+            dots.append((key, pos(default), pos(current)))
 
     def mark(col, value, default, text=None):
         """Blå text under rutor/listor som har ändrats från förvalet (reglagestänger får en blå kula)."""
@@ -438,7 +439,7 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
     mark(a, capital, int(base.total_capital), f"{int(base.total_capital):,} kr".replace(",", " "))
     day_pct = a.slider("Andel till daytrading (%)", 0, 100, int(base.day_allocation_pct), 5,
                        disabled=disabled, key=k("day"))
-    dot(k("day"), 0, 100, int(base.day_allocation_pct))
+    dot(k("day"), 0, 100, int(base.day_allocation_pct), day_pct)
     a.caption(f"Andel till swingtrading: {100 - day_pct} %")
     if left_extra:
         with a:
@@ -452,17 +453,18 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
         risk = b.select_slider("Risk per affär (% av strategins kapital)", options=RISK_OPTIONS,
                                value=float(base.risk_per_trade_pct), key=k("risk"))
     if float(base.risk_per_trade_pct) in RISK_OPTIONS:
-        dot(risk_key or k("risk"), 0, len(RISK_OPTIONS) - 1, RISK_OPTIONS.index(float(base.risk_per_trade_pct)))
+        dot(risk_key or k("risk"), 0, len(RISK_OPTIONS) - 1, RISK_OPTIONS.index(float(base.risk_per_trade_pct)),
+            RISK_OPTIONS.index(float(risk)) if float(risk) in RISK_OPTIONS else 0)
     max_pos = b.slider("Max antal positioner per strategi", 1, 10, int(base.max_positions_per_strategy),
                        disabled=disabled, key=k("maxpos"))
-    dot(k("maxpos"), 1, 10, int(base.max_positions_per_strategy))
+    dot(k("maxpos"), 1, 10, int(base.max_positions_per_strategy), max_pos)
     max_pos_pct = b.slider("Max storlek per swingaffär (% av swingkapitalet)", 5, 100,
                            int(base.max_position_pct_of_strategy_capital), 5, disabled=disabled, key=k("maxpct"))
-    dot(k("maxpct"), 5, 100, int(base.max_position_pct_of_strategy_capital))
+    dot(k("maxpct"), 5, 100, int(base.max_position_pct_of_strategy_capital), max_pos_pct)
     _dmx = int(base.day_max_position_pct or base.max_position_pct_of_strategy_capital)
     day_pct_max = b.slider("Max storlek per daytrade (% av daytrading-kapitalet)", 5, 100, _dmx, 5,
                            disabled=disabled, key=k("daymaxpct"))
-    dot(k("daymaxpct"), 5, 100, _dmx)
+    dot(k("daymaxpct"), 5, 100, _dmx, day_pct_max)
     fractional = c.checkbox("Tillåt delaktier", value=base.allow_fractional_shares, disabled=disabled,
                             key=k("frac"), help="T.ex. 0,35 aktie. Avanza säljer bara hela aktier, därför är "
                                                 "det avstängt för att likna verkligheten.")
@@ -498,16 +500,26 @@ def settings_panel(base, prefix, disabled, risk_key=None, variant_key=None, left
                 f"Max risk per swingaffär **{out.swing_capital * out.risk_per_trade_pct / 100:,.0f} kr**")
                .replace(",", " "))
     if dots:
-        css = "".join(
-            f".st-key-{key} [data-baseweb='slider'] {{position: relative;}}"
-            f".st-key-{key} [data-baseweb='slider']::before {{content: ''; position: absolute; z-index: 0;"
-            f" left: calc({pct:.2f}% - 8px); top: 50%; transform: translateY(-50%); width: 16px; height: 16px;"
-            f" border-radius: 50%; background: #1f77ff; opacity: 0.85; box-shadow: 0 0 0 2px white;"
-            f" pointer-events: none;}}"
-            f".st-key-{key} [role='slider'] {{z-index: 1;}}"
-            for key, pct in dots)
-        st.markdown(f"<style>{css}</style>", unsafe_allow_html=True)
-        st.caption("🔵 Blå kula = ditt förval. Den röda är det du ändrar till.")
+        # Streamlits reglage: [role=group] > div (banan, position: relative) > [linje, knapp (style="left: x%"), …].
+        # Blå linje 0 → förval och blå kula på förvalet ligger UNDER den röda, som ritas från knappen.
+        css = []
+        for key, pct, cur in dots:
+            g = f".st-key-{key} [role='group'] > div"
+            css.append(
+                f"{g} {{overflow-x: clip; overflow-clip-margin: 2px;}}"
+                f"{g}::before {{content: ''; position: absolute; left: 0; width: {pct:.2f}%; top: 50%; height: 4px;"
+                f" transform: translateY(-50%); background: #1f77ff; border-radius: 2px; pointer-events: none; z-index: 1;}}"
+                f"{g} > div[style*='left'] {{z-index: 3;}}"
+                f"{g} > div[style*='left']::before {{content: ''; position: absolute; top: 50%; right: 50%;"
+                f" width: 4000px; height: 4px; transform: translateY(-50%); background: #ff4b4b; border-radius: 2px;"
+                f" z-index: -1; pointer-events: none;}}")
+            if abs(cur - pct) > 0.01:  # blå kula syns bara när reglaget är flyttat från förvalet
+                css.append(
+                    f"{g}::after {{content: ''; position: absolute; left: {pct:.2f}%; top: 50%; width: 14px;"
+                    f" height: 14px; transform: translate(-50%, -50%); background: #1f77ff; border-radius: 50%;"
+                    f" box-shadow: 0 0 0 2px white; pointer-events: none; z-index: 4;}}")
+        st.markdown(f"<style>{''.join(css)}</style>", unsafe_allow_html=True)
+        st.caption("🔵 Blått = ditt förval. Rött = det du ändrar till.")
     if not disabled:
         changed = (capital != int(base.total_capital) or day_pct != int(base.day_allocation_pct)
                    or float(risk) != float(base.risk_per_trade_pct) or max_pos != int(base.max_positions_per_strategy)
