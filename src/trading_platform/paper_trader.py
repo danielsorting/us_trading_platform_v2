@@ -15,6 +15,32 @@ from zoneinfo import ZoneInfo
 from .risk import fee_kwargs, fees_too_high, position_size
 
 SWING_MAX_CALENDAR_DAYS = 28  # ungefär 20 handelsdagar
+
+# Skydd (som i Freqtrade m.fl. robotar):
+COOLDOWN_DAYS = {"swing": 5, "day": 1}  # köp inte samma aktie igen så här snart efter en stop loss
+STOPLOSS_GUARD = 3                       # efter så här många stop loss i daytrading i dag: inga fler daytrades
+DRAWDOWN_HALF_RISK_PCT = 10.0            # kontot så här mycket under sin topp → halverad risk per ny affär
+DRAWDOWN_PAUSE_PCT = 20.0                # … så här mycket under toppen → inga nya köp alls (bara sälj)
+
+
+def protections(broker, now=None):
+    """Spärrar för köp. Returnerar (spärrade aktier {aktie: orsak}, daytrading stoppad i dag?)."""
+    from datetime import timedelta
+    now = now or datetime.now()
+    blocked, day_stops = {}, 0
+    for o in broker.orders:
+        if o.get("side") != "sell" or o.get("reason") != "stop loss":
+            continue
+        try:
+            t = datetime.fromisoformat(o["time"])
+        except Exception:
+            continue
+        strat = o.get("strategy", "swing")
+        if now - t <= timedelta(days=COOLDOWN_DAYS.get(strat, 3)):
+            blocked[o["symbol"]] = f"Paus efter stop loss {t:%Y-%m-%d} (köps inte igen på {COOLDOWN_DAYS.get(strat, 3)} dagar)."
+        if strat == "day" and t.date() == now.date():
+            day_stops += 1
+    return blocked, day_stops >= STOPLOSS_GUARD
 PARK = "park"                 # strategi-märkning för parkerat kapital
 PARK_BUFFER_PCT = 1.0         # så mycket kontanter (%) som alltid lämnas kvar
 PARK_SLIPPAGE_PCT = 0.005     # SPY är världens mest handlade aktie: skillnaden köp/sälj är ca 1 cent
@@ -162,9 +188,20 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
     held = broker.get_positions()
     equity = broker.get_account(prices)["equity"]
     alloc = {"day": settings.day_allocation_pct, "swing": settings.swing_allocation_pct}
+    blocked, day_guard = protections(broker, now)
+    guard_told = False
     for row in scan_rows:
         sym, strat = row.get("symbol"), row.get("strategy")
         if row.get("signal") != "CANDIDATE" or sym in held or sym == settings.park_symbol:
+            continue
+        if sym in blocked:
+            actions.append({"symbol": sym, "action": "hoppar över (skydd)", "detail": blocked[sym]})
+            continue
+        if strat == "day" and day_guard:
+            if not guard_told:
+                actions.append({"symbol": "", "action": "skydd", "detail": f"{STOPLOSS_GUARD} daytrades har gått till "
+                                "stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre)."})
+                guard_told = True
             continue
         if ((strat == "day" and ny_now.weekday() < 5 and ny_now.time() >= DAY_CLOSE_NY)):
             continue  # inga nya dagpositioner strax före stängning

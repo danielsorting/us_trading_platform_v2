@@ -148,3 +148,13 @@ def test_premarket_and_afterhours_swing(tmp_path, provider):
             return {s: (90.0, None) for s in symbols}         # rasar i efterhandeln
     ev = tick(Q(), b, s, state, [], now_ny=datetime(2026, 11, 3, 16, 10, tzinfo=NY))
     assert "AAA" not in b.positions and any("stop loss" in e["detail"] for e in ev)
+
+
+def test_drawdown_protection_halves_risk_and_pauses(tmp_path, provider):
+    b = PaperBroker(5000, tmp_path / "a.json", slippage_pct=0)
+    state = {"equity_peak": 5000 / 0.85}  # kontot är 15 % under toppen
+    ev = tick(provider(), b, settings(), state, ["S1"], now_ny=datetime(2026, 11, 3, 11, 0, tzinfo=NY))
+    assert state["drawdown_level"] == "halv" and any("halveras" in e["detail"] for e in ev)
+    state["equity_peak"] = 5000 / 0.75  # 25 % under toppen
+    ev = tick(provider(), b, settings(), state, ["S1"], now_ny=datetime(2026, 11, 3, 11, 5, tzinfo=NY))
+    assert state["drawdown_level"] == "paus" and not any(e["action"] == "KÖP" for e in ev)

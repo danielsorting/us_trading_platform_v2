@@ -160,3 +160,22 @@ def test_no_tiny_leftover_trades(tmp_path):
     acts = run_paper_cycle(b, rows, s, {x: 100.0 for x in "ABC"})
     assert sorted(b.positions) == ["A", "B"]  # 9 + 9 aktier; C skulle bara få 2 → hoppas över
     assert any("budgeten är fullt använd" in a["detail"] for a in acts)
+
+
+def test_protections_cooldown_and_stoploss_guard(tmp_path):
+    """Skydd: köp inte samma aktie direkt efter stop loss; efter 3 stop loss i daytrading – inga fler i dag."""
+    from dataclasses import replace
+    from trading_platform.paper_trader import protections
+    b = broker(tmp_path, cash=10_000)
+    for sym in ("A", "B", "C"):
+        b.submit_order(sym, "buy", 1, price=100, strategy="day", stop=99)
+        b.submit_order(sym, "sell", 1, price=98, strategy="day", reason="stop loss")
+    blocked, guard = protections(b)
+    assert set(blocked) == {"A", "B", "C"} and guard
+    s = replace(Settings(), max_fee_share_of_profit_pct=1000, allow_fractional_shares=False)
+    rows = [{"symbol": x, "strategy": "day", "signal": "CANDIDATE", "price": 100.0, "stop_reference": 99.0,
+             "target_reference": 102.0} for x in ("A", "D")]
+    acts = run_paper_cycle(b, rows, s, {"A": 100.0, "D": 100.0})
+    assert "A" not in b.positions and "D" not in b.positions
+    assert any("Paus efter stop loss" in a["detail"] for a in acts)
+    assert any("inga fler daytrades i dag" in a["detail"] for a in acts)

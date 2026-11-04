@@ -294,6 +294,32 @@ def tick(provider, broker, settings, state, liquid_symbols, swing_strategy=None,
                     else kind
                 events.append({"tid": stamp, "typ": typ, **a})
 
+    # Skydd: om kontot har fallit mycket från sin högsta nivå tas mindre risk (eller inga nya köp).
+    from .paper_trader import DRAWDOWN_HALF_RISK_PCT, DRAWDOWN_PAUSE_PCT
+    try:
+        held_now = [s_ for s_ in broker.positions]
+        pr = latest_prices(provider, held_now) if (held_now and is_open) else {}
+        eq = broker.get_account(pr)["equity"]
+        peak = max(float(state.get("equity_peak", 0) or 0), eq)
+        state["equity_peak"] = peak
+        dd = (1 - eq / peak) * 100 if peak else 0.0
+        state["drawdown_pct"] = round(dd, 2)
+        level = "paus" if dd >= DRAWDOWN_PAUSE_PCT else "halv" if dd >= DRAWDOWN_HALF_RISK_PCT else "ok"
+        if level != state.get("drawdown_level", "ok"):  # skriv i loggen bara när läget ändras
+            msg = {"paus": f"Kontot är {dd:.1f} % under sin topp – inga nya köp förrän det har återhämtat sig "
+                           f"(gräns {DRAWDOWN_PAUSE_PCT:.0f} %).",
+                   "halv": f"Kontot är {dd:.1f} % under sin topp – risken per ny affär halveras "
+                           f"(gräns {DRAWDOWN_HALF_RISK_PCT:.0f} %).",
+                   "ok": "Kontot har återhämtat sig – vanlig risk igen."}[level]
+            add("skydd", [{"symbol": "", "action": "skydd", "detail": msg}])
+            state["drawdown_level"] = level
+        if level == "paus":
+            settings = replace(settings, max_positions_per_strategy=0)
+        elif level == "halv":
+            settings = replace(settings, risk_per_trade_pct=settings.risk_per_trade_pct / 2)
+    except Exception:
+        pass
+
     phase_now = None if is_open else extended_phase(now_ny)
     if is_open or (phase_now and getattr(settings, "extended_hours_swing", False)):
         settings = news_mood(settings, state, add)
