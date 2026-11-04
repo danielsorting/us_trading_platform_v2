@@ -70,3 +70,28 @@ tid,typ,symbol,action,detail
 2026-11-04 16:35,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 291 aktier: 26 köpkandidater (ANET, APP, BFLY, BKNG, BMNR, BRKR, CNC, EL). Närmast: ABT (3/4), AFRM (3/4), AG (3/4), AMD (3/4), APO (3/4). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
 2026-11-04 16:35,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: HLMN (5/6), TOST (5/6), FISV (5/6), BX (5/6), CL (5/6)."
 2026-11-04 16:35,day,TOST,stop flyttad,Ny stop loss 34.73
+2026-11-04 16:40,swing,,swing-sökning,"Granskade 291 aktier: 26 köpkandidater (ANET, APP, BFLY, BKNG, BMNR, BRKR, CNC, COIN). Närmast: ABT (3/4), ACN (3/4), AFRM (3/4), AG (3/4), APO (3/4)."
+2026-11-04 16:40,swing,MS,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Fervo Energy Lost 36% in a Month on a Short Report. Morgan Stanley Sees 150% Upside"" (nyhetspoäng -5)."
+2026-11-04 16:40,swing,RIOT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""IREN Sinks 9%, CoreWeave Down 6% as Democrats Win Congress: Cramer Warns “Be Careful”"" (nyhetspoäng -9)."
+2026-11-04 16:40,swing,SNAP,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""How Investors May Respond To Snap (SNAP) Teen Lawsuit Settlement"" (nyhetspoäng -2)."
+2026-11-04 16:40,swing,TOST,stop flyttad,Ny stop loss 34.90
+2026-11-04 16:40,swing,APP,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,BFLY,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,BKNG,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,BMNR,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,BRKR,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,CNC,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,COIN,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,HIMS,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,MGM,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,MSTR,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,NFLX,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,OSCR,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,SCHW,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,SE,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,SGHC,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,U,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,VZ,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,swing,XPEV,hoppar över,"Swing-budgeten är fullt använd (8,226 av 8,209 USD)."
+2026-11-04 16:40,day,TOST,stop flyttad,Ny stop loss 34.97
+2026-11-04 16:40,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
