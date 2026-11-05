@@ -1,5 +1,5 @@
 {
-  "cash": 1147.309426605555,
+  "cash": 1603.1788815726723,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -69,17 +69,6 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 1.392
-    },
-    "TEVA": {
-      "quantity": 11.0,
-      "avg_price": 42.32114923667908,
-      "opened": "2026-11-05T15:06:38",
-      "entry_fee": 0.1862,
-      "stop": 41.88,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.262
     },
     "PM": {
       "quantity": 2.0,
@@ -321,6 +310,18 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 1.177
+    },
+    {
+      "id": "f355f81abe",
+      "time": "2026-11-05T15:25:50",
+      "symbol": "TEVA",
+      "side": "sell",
+      "quantity": 11.0,
+      "price": 41.4593,
+      "fee": 0.1824,
+      "pnl": -9.85,
+      "reason": "stop loss",
+      "strategy": "day"
     }
   ],
   "reset_id": null
