@@ -51,6 +51,19 @@ SIGNAL_NAMES = {"CANDIDATE": "✅ Köpkandidat", "WATCH": "👀 Bevaka", "LOW_LI
                 "INSUFFICIENT_DATA": "… För lite data", "DATA_ERROR": "⚠️ Datafel"}
 
 st.set_page_config(page_title="SORTrading Platform", layout="wide")
+# Sidan är på svenska: hindra Chrome från att "översätta" den (då blev t.ex. "handel" till "handtag").
+import streamlit.components.v1 as _components  # noqa: E402
+_components.html("""<script>
+try {
+  const d = window.parent.document;
+  d.documentElement.lang = "sv";
+  d.documentElement.setAttribute("translate", "no");
+  d.documentElement.classList.add("notranslate");
+  if (!d.querySelector('meta[name="google"]')) {
+    const m = d.createElement("meta"); m.name = "google"; m.content = "notranslate"; d.head.appendChild(m);
+  }
+} catch (e) {}
+</script>""", height=0)
 def _secret(name):
     """Läser en hemlig nyckel från Streamlit Secrets eller miljövariabel (aldrig från koden)."""
     import os
