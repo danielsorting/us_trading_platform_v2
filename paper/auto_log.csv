@@ -497,3 +497,8 @@ tid,typ,symbol,action,detail
 2026-11-05 19:15,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-05 19:20,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:50: Granskade 289 aktier: 0 köpkandidater. Närmast: IBN (5/6), SONY (5/6), UL (5/6), ACN (4/6), ADMA (4/6). Nästa sökning ca 19:20 (dagskurser ändras långsamt)."
 2026-11-05 19:20,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-05 19:25,swing,,swing-sökning,"Granskade 290 aktier: 5 köpkandidater (BDX, IBN, SONY, U, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6)."
+2026-11-05 19:25,swing,SONY,hoppar över,"Swing-budgeten är fullt använd (7,601 av 7,581 USD)."
+2026-11-05 19:25,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,601 av 7,581 USD)."
+2026-11-05 19:25,swing,UL,hoppar över,"Swing-budgeten är fullt använd (7,601 av 7,581 USD)."
+2026-11-05 19:25,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
