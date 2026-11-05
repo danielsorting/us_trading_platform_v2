@@ -366,3 +366,5 @@ tid,typ,symbol,action,detail
 2026-11-05 16:05,day,TEVA,KÖP,"11 st à 42.30 USD (day), stop 41.88"
 2026-11-05 16:05,day,PM,KÖP,"2 st à 210.37 USD (day), stop 209.11"
 2026-11-05 16:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 290 aktier: 14 köpkandidater (ABBV, ACN, AMGN, BDX, EW, IBN, KO, MA). Närmast: ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6), BRK-B (5/6). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
+2026-11-05 16:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 290 aktier: 14 köpkandidater (ABBV, ACN, AMGN, BDX, EW, IBN, KO, MA). Närmast: ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6), BRK-B (5/6). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
+2026-11-05 16:15,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: LYB (5/6), RAMP (4/6), ADMA (4/6), BSY (4/6), QCOM (4/6)."
