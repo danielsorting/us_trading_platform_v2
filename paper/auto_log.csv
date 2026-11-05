@@ -549,3 +549,9 @@ tid,typ,symbol,action,detail
 2026-11-05 20:50,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-05 20:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
 2026-11-05 20:55,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), JAN (5/6), WEN (5/6), U (5/6), BDX (5/6)."
+2026-11-05 21:00,swing,,swing-sökning,"Granskade 290 aktier: 6 köpkandidater (BDX, BEKE, EW, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BSY (5/6), DUK (5/6)."
+2026-11-05 21:00,swing,EW,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Edwards Lifesciences Corp (EW) (Q3 2026) Earnings Call Highlights: Broad-Based TAVR and TMTT ..."" (nyhetspoäng -12)."
+2026-11-05 21:00,swing,BEKE,hoppar över,"Swing-budgeten är fullt använd (7,693 av 7,656 USD)."
+2026-11-05 21:00,swing,SONY,hoppar över,"Swing-budgeten är fullt använd (7,693 av 7,656 USD)."
+2026-11-05 21:00,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,693 av 7,656 USD)."
+2026-11-05 21:00,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: VMRK (5/6), CAVA (5/6), RAMP (4/6), ADMA (4/6), WEN (4/6)."
