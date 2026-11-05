@@ -74,3 +74,16 @@ def no_real_news(monkeypatch):
     from trading_platform import news
     monkeypatch.setattr(news, "fetch_symbol_news", lambda symbol, count=10: [])
     monkeypatch.setattr(news, "fetch_market_news", lambda *a, **k: [])
+
+
+@pytest.fixture(autouse=True)
+def fixed_ny_clock(monkeypatch):
+    """Testerna ska ge samma svar oavsett när de körs. Nattrapporten kör testerna ca 23:20
+    UTC – då har New York-börsen stängt och roboten vägrar köpa daytrades, vilket fick
+    6 tester att fallera och stoppade hela rapporten. Här står klockan alltid på en
+    vanlig tisdag kl 11:00 i New York (tester som behöver annan tid skickar egen ny_now)."""
+    from datetime import datetime
+    from zoneinfo import ZoneInfo
+    from trading_platform import paper_trader
+    monkeypatch.setattr(paper_trader, "ny_clock",
+                        lambda: datetime(2026, 11, 3, 11, 0, tzinfo=ZoneInfo("America/New_York")))
