@@ -529,3 +529,5 @@ tid,typ,symbol,action,detail
 2026-11-05 20:15,day,WRBY,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Warby Parker Shares Rise After Q3 Earnings Beat"" (nyhetspoäng -9)."
 2026-11-05 20:15,day,JAN,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Janus Living Announces Pricing of Upsized Public Offering of Class A-1 Common Stock"" (nyhetspoäng -3)."
 2026-11-05 20:15,day,TEVA,hoppar över (skydd),Paus efter stop loss 2026-11-05 (köps inte igen på 1 dagar).
+2026-11-05 20:20,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:00: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 20:30 (dagskurser ändras långsamt)."
+2026-11-05 20:20,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: WRBY (5/6), JAN (5/6), ABNB (5/6), AMZN (5/6), CLS (5/6)."
