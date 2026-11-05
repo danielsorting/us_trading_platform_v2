@@ -345,3 +345,5 @@ tid,typ,symbol,action,detail
 2026-11-05 15:50,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: RAMP (4/6), MOS (4/6), BDX (4/6), EW (3/6), NXPI (3/6)."
 2026-11-05 15:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 290 aktier: 3 köpkandidater (BEKE, SONY, U). Närmast: ABBV (5/6), ACN (5/6), ADMA (5/6), AMZN (5/6), APP (5/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
 2026-11-05 15:55,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: RAMP (4/6), BDX (4/6), PG (4/6), ADMA (3/6), MOS (3/6)."
+2026-11-05 16:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 6 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 290 aktier: 3 köpkandidater (BEKE, SONY, U). Närmast: ABBV (5/6), ACN (5/6), ADMA (5/6), AMZN (5/6), APP (5/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
+2026-11-05 16:00,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: TEVA (5/6), ET (5/6), DVN (5/6), FRO (5/6), RAMP (4/6)."
