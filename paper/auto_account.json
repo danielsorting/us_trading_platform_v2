@@ -1,5 +1,5 @@
 {
-  "cash": 911.2438974500479,
+  "cash": 1347.950538299352,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -65,17 +65,6 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 0.679
-    },
-    "EQNR": {
-      "quantity": 10.0,
-      "avg_price": 44.01199667930603,
-      "opened": "2026-11-05T16:11:34",
-      "entry_fee": 0.176,
-      "stop": 43.79,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.153
     }
   },
   "orders": [
@@ -544,6 +533,18 @@
       "price": 63.7881,
       "fee": 0.1786,
       "pnl": -5.29,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "2c39aa70a1",
+      "time": "2026-11-05T16:25:51",
+      "symbol": "EQNR",
+      "side": "sell",
+      "quantity": 10.0,
+      "price": 43.6881,
+      "fee": 0.1748,
+      "pnl": -3.59,
       "reason": "stop loss",
       "strategy": "day"
     }
