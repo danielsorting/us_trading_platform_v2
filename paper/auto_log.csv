@@ -513,3 +513,5 @@ tid,typ,symbol,action,detail
 2026-11-05 19:45,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), WRBY (5/6), ACN (5/6), HMY (5/6), CCJ (5/6)."
 2026-11-05 19:50,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 19:25: Granskade 290 aktier: 5 köpkandidater (BDX, IBN, SONY, U, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 19:55 (dagskurser ändras långsamt)."
 2026-11-05 19:50,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: JAN (5/6), ACN (5/6), PDD (5/6), XPEV (5/6), RAMP (4/6)."
+2026-11-05 19:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 19:25: Granskade 290 aktier: 5 köpkandidater (BDX, IBN, SONY, U, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 19:55 (dagskurser ändras långsamt)."
+2026-11-05 19:55,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), WEN (5/6), JAN (5/6), U (5/6), TEVA (5/6)."
