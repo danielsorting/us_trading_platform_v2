@@ -541,3 +541,7 @@ tid,typ,symbol,action,detail
 2026-11-05 20:35,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-05 20:40,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
 2026-11-05 20:40,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: TTWO (5/6), JAN (5/6), GFL (5/6), BEKE (5/6), IBN (5/6)."
+2026-11-05 20:45,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.42 per nyhet, 12 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock Market Today: Major Indexes Plunge After Massive Post-Election Surge; Nasdaq Drops 5%, Dow Falls 1,600 Points as Chip Stocks Sink""."
+2026-11-05 20:45,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
+2026-11-05 20:45,day,QCOM,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""ASML Sinks 8% as Post-Election Chip Rout Deepens"" (nyhetspoäng -10)."
+2026-11-05 20:45,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
