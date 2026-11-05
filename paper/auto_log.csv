@@ -479,3 +479,6 @@ tid,typ,symbol,action,detail
 2026-11-05 18:40,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: QCOM (5/6), RAMP (4/6), ADMA (4/6), TEVA (4/6), CAVA (4/6)."
 2026-11-05 18:40,day,WRBY,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Warby Parker Shares Rise After Q3 Earnings Beat"" (nyhetspoäng -9)."
 2026-11-05 18:40,day,JAN,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Janus Living Announces Pricing of Upsized Public Offering of Class A-1 Common Stock"" (nyhetspoäng -3)."
+2026-11-05 18:45,nyheter,,världsläget,"Marknadshumör negativt (snittpoäng -1.0 per nyhet, 13 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock Market Today: Nasdaq Slumps 4% As AI Unwinds; Qualcomm Tumbles On Soft Outlook (Live Coverage)"". Risken per ny affär halveras tills läget lugnar sig."
+2026-11-05 18:45,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 290 aktier: 4 köpkandidater (IBN, SONY, U, UL). Närmast: ADMA (5/6), APP (5/6), BDX (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
+2026-11-05 18:45,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: CAVA (5/6), RAMP (4/6), ADMA (4/6), WRBY (4/6), JAN (4/6)."
