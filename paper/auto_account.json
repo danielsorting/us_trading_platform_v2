@@ -1,20 +1,9 @@
 {
-  "cash": 2005.1264753031348,
+  "cash": 1990.7733447475468,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
   "positions": {
-    "ENPH": {
-      "quantity": 34.0,
-      "avg_price": 33.1815834159851,
-      "opened": "2026-11-04T14:31:27",
-      "entry_fee": 0.4513,
-      "stop": 28.37,
-      "target": null,
-      "strategy": "swing",
-      "trail_atr": 3.0,
-      "atr": 2.099
-    },
     "MSFT": {
       "quantity": 5.0,
       "avg_price": 546.833277557373,
@@ -49,10 +38,10 @@
       "atr": 1.392
     },
     "SPY": {
-      "quantity": 2.8810000000000002,
-      "avg_price": 741.676688216482,
+      "quantity": 4.1798,
+      "avg_price": 741.462398176939,
       "opened": "2026-11-05T15:45:50",
-      "entry_fee": 0.8547,
+      "entry_fee": 1.2397,
       "strategy": "park"
     }
   },
@@ -352,6 +341,29 @@
       "quantity": 1.741,
       "price": 740.537,
       "fee": 0.5157,
+      "pnl": null,
+      "strategy": "park"
+    },
+    {
+      "id": "be5f2b842f",
+      "time": "2026-11-05T15:55:50",
+      "symbol": "ENPH",
+      "side": "sell",
+      "quantity": 34.0,
+      "price": 27.906,
+      "fee": 0.3795,
+      "pnl": -180.2,
+      "reason": "stop loss",
+      "strategy": "swing"
+    },
+    {
+      "id": "09621eb708",
+      "time": "2026-11-05T15:55:50",
+      "symbol": "SPY",
+      "side": "buy",
+      "quantity": 1.2988,
+      "price": 740.9871,
+      "fee": 0.385,
       "pnl": null,
       "strategy": "park"
     }
