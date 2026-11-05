@@ -408,3 +408,21 @@ tid,typ,symbol,action,detail
 2026-11-05 17:00,day,,inga daytrades,"Granskade 299 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), BSY (5/6), LYB (5/6), PM (5/6), BRK-B (5/6)."
 2026-11-05 17:05,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 3 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 290 aktier: 11 köpkandidater (ABBV, ACN, BDX, EW, IBN, KO, MDLZ, PFE). Närmast: ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6), BRK-B (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
 2026-11-05 17:05,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: RAMP (4/6), ADMA (4/6), UL (4/6), EQNR (4/6), SONY (4/6)."
+2026-11-05 17:10,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.14 per nyhet, 14 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock market today: Nasdaq plunges 5% as chip stocks sell off, Dow and S&P 500 give back post-election rally gains""."
+2026-11-05 17:10,swing,,swing-sökning,"Granskade 290 aktier: 8 köpkandidater (BDX, EW, IBN, KO, MDLZ, PG, SONY, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6)."
+2026-11-05 17:10,swing,EW,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""UBS Adjusts Price Target on Edwards Lifesciences to $118 From $110, Maintains Buy Rating"" (nyhetspoäng -12)."
+2026-11-05 17:10,swing,BDX,KÖP,"8 st à 212.11 USD (swing), stop 203.24"
+2026-11-05 17:10,park,SPY,SÄLJ (parkering),1.6853 st för att betala köp
+2026-11-05 17:10,swing,IBN,KÖP,"47 st à 31.97 USD (swing), stop 30.61"
+2026-11-05 17:10,swing,KO,hoppar över,"Swing-budgeten är fullt använd (7,546 av 7,553 USD)."
+2026-11-05 17:10,swing,MDLZ,hoppar över,"Swing-budgeten är fullt använd (7,546 av 7,553 USD)."
+2026-11-05 17:10,swing,PG,hoppar över,"Swing-budgeten är fullt använd (7,546 av 7,553 USD)."
+2026-11-05 17:10,swing,SONY,hoppar över,"Swing-budgeten är fullt använd (7,546 av 7,553 USD)."
+2026-11-05 17:10,swing,UL,hoppar över,"Swing-budgeten är fullt använd (7,546 av 7,553 USD)."
+2026-11-05 17:10,park,SPY,SÄLJ (parkering),0.5765 st för att betala köp
+2026-11-05 17:10,day,EOG,KÖP,"3 st à 150.98 USD (day), stop 150.20"
+2026-11-05 17:10,park,SPY,SÄLJ (parkering),0.5931 st för att betala köp
+2026-11-05 17:10,day,EQNR,KÖP,"10 st à 43.99 USD (day), stop 43.79"
+2026-11-05 17:10,day,XOM,hoppar över,Avgifterna skulle äta mer än 20 % av förväntad vinst (för liten affär).
+2026-11-05 17:10,park,SPY,SÄLJ (parkering),0.6086 st för att betala köp
+2026-11-05 17:10,day,LYB,KÖP,"7 st à 64.46 USD (day), stop 64.03"
