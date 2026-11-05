@@ -124,6 +124,12 @@ def latest_prices(provider, symbols):
 DAY_CLOSE_NY = time(15, 50)  # stäng dagpositioner 10 min före börsens stängning (21:50 svensk tid)
 
 
+def ny_clock():
+    """Klockan i New York just nu. Egen funktion så att testerna kan ställa klockan
+    (annars gick testerna sönder när nattrapporten kördes efter börsens stängning)."""
+    return datetime.now(ZoneInfo("America/New_York"))
+
+
 def close_all_day_positions(broker, prices, reason="stängd manuellt"):
     """Säljer alla daytrading-positioner till senaste kurs."""
     actions = []
@@ -146,7 +152,7 @@ def run_paper_cycle(broker, scan_rows, settings, prices, now=None, limits=None, 
     limits: valfritt max antal positioner per strategi, t.ex. {"day": 10}.
     """
     now = now or datetime.now()
-    ny_now = ny_now or datetime.now(ZoneInfo("America/New_York"))
+    ny_now = ny_now or ny_clock()
     limits = limits or {}
     actions = []
 

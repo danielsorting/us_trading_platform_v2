@@ -179,3 +179,24 @@ def test_protections_cooldown_and_stoploss_guard(tmp_path):
     assert "A" not in b.positions and "D" not in b.positions
     assert any("Paus efter stop loss" in a["detail"] for a in acts)
     assert any("inga fler daytrades i dag" in a["detail"] for a in acts)
+
+
+def test_tests_do_not_depend_on_time_of_day(tmp_path):
+    """Regressionstest: daytrades köps i testerna även om klockan egentligen är efter börsens stängning."""
+    from trading_platform import paper_trader
+    assert paper_trader.ny_clock().time() < paper_trader.DAY_CLOSE_NY
+    b = broker(tmp_path, cash=10_000)
+    rows = [{"symbol": "A", "strategy": "day", "signal": "CANDIDATE", "price": 100.0,
+             "stop_reference": 99.0, "target_reference": 102.0}]
+    run_paper_cycle(b, rows, Settings(max_fee_share_of_profit_pct=1000), {"A": 100.0})
+    assert "A" in b.positions
+
+
+def test_real_clock_closes_day_trades_after_close(tmp_path):
+    """Den riktiga regeln gäller fortfarande: efter 15:50 i New York säljs daytrades."""
+    from zoneinfo import ZoneInfo
+    b = broker(tmp_path, cash=10_000)
+    b.submit_order("A", "buy", 1, price=100, strategy="day")
+    late = datetime(2026, 11, 4, 18, 20, tzinfo=ZoneInfo("America/New_York"))  # som nattrapporten
+    run_paper_cycle(b, [], Settings(), {"A": 100.0}, ny_now=late)
+    assert "A" not in b.positions
