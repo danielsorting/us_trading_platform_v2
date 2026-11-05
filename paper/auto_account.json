@@ -1,5 +1,5 @@
 {
-  "cash": 14.8012300756277,
+  "cash": 911.2438974500479,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -66,17 +66,6 @@
       "trail_atr": 3.0,
       "atr": 0.679
     },
-    "EOG": {
-      "quantity": 3.0,
-      "avg_price": 151.05548572540283,
-      "opened": "2026-11-05T16:11:34",
-      "entry_fee": 0.1813,
-      "stop": 150.2,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.585
-    },
     "EQNR": {
       "quantity": 10.0,
       "avg_price": 44.01199667930603,
@@ -87,17 +76,6 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.153
-    },
-    "LYB": {
-      "quantity": 7.0,
-      "avg_price": 64.4922290840149,
-      "opened": "2026-11-05T16:11:34",
-      "entry_fee": 0.1806,
-      "stop": 64.03,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.3
     }
   },
   "orders": [
@@ -544,6 +522,30 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.3
+    },
+    {
+      "id": "872887f98c",
+      "time": "2026-11-05T16:20:50",
+      "symbol": "EOG",
+      "side": "sell",
+      "quantity": 3.0,
+      "price": 150.0949,
+      "fee": 0.1801,
+      "pnl": -3.24,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "ed87b20755",
+      "time": "2026-11-05T16:20:50",
+      "symbol": "LYB",
+      "side": "sell",
+      "quantity": 7.0,
+      "price": 63.7881,
+      "fee": 0.1786,
+      "pnl": -5.29,
+      "reason": "stop loss",
+      "strategy": "day"
     }
   ],
   "reset_id": null

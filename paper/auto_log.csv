@@ -428,3 +428,7 @@ tid,typ,symbol,action,detail
 2026-11-05 17:10,day,LYB,KÖP,"7 st à 64.46 USD (day), stop 64.03"
 2026-11-05 17:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 17:10: Granskade 290 aktier: 8 köpkandidater (BDX, EW, IBN, KO, MDLZ, PG, SONY, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6). Nästa sökning ca 17:40 (dagskurser ändras långsamt)."
 2026-11-05 17:15,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), TEVA (5/6), RAMP (4/6), OSCR (4/6), MOS (4/6)."
+2026-11-05 17:20,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 17:10: Granskade 290 aktier: 8 köpkandidater (BDX, EW, IBN, KO, MDLZ, PG, SONY, UL). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6). Nästa sökning ca 17:40 (dagskurser ändras långsamt)."
+2026-11-05 17:20,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: AGI (5/6), SNOW (5/6), INTC (5/6), CDE (5/6), HMY (5/6)."
+2026-11-05 17:20,day,EOG,SÄLJ,"stop loss, resultat -3.24 USD"
+2026-11-05 17:20,day,LYB,SÄLJ,"stop loss, resultat -5.29 USD"
