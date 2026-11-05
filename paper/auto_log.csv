@@ -547,3 +547,5 @@ tid,typ,symbol,action,detail
 2026-11-05 20:45,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-05 20:50,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
 2026-11-05 20:50,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-05 20:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 20:30: Granskade 290 aktier: 4 köpkandidater (BDX, IBN, SONY, U). Närmast: ACN (5/6), ADMA (5/6), APP (5/6), BEKE (5/6), BSY (5/6). Nästa sökning ca 21:00 (dagskurser ändras långsamt)."
+2026-11-05 20:55,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), JAN (5/6), WEN (5/6), U (5/6), BDX (5/6)."
