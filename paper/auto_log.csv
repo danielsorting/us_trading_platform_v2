@@ -396,3 +396,7 @@ tid,typ,symbol,action,detail
 2026-11-05 16:45,day,NVTS,SÄLJ,"stop loss, resultat -169.06 USD"
 2026-11-05 16:45,day,TEVA,hoppar över (skydd),Paus efter stop loss 2026-11-05 (köps inte igen på 1 dagar).
 2026-11-05 16:45,park,SPY,KÖP (parkering),1.14 st ledig kassa i S&P 500
+2026-11-05 16:50,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 290 aktier: 11 köpkandidater (ABBV, ACN, BDX, EW, IBN, KO, MDLZ, PFE). Närmast: ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6), BRK-B (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
+2026-11-05 16:50,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: PG (5/6), PEP (5/6), RAMP (4/6), ADMA (4/6), BSY (4/6)."
+2026-11-05 16:50,day,ANET,SÄLJ,"stop loss, resultat -155.17 USD"
+2026-11-05 16:50,park,SPY,KÖP (parkering),1.741 st ledig kassa i S&P 500

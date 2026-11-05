@@ -1,20 +1,9 @@
 {
-  "cash": 2008.875384631846,
+  "cash": 2005.1264753031348,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
   "positions": {
-    "ANET": {
-      "quantity": 8.0,
-      "avg_price": 180.08000049591064,
-      "opened": "2026-11-04T14:31:27",
-      "entry_fee": 0.5763,
-      "stop": 161.76,
-      "target": null,
-      "strategy": "swing",
-      "trail_atr": 3.0,
-      "atr": 8.744
-    },
     "ENPH": {
       "quantity": 34.0,
       "avg_price": 33.1815834159851,
@@ -60,10 +49,10 @@
       "atr": 1.392
     },
     "SPY": {
-      "quantity": 1.14,
-      "avg_price": 743.4171738830568,
+      "quantity": 2.8810000000000002,
+      "avg_price": 741.676688216482,
       "opened": "2026-11-05T15:45:50",
-      "entry_fee": 0.339,
+      "entry_fee": 0.8547,
       "strategy": "park"
     }
   },
@@ -340,6 +329,29 @@
       "quantity": 1.14,
       "price": 743.4172,
       "fee": 0.339,
+      "pnl": null,
+      "strategy": "park"
+    },
+    {
+      "id": "cd0bb2be30",
+      "time": "2026-11-05T15:50:55",
+      "symbol": "ANET",
+      "side": "sell",
+      "quantity": 8.0,
+      "price": 160.8195,
+      "fee": 0.5146,
+      "pnl": -155.17,
+      "reason": "stop loss",
+      "strategy": "swing"
+    },
+    {
+      "id": "c1f9cfd043",
+      "time": "2026-11-05T15:50:55",
+      "symbol": "SPY",
+      "side": "buy",
+      "quantity": 1.741,
+      "price": 740.537,
+      "fee": 0.5157,
       "pnl": null,
       "strategy": "park"
     }
