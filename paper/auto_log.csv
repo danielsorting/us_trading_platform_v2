@@ -404,3 +404,5 @@ tid,typ,symbol,action,detail
 2026-11-05 16:55,day,,inga daytrades,"Granskade 300 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), MO (5/6), PEP (5/6), MDLZ (5/6), LYB (5/6)."
 2026-11-05 16:55,day,ENPH,SÄLJ,"stop loss, resultat -180.20 USD"
 2026-11-05 16:55,park,SPY,KÖP (parkering),1.2988 st ledig kassa i S&P 500
+2026-11-05 17:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 3 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 290 aktier: 11 köpkandidater (ABBV, ACN, BDX, EW, IBN, KO, MDLZ, PFE). Närmast: ADMA (5/6), APP (5/6), AZN (5/6), BEKE (5/6), BRK-B (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
+2026-11-05 17:00,day,,inga daytrades,"Granskade 299 aktier: ingen uppfyller alla villkor just nu. Närmast: ADMA (5/6), BSY (5/6), LYB (5/6), PM (5/6), BRK-B (5/6)."
