@@ -64,7 +64,7 @@
       "avg_price": 276.93838778686523,
       "opened": "2026-11-06T15:15:48",
       "entry_fee": 0.1108,
-      "stop": 275.48,
+      "stop": 275.49,
       "target": null,
       "strategy": "day",
       "trail_atr": 2.0,
