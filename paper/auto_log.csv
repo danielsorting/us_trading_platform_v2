@@ -603,3 +603,8 @@ tid,typ,symbol,action,detail
 2026-11-06 16:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 291 aktier: 1 köpkandidater (ED). Närmast: U (5/6), ABNB (4/6), FROG (4/6), IBN (4/6), LBTYA (4/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
 2026-11-06 16:00,day,ASTS,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Rocket Lab Reports November 9. The Quarter Has to Show It Can Fund Growth Without More Dilution"" (nyhetspoäng 2)."
 2026-11-06 16:00,day,HWM,KÖP,"2 st à 206.54 USD (day), stop 204.84"
+2026-11-06 16:05,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.45 per nyhet, 11 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock market today: Nasdaq rebound after brutal sell-off, Dow and S&P 500 wobble as US adds 165K jobs""."
+2026-11-06 16:05,swing,,swing-sökning,"Granskade 291 aktier: 2 köpkandidater (IBN, U). Närmast: ABNB (5/6), AMZN (5/6), APP (5/6), FROG (5/6), JD (5/6)."
+2026-11-06 16:05,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,855 av 7,784 USD)."
+2026-11-06 16:05,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Mattel Inc (MAT) (Q3 2026) Earnings Call Highlights: Sales Rise 4% but Guidance Cut on ..."" (nyhetspoäng -2)."
+2026-11-06 16:05,day,KTOS,KÖP,"14 st à 34.72 USD (day), stop 34.03"

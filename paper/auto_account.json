@@ -1,5 +1,5 @@
 {
-  "cash": 934.4886969632926,
+  "cash": 447.9711398649039,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -76,6 +76,17 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 1.218
+    },
+    "KTOS": {
+      "quantity": 14.0,
+      "avg_price": 34.73736122131348,
+      "opened": "2026-11-06T15:06:21",
+      "entry_fee": 0.1945,
+      "stop": 34.03,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.483
     }
   },
   "orders": [
@@ -573,6 +584,21 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 1.218
+    },
+    {
+      "id": "7973888a5b",
+      "time": "2026-11-06T15:06:21",
+      "symbol": "KTOS",
+      "side": "buy",
+      "quantity": 14.0,
+      "price": 34.7374,
+      "fee": 0.1945,
+      "pnl": null,
+      "stop": 34.03,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.483
     }
   ],
   "reset_id": null
