@@ -20,7 +20,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from trading_platform.backtest import find_best, per_year, period_return, run_backtest  # noqa: E402
+from trading_platform.backtest import day_split_returns, find_best, per_year, period_return, run_backtest  # noqa: E402
 from trading_platform.config import load_settings  # noqa: E402
 from trading_platform.daytop import liquid_universe  # noqa: E402
 from trading_platform.data import YahooResearchProvider  # noqa: E402
@@ -40,6 +40,13 @@ def md_table(df, cols):
     for _, r in df[cols].iterrows():
         out.append("| " + " | ".join("" if v is None or v != v else str(v) for v in r.values) + " |")
     return "\n".join(out)
+
+
+def day_test_control(equity, capital):
+    """Kolumnerna Testdel %, Kontrolldel % och Håller i kontroll? för daytrading-tabellen."""
+    a, b = day_split_returns(equity, capital)
+    holds = None if a is None or b is None else ("ja" if a > 0 and b > 0 else "nej")
+    return {"Testdel %": a, "Kontrolldel %": b, "Håller i kontroll?": holds}
 
 
 def main():
@@ -145,12 +152,16 @@ def main():
             rows.append({"Strategi": name, "Avkastning %": stats["total_return_pct"], "S&P 500 %": bench,
                          "Affärer": stats["trades"], "Vinstandel %": stats["win_rate_pct"],
                          "Snitt R": stats["avg_r"], "Profit factor": stats["profit_factor"],
-                         "Största nedgång %": stats["max_drawdown_pct"], "Courtage USD": stats["fees_usd"]})
+                         "Största nedgång %": stats["max_drawdown_pct"], "Courtage USD": stats["fees_usd"],
+                         **day_test_control(eq, day_cap)})
             history_rows.append([f"{started:%Y-%m-%d}", "day", f"{DAY_UNIVERSE} mest omsatta", name, None,
                                  stats["total_return_pct"], bench, stats["max_drawdown_pct"], stats["trades"], None])
         import pandas as pd
         lines += [md_table(pd.DataFrame(rows), ["Strategi", "Avkastning %", "S&P 500 %", "Affärer", "Vinstandel %",
-                                                "Snitt R", "Profit factor", "Största nedgång %", "Courtage USD"]), ""]
+                                                "Snitt R", "Profit factor", "Största nedgång %", "Courtage USD",
+                                                "Testdel %", "Kontrolldel %", "Håller i kontroll?"]), "",
+                  "Testdel = de första 70 % av dagarna, kontrolldel = resten. En variant är bara värd att "
+                  "byta till om den går bättre i BÅDA delarna (annars är det troligen tur).", ""]
     else:
         lines += ["Hoppades över (ingen data).", ""]
 

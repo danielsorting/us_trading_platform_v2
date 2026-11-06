@@ -315,6 +315,20 @@ def split_returns(equity, cut, start_capital):
     return a, b
 
 
+def day_split_returns(equity, start_capital, split=0.7):
+    """Testdel och kontrolldel för DAYTRADING: de första `split` av handelsdagarna är testdel,
+    resten kontrolldel. Delningen sker vid dagsslut så att ingen dag hamnar i båda delarna.
+    En daytrading-variant som bara går plus i testdelen är troligen tur."""
+    if equity is None or not len(equity):
+        return None, None
+    days = sorted(set(pd.DatetimeIndex(equity.index).normalize()))
+    if len(days) < 5:
+        return None, None
+    last_test_day = days[max(int(len(days) * split) - 1, 0)]
+    in_test = equity.index[pd.DatetimeIndex(equity.index).normalize() <= last_test_day]
+    return split_returns(equity, in_test[-1], start_capital)
+
+
 def compare_strategies(bars_by_symbol, strategies, capital_usd, settings=None, split=0.7, benchmark=None):
     """Jämför flera strategier på samma aktier.
 
