@@ -600,3 +600,6 @@ tid,typ,symbol,action,detail
 2026-11-06 15:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 291 aktier: 1 köpkandidater (ED). Närmast: U (5/6), ABNB (4/6), FROG (4/6), IBN (4/6), LBTYA (4/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
 2026-11-06 15:55,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: AFRM (4/6), MAT (4/6), ROIV (4/6), HWM (4/6), WDC (4/6)."
 2026-11-06 15:55,day,IBN,stop flyttad,Ny stop loss 31.84
+2026-11-06 16:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 291 aktier: 1 köpkandidater (ED). Närmast: U (5/6), ABNB (4/6), FROG (4/6), IBN (4/6), LBTYA (4/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
+2026-11-06 16:00,day,ASTS,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Rocket Lab Reports November 9. The Quarter Has to Show It Can Fund Growth Without More Dilution"" (nyhetspoäng 2)."
+2026-11-06 16:00,day,HWM,KÖP,"2 st à 206.54 USD (day), stop 204.84"
