@@ -714,3 +714,5 @@ tid,typ,symbol,action,detail
 2026-11-06 18:30,day,CHTR,hoppar över (skydd),Paus efter stop loss 2026-11-06 (köps inte igen på 1 dagar).
 2026-11-06 18:35,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
 2026-11-06 18:35,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 18:40,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:15: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6). Nästa sökning ca 18:45 (dagskurser ändras långsamt)."
+2026-11-06 18:40,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: MAT (5/6), FROG (5/6), CHTR (5/6), MNST (5/6), KO (5/6)."
