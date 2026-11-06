@@ -631,3 +631,8 @@ tid,typ,symbol,action,detail
 2026-11-06 16:30,day,MCD,stop flyttad,Ny stop loss 275.22
 2026-11-06 16:30,day,VZ,KÖP,"10 st à 46.03 USD (day), stop 45.79"
 2026-11-06 16:30,day,HRL,hoppar över,"Daytrading-budgeten är fullt använd (1,702 av 1,942 USD)."
+2026-11-06 16:35,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.45 per nyhet, 11 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock market today: Nasdaq, S&P 500 rebound after brutal sell-off as US adds 165K jobs""."
+2026-11-06 16:35,swing,,swing-sökning,"Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), JD (5/6)."
+2026-11-06 16:35,swing,IBN,stop flyttad,Ny stop loss 31.97
+2026-11-06 16:35,swing,KTOS,SÄLJ,"stop loss, resultat -15.84 USD"
+2026-11-06 16:35,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,819 av 7,742 USD)."
