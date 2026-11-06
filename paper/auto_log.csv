@@ -597,3 +597,6 @@ tid,typ,symbol,action,detail
 2026-11-06 15:50,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 291 aktier: 1 köpkandidater (ED). Närmast: U (5/6), ABNB (4/6), FROG (4/6), IBN (4/6), LBTYA (4/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
 2026-11-06 15:50,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: MAT (4/6), TXG (4/6), JPM (4/6), AKAM (4/6), SNDK (4/6)."
 2026-11-06 15:50,day,IBN,stop flyttad,Ny stop loss 31.81
+2026-11-06 15:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 15:30: Granskade 291 aktier: 1 köpkandidater (ED). Närmast: U (5/6), ABNB (4/6), FROG (4/6), IBN (4/6), LBTYA (4/6). Nästa sökning ca 16:00 (dagskurser ändras långsamt)."
+2026-11-06 15:55,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: AFRM (4/6), MAT (4/6), ROIV (4/6), HWM (4/6), WDC (4/6)."
+2026-11-06 15:55,day,IBN,stop flyttad,Ny stop loss 31.84
