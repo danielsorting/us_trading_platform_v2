@@ -1,5 +1,5 @@
 {
-  "cash": 162.71883056631737,
+  "cash": 620.1569040412014,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -80,17 +80,6 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 1.324
-    },
-    "VZ": {
-      "quantity": 10.0,
-      "avg_price": 46.05801734733581,
-      "opened": "2026-11-06T15:30:48",
-      "entry_fee": 0.1842,
-      "stop": 45.79,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 0.158
     },
     "DVN": {
       "quantity": 11.0,
@@ -734,6 +723,18 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.244
+    },
+    {
+      "id": "564177f14e",
+      "time": "2026-11-06T16:05:48",
+      "symbol": "VZ",
+      "side": "sell",
+      "quantity": 10.0,
+      "price": 45.7621,
+      "fee": 0.183,
+      "pnl": -3.33,
+      "reason": "stop loss",
+      "strategy": "day"
     }
   ],
   "reset_id": null
