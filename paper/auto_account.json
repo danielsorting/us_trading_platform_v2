@@ -1,5 +1,5 @@
 {
-  "cash": 1563.0826066279476,
+  "cash": 1840.3429613886897,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -58,17 +58,6 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 0.679
-    },
-    "MCD": {
-      "quantity": 1.0,
-      "avg_price": 276.93838778686523,
-      "opened": "2026-11-06T15:15:48",
-      "entry_fee": 0.1108,
-      "stop": 275.72,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 1.324
     }
   },
   "orders": [
@@ -736,6 +725,18 @@
       "fee": 0.1874,
       "pnl": -1.89,
       "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "90b3fb0aa0",
+      "time": "2026-11-06T20:50:48",
+      "symbol": "MCD",
+      "side": "sell",
+      "quantity": 1.0,
+      "price": 277.3713,
+      "fee": 0.1109,
+      "pnl": 0.21,
+      "reason": "dagens slut (börsen stänger snart)",
       "strategy": "day"
     }
   ],
