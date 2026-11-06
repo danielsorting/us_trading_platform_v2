@@ -809,3 +809,7 @@ tid,typ,symbol,action,detail
 2026-11-06 21:05,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""As Barbie stumbles, Mattel cuts forecast ahead of the holidays"" (nyhetspoäng -4)."
 2026-11-06 21:05,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-06 21:05,day,DVN,hoppar över (skydd),Paus efter stop loss 2026-11-06 (köps inte igen på 1 dagar).
+2026-11-06 21:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 21:00: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), MRNA (5/6). Nästa sökning ca 21:30 (dagskurser ändras långsamt)."
+2026-11-06 21:10,day,DKNG,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""DraftKings Plunges 27% on Weak 2027 Forecast and Prediction-Market Spending; Flutter Sinks 8%, Penn Entertainment Drops 4%"" (nyhetspoäng -16)."
+2026-11-06 21:10,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 21:10,day,HWM,hoppar över (skydd),Paus efter stop loss 2026-11-06 (köps inte igen på 1 dagar).
