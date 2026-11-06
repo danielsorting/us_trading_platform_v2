@@ -733,3 +733,6 @@ tid,typ,symbol,action,detail
 2026-11-06 19:05,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
 2026-11-06 19:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:45: Granskade 291 aktier: 2 köpkandidater (ABNB, U). Närmast: APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6), PPL (5/6). Nästa sökning ca 19:15 (dagskurser ändras långsamt)."
 2026-11-06 19:10,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 19:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 18:45: Granskade 291 aktier: 2 köpkandidater (ABNB, U). Närmast: APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6), PPL (5/6). Nästa sökning ca 19:15 (dagskurser ändras långsamt)."
+2026-11-06 19:15,day,VZ,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""AST SpaceMobile Fell 26% in a Week. The November 9 Report Has to Answer the Dilution Question"" (nyhetspoäng -4)."
+2026-11-06 19:15,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
