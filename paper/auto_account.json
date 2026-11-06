@@ -1,5 +1,5 @@
 {
-  "cash": 213.63851742430361,
+  "cash": 162.1655176112239,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -59,17 +59,6 @@
       "trail_atr": 3.0,
       "atr": 0.679
     },
-    "HWM": {
-      "quantity": 2.0,
-      "avg_price": 206.64827066802977,
-      "opened": "2026-11-06T15:00:48",
-      "entry_fee": 0.1653,
-      "stop": 204.84,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 1.218
-    },
     "KTOS": {
       "quantity": 14.0,
       "avg_price": 34.73736122131348,
@@ -97,11 +86,22 @@
       "avg_price": 276.93838778686523,
       "opened": "2026-11-06T15:15:48",
       "entry_fee": 0.1108,
-      "stop": 275.01,
+      "stop": 275.22,
       "target": null,
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 1.324
+    },
+    "VZ": {
+      "quantity": 10.0,
+      "avg_price": 46.05801734733581,
+      "opened": "2026-11-06T15:30:48",
+      "entry_fee": 0.1842,
+      "stop": 45.79,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.158
     }
   },
   "orders": [
@@ -680,6 +680,33 @@
       "pnl": -0.26,
       "strategy": "park",
       "reason": "pengar till aktieköp"
+    },
+    {
+      "id": "2bb8956f58",
+      "time": "2026-11-06T15:30:48",
+      "symbol": "HWM",
+      "side": "sell",
+      "quantity": 2.0,
+      "price": 204.7276,
+      "fee": 0.1638,
+      "pnl": -4.17,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "a406de685c",
+      "time": "2026-11-06T15:30:48",
+      "symbol": "VZ",
+      "side": "buy",
+      "quantity": 10.0,
+      "price": 46.058,
+      "fee": 0.1842,
+      "pnl": null,
+      "stop": 45.79,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.158
     }
   ],
   "reset_id": null
