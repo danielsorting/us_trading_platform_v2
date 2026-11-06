@@ -678,3 +678,8 @@ tid,typ,symbol,action,detail
 2026-11-06 17:35,day,CHTR,SÄLJ,"stop loss, resultat -13.17 USD"
 2026-11-06 17:35,day,DVN,stop flyttad,Ny stop loss 42.66
 2026-11-06 17:35,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 17:40,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.69 per nyhet, 13 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock market today: Nasdaq, S&P 500 rebound after brutal sell-off as US adds 165K jobs""."
+2026-11-06 17:40,swing,,swing-sökning,"Granskade 291 aktier: 2 köpkandidater (MRNA, U). Närmast: ABNB (5/6), APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6)."
+2026-11-06 17:40,swing,MRNA,hoppar över,"Swing-budgeten är fullt använd (7,912 av 7,806 USD)."
+2026-11-06 17:40,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,912 av 7,806 USD)."
+2026-11-06 17:40,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: IONQ (5/6), FROG (5/6), ASTS (5/6), SHOP (5/6), TSLA (5/6)."
