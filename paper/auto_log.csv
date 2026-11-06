@@ -692,3 +692,6 @@ tid,typ,symbol,action,detail
 2026-11-06 17:55,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 17:40: Granskade 291 aktier: 2 köpkandidater (MRNA, U). Närmast: ABNB (5/6), APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6). Nästa sökning ca 18:10 (dagskurser ändras långsamt)."
 2026-11-06 17:55,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Mattel Inc (MAT) (Q3 2026) Earnings Call Highlights: Sales Rise 4% but Guidance Cut on ..."" (nyhetspoäng -2)."
 2026-11-06 17:55,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 18:00,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 17:40: Granskade 291 aktier: 2 köpkandidater (MRNA, U). Närmast: ABNB (5/6), APP (5/6), FOXA (5/6), FROG (5/6), IBN (5/6). Nästa sökning ca 18:10 (dagskurser ändras långsamt)."
+2026-11-06 18:00,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: PM (5/6), GFI (5/6), SLB (5/6), B (5/6), MCD (5/6)."
+2026-11-06 18:00,day,DVN,SÄLJ,"stop loss, resultat -1.89 USD"
