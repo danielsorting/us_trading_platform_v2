@@ -660,3 +660,6 @@ tid,typ,symbol,action,detail
 2026-11-06 17:10,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,879 av 7,787 USD)."
 2026-11-06 17:10,day,CL,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""European gas tumbles to seal worst week since 2025, snaps five-week rally"" (nyhetspoäng -6)."
 2026-11-06 17:10,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 17:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 17:10: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), MRNA (5/6). Nästa sökning ca 17:40 (dagskurser ändras långsamt)."
+2026-11-06 17:15,day,CL,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""European gas tumbles to seal worst week since 2025, snaps five-week rally"" (nyhetspoäng -6)."
+2026-11-06 17:15,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
