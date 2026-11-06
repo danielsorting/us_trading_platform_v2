@@ -612,3 +612,10 @@ tid,typ,symbol,action,detail
 2026-11-06 16:10,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Mattel Inc (MAT) (Q3 2026) Earnings Call Highlights: Sales Rise 4% but Guidance Cut on ..."" (nyhetspoäng -2)."
 2026-11-06 16:10,park,SPY,SÄLJ (parkering),0.0639 st för att betala köp
 2026-11-06 16:10,day,CHTR,KÖP,"4 st à 121.86 USD (day), stop 118.65"
+2026-11-06 16:15,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 291 aktier: 2 köpkandidater (IBN, U). Närmast: ABNB (5/6), AMZN (5/6), APP (5/6), FROG (5/6), JD (5/6). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
+2026-11-06 16:15,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Mattel Inc (MAT) (Q3 2026) Earnings Call Highlights: Sales Rise 4% but Guidance Cut on ..."" (nyhetspoäng -2)."
+2026-11-06 16:15,day,KTOS,stop flyttad,Ny stop loss 34.06
+2026-11-06 16:15,park,SPY,SÄLJ (parkering),0.3774 st för att betala köp
+2026-11-06 16:15,day,MCD,KÖP,"1 st à 276.80 USD (day), stop 274.62"
+2026-11-06 16:15,park,SPY,SÄLJ (parkering),0.2750000000000004 st för att betala köp
+2026-11-06 16:15,day,FOXA,hoppar över,"Insufficient cash: need 269.50, have 213.64 USD."

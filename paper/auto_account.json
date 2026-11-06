@@ -1,5 +1,5 @@
 {
-  "cash": 7.391747147621118,
+  "cash": 213.63851742430361,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -36,13 +36,6 @@
       "strategy": "swing",
       "trail_atr": 3.0,
       "atr": 1.392
-    },
-    "SPY": {
-      "quantity": 0.6524000000000004,
-      "avg_price": 741.462398176939,
-      "opened": "2026-11-05T15:45:50",
-      "entry_fee": 0.1934973635102159,
-      "strategy": "park"
     },
     "BDX": {
       "quantity": 8.0,
@@ -82,7 +75,7 @@
       "avg_price": 34.73736122131348,
       "opened": "2026-11-06T15:06:21",
       "entry_fee": 0.1945,
-      "stop": 34.03,
+      "stop": 34.06,
       "target": null,
       "strategy": "day",
       "trail_atr": 2.0,
@@ -98,6 +91,17 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 2.076
+    },
+    "MCD": {
+      "quantity": 1.0,
+      "avg_price": 276.93838778686523,
+      "opened": "2026-11-06T15:15:48",
+      "entry_fee": 0.1108,
+      "stop": 274.62,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.324
     }
   },
   "orders": [
@@ -637,6 +641,45 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 2.076
+    },
+    {
+      "id": "438fd918cc",
+      "time": "2026-11-06T15:15:48",
+      "symbol": "SPY",
+      "side": "sell",
+      "quantity": 0.3774,
+      "price": 741.0934,
+      "fee": 0.1119,
+      "pnl": -0.36,
+      "strategy": "park",
+      "reason": "pengar till aktieköp"
+    },
+    {
+      "id": "9aa454a106",
+      "time": "2026-11-06T15:15:48",
+      "symbol": "MCD",
+      "side": "buy",
+      "quantity": 1.0,
+      "price": 276.9384,
+      "fee": 0.1108,
+      "pnl": null,
+      "stop": 274.62,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 1.324
+    },
+    {
+      "id": "6a0326a3ab",
+      "time": "2026-11-06T15:15:48",
+      "symbol": "SPY",
+      "side": "sell",
+      "quantity": 0.2750000000000004,
+      "price": 741.0934,
+      "fee": 0.0815,
+      "pnl": -0.26,
+      "strategy": "park",
+      "reason": "pengar till aktieköp"
     }
   ],
   "reset_id": null
