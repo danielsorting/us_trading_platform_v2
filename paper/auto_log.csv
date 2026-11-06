@@ -820,3 +820,9 @@ tid,typ,symbol,action,detail
 2026-11-06 21:25,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 21:00: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), MRNA (5/6). Nästa sökning ca 21:30 (dagskurser ändras långsamt)."
 2026-11-06 21:25,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""As Barbie stumbles, Mattel cuts forecast ahead of the holidays"" (nyhetspoäng -4)."
 2026-11-06 21:25,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
+2026-11-06 21:30,nyheter,,världsläget,"Marknadshumör neutralt (snittpoäng -0.62 per nyhet, 13 nyheter senaste 12 h om börsen, olja, Trump/tullar och räntor). Mest negativ: ""Stock market today: Nasdaq, S&P 500 rebound after brutal sell-off as US adds 165K jobs""."
+2026-11-06 21:30,swing,,swing-sökning,"Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), MRNA (5/6), AMZN (4/6)."
+2026-11-06 21:30,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,929 av 7,816 USD)."
+2026-11-06 21:30,day,RDW,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Redwire Plunges 21% as Revenue Miss Overshadows Record Margins and Backlog; Intuitive Machines Sinks 15%, Planet Labs Tumbles 12%"" (nyhetspoäng -14)."
+2026-11-06 21:30,day,RKLB,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Rocket Lab Sinks 12% as AI Stock Sell-Off Hits Space: “Absolute Slaughter”"" (nyhetspoäng -6)."
+2026-11-06 21:30,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
