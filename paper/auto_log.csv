@@ -764,3 +764,7 @@ tid,typ,symbol,action,detail
 2026-11-06 20:05,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 19:55: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), AMZN (4/6), BRK-B (4/6). Nästa sökning ca 20:25 (dagskurser ändras långsamt)."
 2026-11-06 20:05,day,,inga daytrades,"Granskade 298 aktier: ingen uppfyller alla villkor just nu. Närmast: TEM (5/6), FROG (5/6), JNJ (5/6), KO (5/6), TTWO (5/6)."
 2026-11-06 20:05,day,FLY,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Rocket Lab Reports November 9. The Quarter Has to Show It Can Fund Growth Without More Dilution"" (nyhetspoäng 4)."
+2026-11-06 20:10,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 19:55: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), AMZN (4/6), BRK-B (4/6). Nästa sökning ca 20:25 (dagskurser ändras långsamt)."
+2026-11-06 20:10,day,TSLA,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Tesla Stock Rebounds After Brutal Selloff. Musk Has a New Cybercab Plan"" (nyhetspoäng -6)."
+2026-11-06 20:10,day,VZ,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""AST SpaceMobile Fell 26% in a Week. The November 9 Report Has to Answer the Dilution Question"" (nyhetspoäng -4)."
+2026-11-06 20:10,day,,skydd,3 daytrades har gått till stop loss i dag – inga fler daytrades i dag (dåliga dagar ska inte bli värre).
