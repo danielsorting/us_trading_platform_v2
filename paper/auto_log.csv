@@ -623,3 +623,6 @@ tid,typ,symbol,action,detail
 2026-11-06 16:20,day,MAT,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Mattel Inc (MAT) (Q3 2026) Earnings Call Highlights: Sales Rise 4% but Guidance Cut on ..."" (nyhetspoäng -2)."
 2026-11-06 16:20,day,IBN,stop flyttad,Ny stop loss 31.86
 2026-11-06 16:20,day,PPL,hoppar över,"Insufficient cash: need 291.30, have 213.64 USD."
+2026-11-06 16:25,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:05: Granskade 291 aktier: 2 köpkandidater (IBN, U). Närmast: ABNB (5/6), AMZN (5/6), APP (5/6), FROG (5/6), JD (5/6). Nästa sökning ca 16:35 (dagskurser ändras långsamt)."
+2026-11-06 16:25,day,IBN,stop flyttad,Ny stop loss 31.92
+2026-11-06 16:25,day,MCD,stop flyttad,Ny stop loss 275.01
