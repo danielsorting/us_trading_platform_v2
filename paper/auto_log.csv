@@ -640,3 +640,8 @@ tid,typ,symbol,action,detail
 2026-11-06 16:40,day,MCD,stop flyttad,Ny stop loss 275.48
 2026-11-06 16:45,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), JD (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
 2026-11-06 16:45,day,DVN,KÖP,"11 st à 42.70 USD (day), stop 42.33"
+2026-11-06 16:50,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), JD (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
+2026-11-06 16:50,day,ASTS,hoppar över (nyheter),"Dålig nyhet senaste 48 h: ""Rocket Lab Reports November 9. The Quarter Has to Show It Can Fund Growth Without More Dilution"" (nyhetspoäng 3)."
+2026-11-06 16:50,day,DVN,stop flyttad,Ny stop loss 42.36
+2026-11-06 16:50,day,ROIV,hoppar över,"Insufficient cash: need 225.62, have 162.72 USD."
+2026-11-06 16:50,day,USB,hoppar över,"Insufficient cash: need 239.58, have 162.72 USD."
