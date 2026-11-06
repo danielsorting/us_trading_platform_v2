@@ -638,3 +638,5 @@ tid,typ,symbol,action,detail
 2026-11-06 16:35,swing,U,hoppar över,"Swing-budgeten är fullt använd (7,819 av 7,742 USD)."
 2026-11-06 16:40,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), JD (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
 2026-11-06 16:40,day,MCD,stop flyttad,Ny stop loss 275.48
+2026-11-06 16:45,swing,,swing-koll,"Kontrollerade stop loss och kursmål för 5 öppna swingaffärer. Senaste swing-sökning 16:35: Granskade 291 aktier: 1 köpkandidater (U). Närmast: ABNB (5/6), APP (5/6), FROG (5/6), IBN (5/6), JD (5/6). Nästa sökning ca 17:05 (dagskurser ändras långsamt)."
+2026-11-06 16:45,day,DVN,KÖP,"11 st à 42.70 USD (day), stop 42.33"

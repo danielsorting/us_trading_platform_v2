@@ -1,5 +1,5 @@
 {
-  "cash": 632.8416889628475,
+  "cash": 162.71883056631737,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -91,6 +91,17 @@
       "strategy": "day",
       "trail_atr": 2.0,
       "atr": 0.158
+    },
+    "DVN": {
+      "quantity": 11.0,
+      "avg_price": 42.72135076332092,
+      "opened": "2026-11-06T15:45:48",
+      "entry_fee": 0.188,
+      "stop": 42.33,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.244
     }
   },
   "orders": [
@@ -708,6 +719,21 @@
       "pnl": -15.84,
       "reason": "stop loss",
       "strategy": "day"
+    },
+    {
+      "id": "3829704d3e",
+      "time": "2026-11-06T15:45:48",
+      "symbol": "DVN",
+      "side": "buy",
+      "quantity": 11.0,
+      "price": 42.7214,
+      "fee": 0.188,
+      "pnl": null,
+      "stop": 42.33,
+      "target": null,
+      "strategy": "day",
+      "trail_atr": 2.0,
+      "atr": 0.244
     }
   ],
   "reset_id": null
