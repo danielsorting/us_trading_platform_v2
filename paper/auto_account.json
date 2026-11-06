@@ -1,5 +1,5 @@
 {
-  "cash": 620.1569040412014,
+  "cash": 1094.8493391608304,
   "starting_cash": 10248.054330200142,
   "usd_sek_at_start": 9.757949829101562,
   "created": "2026-11-04T14:30:22",
@@ -59,17 +59,6 @@
       "trail_atr": 3.0,
       "atr": 0.679
     },
-    "CHTR": {
-      "quantity": 4.0,
-      "avg_price": 121.91593085861206,
-      "opened": "2026-11-06T15:10:48",
-      "entry_fee": 0.1951,
-      "stop": 118.93,
-      "target": null,
-      "strategy": "day",
-      "trail_atr": 2.0,
-      "atr": 2.076
-    },
     "MCD": {
       "quantity": 1.0,
       "avg_price": 276.93838778686523,
@@ -86,7 +75,7 @@
       "avg_price": 42.72135076332092,
       "opened": "2026-11-06T15:45:48",
       "entry_fee": 0.188,
-      "stop": 42.54,
+      "stop": 42.66,
       "target": null,
       "strategy": "day",
       "trail_atr": 2.0,
@@ -733,6 +722,18 @@
       "price": 45.7621,
       "fee": 0.183,
       "pnl": -3.33,
+      "reason": "stop loss",
+      "strategy": "day"
+    },
+    {
+      "id": "ef41f15eb1",
+      "time": "2026-11-06T16:35:48",
+      "symbol": "CHTR",
+      "side": "sell",
+      "quantity": 4.0,
+      "price": 118.7206,
+      "fee": 0.19,
+      "pnl": -13.17,
       "reason": "stop loss",
       "strategy": "day"
     }
