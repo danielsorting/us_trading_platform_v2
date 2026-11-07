@@ -1,31 +1,31 @@
 Aktier,Strategi,Risk %,Kassa i S&P,Per år %,Största nedgång %,Affärer,Poäng,Testat
-300,Utbrott + marknadsfilter – låt vinnare löpa,1.0,True,15.5,-25.17,308,0.62,2026-11-05 23:20 UTC
-300,Utbrott – låt vinnare löpa,1.0,False,14.9,-28.84,328,0.52,2026-11-05 23:20 UTC
-300,Utbrott + marknadsfilter – låt vinnare löpa,2.0,True,11.5,-25.06,161,0.46,2026-11-05 23:20 UTC
-300,Utbrott – låt vinnare löpa,1.0,True,14.5,-31.91,332,0.45,2026-11-05 23:20 UTC
-300,Utbrott – låt vinnare löpa,2.0,True,15.9,-36.36,207,0.44,2026-11-05 23:20 UTC
-600,Utbrott + marknadsfilter – låt vinnare löpa,1.0,False,11.2,-27.91,304,0.4,2026-11-05 23:20 UTC
-300,Utbrott + marknadsfilter – låt vinnare löpa,1.0,False,8.9,-24.17,299,0.37,2026-11-05 23:20 UTC
-300,Utbrott – låt vinnare löpa,2.0,False,12.3,-37.43,195,0.33,2026-11-05 23:20 UTC
-600,Utbrott – låt vinnare löpa,1.0,False,10.3,-31.48,358,0.33,2026-11-05 23:20 UTC
-600,Utbrott – låt vinnare löpa,1.0,True,9.7,-33.44,369,0.29,2026-11-05 23:20 UTC
-600,Utbrott + marknadsfilter – låt vinnare löpa,2.0,True,9.3,-32.6,184,0.29,2026-11-05 23:20 UTC
-300,Utbrott + marknadsfilter – låt vinnare löpa,2.0,False,6.8,-24.85,166,0.27,2026-11-05 23:20 UTC
-600,Utbrott + marknadsfilter – låt vinnare löpa,1.0,True,5.3,-30.61,316,0.17,2026-11-05 23:20 UTC
-600,Utbrott – låt vinnare löpa,2.0,True,6.5,-40.98,219,0.16,2026-11-05 23:20 UTC
-300,Swing – låt vinnare löpa,1.0,True,4.7,-42.89,412,0.11,2026-11-05 23:20 UTC
-300,Swing + marknadsfilter + relativ styrka,2.0,True,3.6,-37.07,310,0.1,2026-11-05 23:20 UTC
-300,Swing + marknadsfilter – låt vinnare löpa,2.0,False,3.9,-43.05,197,0.09,2026-11-05 23:20 UTC
-600,Utbrott – låt vinnare löpa,2.0,False,3.7,-45.23,213,0.08,2026-11-05 23:20 UTC
-300,Swing + marknadsfilter,2.0,True,2.3,-36.45,347,0.06,2026-11-05 23:20 UTC
-300,Swing – låt vinnare löpa,1.0,False,2.5,-38.03,410,0.06,2026-11-05 23:20 UTC
-600,Swing – låt vinnare löpa,2.0,True,2.5,-48.35,254,0.05,2026-11-05 23:20 UTC
-300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,False,1.9,-37.4,474,0.05,2026-11-05 23:20 UTC
-300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",2.0,True,0.7,-48.27,300,0.01,2026-11-05 23:20 UTC
-600,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,True,-0.1,-45.36,475,-0.0,2026-11-05 23:20 UTC
-600,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,False,-1.0,-42.98,465,-0.02,2026-11-05 23:20 UTC
-300,Swing + marknadsfilter + relativ styrka,1.0,True,-0.7,-39.78,506,-0.02,2026-11-05 23:20 UTC
-300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",2.0,False,-1.2,-52.98,283,-0.02,2026-11-05 23:20 UTC
-300,Swing + marknadsfilter – låt vinnare löpa,1.0,False,-1.0,-29.89,359,-0.03,2026-11-05 23:20 UTC
-300,Swing – låt vinnare löpa,2.0,False,-1.6,-47.14,246,-0.03,2026-11-05 23:20 UTC
-600,"Swing + marknadsfilter, mål 3R",1.0,False,-1.3,-42.63,532,-0.03,2026-11-05 23:20 UTC
+300,Utbrott + marknadsfilter – låt vinnare löpa,1.0,True,15.3,-23.74,300,0.65,2026-11-06 23:15 UTC
+300,Utbrott – låt vinnare löpa,2.0,True,20.8,-40.14,185,0.52,2026-11-06 23:15 UTC
+300,Utbrott – låt vinnare löpa,1.0,False,14.4,-30.59,337,0.47,2026-11-06 23:15 UTC
+300,Utbrott – låt vinnare löpa,1.0,True,12.2,-30.61,334,0.4,2026-11-06 23:15 UTC
+600,Utbrott – låt vinnare löpa,1.0,True,13.4,-34.84,375,0.38,2026-11-06 23:15 UTC
+300,Utbrott + marknadsfilter – låt vinnare löpa,1.0,False,8.7,-23.0,304,0.38,2026-11-06 23:15 UTC
+300,Utbrott + marknadsfilter – låt vinnare löpa,2.0,False,11.2,-30.22,175,0.37,2026-11-06 23:15 UTC
+600,Utbrott + marknadsfilter – låt vinnare löpa,1.0,True,10.4,-33.03,319,0.32,2026-11-06 23:15 UTC
+300,Utbrott – låt vinnare löpa,2.0,False,12.2,-39.0,211,0.31,2026-11-06 23:15 UTC
+600,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,False,5.4,-32.53,462,0.16,2026-11-06 23:15 UTC
+300,Swing – låt vinnare löpa,1.0,True,3.8,-35.53,396,0.11,2026-11-06 23:15 UTC
+300,Utbrott + marknadsfilter – låt vinnare löpa,2.0,True,3.3,-32.83,180,0.1,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter – låt vinnare löpa,1.0,False,3.0,-33.24,350,0.09,2026-11-06 23:15 UTC
+600,Utbrott + marknadsfilter – låt vinnare löpa,1.0,False,2.6,-29.58,328,0.09,2026-11-06 23:15 UTC
+300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,False,2.9,-35.37,458,0.08,2026-11-06 23:15 UTC
+300,Swing – låt vinnare löpa,1.0,False,2.5,-37.12,425,0.07,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter – låt vinnare löpa,2.0,True,2.8,-42.69,206,0.07,2026-11-06 23:15 UTC
+600,Utbrott – låt vinnare löpa,1.0,False,2.3,-35.43,383,0.07,2026-11-06 23:15 UTC
+600,Swing – låt vinnare löpa,2.0,True,2.4,-40.33,243,0.06,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter + relativ styrka,2.0,False,2.0,-34.47,304,0.06,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter + relativ styrka,2.0,True,2.2,-39.82,306,0.05,2026-11-06 23:15 UTC
+600,Utbrott + marknadsfilter – låt vinnare löpa,2.0,True,1.8,-39.48,184,0.05,2026-11-06 23:15 UTC
+300,Swing – låt vinnare löpa,2.0,True,1.7,-51.45,243,0.03,2026-11-06 23:15 UTC
+300,Swing – låt vinnare löpa,2.0,False,1.0,-45.36,232,0.02,2026-11-06 23:15 UTC
+300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",1.0,True,0.4,-45.35,464,0.01,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter – låt vinnare löpa,2.0,False,-0.2,-50.75,208,-0.0,2026-11-06 23:15 UTC
+300,"Swing – 5 av 6 (RSI, MACD och botten krävs)",2.0,True,-0.3,-55.1,301,-0.01,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter – låt vinnare löpa,1.0,True,-0.5,-38.84,350,-0.01,2026-11-06 23:15 UTC
+300,Swing + marknadsfilter + relativ styrka,1.0,True,-0.5,-45.43,506,-0.01,2026-11-06 23:15 UTC
+300,Swing – grund,2.0,False,-0.4,-46.12,393,-0.01,2026-11-06 23:15 UTC
