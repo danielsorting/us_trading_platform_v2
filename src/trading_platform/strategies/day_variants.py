@@ -8,6 +8,11 @@ ORB = Opening Range Breakout. Ett välkänt och väl undersökt daytrading-uppl�
 3. Användarens grundregel gäller: köp aldrig när RSI eller MACD är på väg ner.
 4. Stop loss under öppningsintervallets lägsta (högst 1,5 × ATR bort), mål 2R,
    allt stängs senast vid dagens slut.
+
+"Ett köp per aktie och dag": bara dagens FÖRSTA köpsignal i en aktie räknas.
+Ett utbrott som misslyckas (kursen faller tillbaka till stop loss) följs annars
+ofta av nya köp i samma aktie samma dag – fler affärer, mer courtage och ofta
+nya förluster. Den simulerade handeln har redan en sådan paus efter stop loss.
 """
 import sys
 
@@ -24,8 +29,10 @@ class DayORB:
     MAX_HOLD_BARS = 78  # hela dagen; stängs ändå vid dagens slut
 
     def __init__(self, label, opening_bars=3, last_entry_bar=24, volume_factor=1.5, trail_atr=None,
-                 keep_target=True):
+                 keep_target=True, one_entry_per_day=False):
         self.label = label
+        # one_entry_per_day=True: bara dagens första köpsignal i aktien räknas.
+        self.one_entry_per_day = one_entry_per_day
         # Följande stop: stop loss flyttas upp till (kurs − trail_atr × ATR) när kursen stiger,
         # så att en del av vinsten låses in. keep_target=True: kursmålet (2R) gäller också.
         self.TRAIL_ATR = trail_atr
@@ -47,7 +54,7 @@ class DayORB:
         usual = cum.groupby(bar_no).transform(lambda v: v.shift(1).rolling(10, min_periods=1).mean())
         high_volume = (cum >= self.volume_factor * usual).where(usual.notna(),
                                                                 x.Volume >= self.volume_factor * x.VOL20)
-        return pd.DataFrame(
+        c = pd.DataFrame(
             {
                 "efter öppningsintervallet": (bar_no >= self.opening_bars) & (bar_no <= self.last_entry_bar),
                 "bryter öppningens högsta": x.Close > or_high,
@@ -58,6 +65,12 @@ class DayORB:
             },
             index=x.index,
         )
+        if self.one_entry_per_day:
+            # Antal tidigare köpsignaler i dag (före denna stapel). Bara den första räknas.
+            full = (c.all(axis=1) & c.notna().all(axis=1)).astype(int)
+            earlier = full.groupby(date).cumsum() - full
+            c["första köpsignalen i dag"] = earlier == 0
+        return c
 
     def evaluate(self, symbol, bars):
         return evaluate_last(self, symbol, bars)
@@ -80,4 +93,8 @@ def day_variants():
         "Day – ORB hela dagen, lås vinst (inget mål)": DayORB(
             "Day – ORB hela dagen, lås vinst (inget mål)", opening_bars=6, last_entry_bar=72, trail_atr=2.0,
             keep_target=False),
+        # Som ovan, men bara EN köpsignal per aktie och dag (inga nya försök efter ett misslyckat utbrott).
+        "Day – ORB hela dagen, lås vinst, ett köp per aktie och dag": DayORB(
+            "Day – ORB hela dagen, lås vinst, ett köp per aktie och dag", opening_bars=6, last_entry_bar=72,
+            trail_atr=2.0, keep_target=False, one_entry_per_day=True),
     }
